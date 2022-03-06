@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import 'antd/dist/antd.css';
-
+// import 'keen-slider/keen-slider.min.css';
 import { ChakraProvider } from '@chakra-ui/react';
 import ProgressBar from '@badrap/bar-of-progress';
 import Router from 'next/router';
