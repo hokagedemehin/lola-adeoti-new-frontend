@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
 import { BsArrowUpCircle } from 'react-icons/bs';
-import BackToTop from './backToTop';
+import BackToTop from './BackToTop';
 
 const Layout = ({ children, name, desc }) => {
   return (
