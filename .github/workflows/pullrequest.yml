@@ -4,27 +4,101 @@
 name: Pull Request Action
 
 on:
-  push:
-    branches: [ main ]
+  # push:
+  #   branches: [main]
   pull_request:
-    branches: [ main ]
+    # branches: [main]
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+    # workflow_call:
 
 jobs:
   build:
-
+    name: 'Build Application'
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [16.x]
+    # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
-    - run: yarn install
-    - run: yarn build
+      - name: '☁ checkout repository'
+        uses: actions/checkout@v2
+
+      - name: 'Use Node.js 16'
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{matrix.node-version}}
+          cache: 'yarn'
+
+      - name: 'Install dependencies'
+        uses: bahmutov/npm-install@v1.6.0
+      # - run: yarn install
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-out name=dir::$(yarn cache dir)"
+
+      - name: Start Caching Build
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: |
+            ~/.yarn
+            ${{ github.workspace }}/.next/cache
+
+          key: ${{runner.os}}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Yarn build if cache is stale
+        run: yarn build
+
+      - name: 🌩 Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: |
+            ~/.yarn
+            ${{ github.workspace }}/.next/cache
+          if-no-files-found: ignore
+
+  # Cypress testing
+  test:
+    name: Cypress Testing Phase
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    # strategy:
+    #   matrix:
+    #     node-version: [16.x]
+
+    steps:
+      - name: ⛅ checkout repository
+        uses: actions/checkout@v2
+
+      - name: 🖥 Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: 📩 Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+
+      # - name: 🧪 Run all tests
+      #   uses: cypress-io/github-action@v2
+      #   with:
+      #     browser: chrome
+      #     headless: true
+
+      # - name: 🌠 Display structure of downloaded file
+      #   run: ls -R
+
+  # steps:

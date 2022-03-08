@@ -1,3 +1,25 @@
 {
   "extends": "next/core-web-vitals"
 }
+
+// {
+//   "env": {
+//     "browser": true,
+//     "es2021": true
+//   },
+//   "extends": ["eslint:recommended", "next", "plugin:cypress/recommended"],
+//   "parserOptions": {
+//     "ecmaFeatures": {
+//       "jsx": true
+//     },
+//     "ecmaVersion": 12,
+//     "sourceType": "module"
+//   },
+//   "plugins": [],
+//   "rules": {
+//     "react/no-unescaped-entities": "off"
+//     // "react/no-children-prop": "off"
+//     // "no-console": "warn",
+//     // "no-console": [{ "allow": ["warn", "error"] }]
+//   }
+// }

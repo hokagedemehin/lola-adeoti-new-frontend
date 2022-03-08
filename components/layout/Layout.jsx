@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
 import { BsArrowUpCircle } from 'react-icons/bs';
+import NavBar from '../navbar/NavBar';
 import BackToTop from './BackToTop';
 
 const Layout = ({ children, name, desc }) => {
@@ -23,7 +24,10 @@ const Layout = ({ children, name, desc }) => {
           content="shrWGcYhhJuGhM5foR7h_xJ8sMkmcNotSWcNhIHuNfk"
         /> */}
       </Head>
-      <div className='mx-auto flex max-w-screen-xl flex-col'>
+      <div className='relative mx-auto flex max-w-screen-xl flex-col'>
+        <div className='fixed top-0 left-0 right-0 z-10 bg-white shadow-md'>
+          <NavBar />
+        </div>
         <main className=''>{children}</main>
         <BackToTop />
       </div>

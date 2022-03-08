@@ -9,10 +9,7 @@ import NavBar from '../components/navbar/NavBar';
 export default function Home() {
   return (
     <Layout name='Home'>
-      <div className='relative'>
-        <div className='fixed top-0 left-0 right-0 z-10 bg-white shadow-md'>
-          <NavBar />
-        </div>
+      <div className=''>
         <HeroSection />
       </div>
     </Layout>
