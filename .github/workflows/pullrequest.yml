@@ -51,8 +51,10 @@ jobs:
         uses: actions/cache@v2
         id: yarn-caches
         with:
-          path: |
-            ~/.yarn/next/cache
+          # path: |
+          #   ~/.yarn
+          #   ${{ github.workspace }}/.next/cache
+          path: /home/runner/.cache/yarn/v6
 
           key: ${{runner.os}}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
@@ -126,4 +128,4 @@ jobs:
   #     # - name: 🌠 Display structure of downloaded file
   #     #   run: ls -R
 
-  # # steps:
+  # steps:
