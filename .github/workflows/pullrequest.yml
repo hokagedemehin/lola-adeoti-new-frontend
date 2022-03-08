@@ -107,11 +107,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      # - name: 🧪 Run all tests
-      #   uses: cypress-io/github-action@v2
-      #   with:
-      #     browser: chrome
-      #     headless: true
+      - name: 🧪 Run all tests
+        uses: cypress-io/github-action@v2
+        with:
+          browser: chrome
+          headless: true
 
       # - name: 🌠 Display structure of downloaded file
       #   run: ls -R
