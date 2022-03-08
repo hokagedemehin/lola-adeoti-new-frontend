@@ -42,6 +42,19 @@ jobs:
       # - name: 'Build Application'
       - run: yarn build
 
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-out name=dir::$(yarn cache dir)"
+
+      -name: Start Caching
+      - uses: action/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{steps.yarn-cache-dir-path.output.dir}}
+          key: ${{runner.os}}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
   # Cypress testing
   # test:
   #   runs-on: ubuntu-latest
