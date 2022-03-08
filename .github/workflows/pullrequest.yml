@@ -39,8 +39,6 @@ jobs:
         uses: bahmutov/npm-install@v1.6.0
       # - run: yarn install
 
-      # - name: 'Build Application'
-
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-out name=dir::$(yarn cache dir)"
@@ -49,7 +47,6 @@ jobs:
       - uses: actions/cache@v2
         id: yarn-cache
         with:
-          # path: ${{steps.yarn-cache-dir-path.output.dir}}
           path: |
             ~/.yarn
             ${{ github.workspace }}/.next/cache
@@ -58,9 +55,35 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - run: yarn build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: ${{runner.os}}-yarn-${{ hashFiles('**/yarn.lock') }}
+          if-no-files-found: ignore
 
   # Cypress testing
-  # test:
-  #   runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest
+
+    # strategy:
+    #   matrix:
+    #     node-version: [16.x]
+
+    steps:
+      - name: ⛅ checkout repository
+        uses: actions/checkout@v2
+
+      - name: 🖥 Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - uses: actions/download-artifact
+        with:
+          name: build-artifact
+
+      - name: 🌠 Display structure of downloaded file
+        run: ls -R
 
   # steps:
