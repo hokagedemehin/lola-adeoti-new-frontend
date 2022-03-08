@@ -4,10 +4,10 @@
 name: Pull Request Action
 
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
   pull_request:
-    branches: [main]
+    # branches: [main]
     types:
       - opened
       - edited
@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: '☁ checkout repository'
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       - name: 'Use Node.js 16'
         uses: actions/setup-node@v2
