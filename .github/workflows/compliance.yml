@@ -1,4 +1,4 @@
-name: 🦜 Commit Compliance
+name: 🧵 Commit Compliance
 
 on:
   pull_request_target:
