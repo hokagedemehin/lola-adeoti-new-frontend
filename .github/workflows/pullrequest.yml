@@ -62,7 +62,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-artifact
-          path: ${{runner.os}}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: |
+            ~/.yarn
+            ${{ github.workspace }}/.next/cache
           if-no-files-found: ignore
 
   # Cypress testing
