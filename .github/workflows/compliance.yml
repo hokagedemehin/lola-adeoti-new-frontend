@@ -1,4 +1,4 @@
-name: Commit Compliance
+name: 🦜 Commit Compliance
 
 on:
   pull_request_target:
@@ -7,12 +7,12 @@ on:
       - edited
       - synchronize
       - reopened
-  pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
-      - reopened
+  # pull_request:
+  #   types:
+  #     - opened
+  #     - edited
+  #     - synchronize
+  #     - reopened
 
   workflow_call:
 

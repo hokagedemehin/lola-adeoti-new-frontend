@@ -55,8 +55,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      # - name: Yarn build if cache is stale
-      #   run: yarn build
+      - name: 🏁 Yarn build if cache is stale
+        run: yarn build
 
       # - name: 🌩 Upload artifact
       #   uses: actions/upload-artifact@v3
