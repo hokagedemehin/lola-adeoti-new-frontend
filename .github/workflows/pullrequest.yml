@@ -42,9 +42,9 @@ jobs:
       - name: 🏁 Yarn build if cache is stale
         run: yarn build
 
-      # - name: Get yarn cache directory path
-      #   id: yarn-cache-dir-path
-      #   run: echo "::set-out name=dir::$(yarn cache dir)"
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-out name=dir::$(yarn cache dir)"
 
       - name: 🚧 Start Caching Build
         # uses: c-hive/gha-yarn-cache@v2
