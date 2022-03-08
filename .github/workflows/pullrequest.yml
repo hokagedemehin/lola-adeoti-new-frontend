@@ -39,7 +39,7 @@ jobs:
         uses: bahmutov/npm-install@v1.6.0
       # - run: yarn install
 
-      - name: 'Build Application'
+      # - name: 'Build Application'
       - run: yarn build
 
   # Cypress testing
