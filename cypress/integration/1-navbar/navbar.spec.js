@@ -2,6 +2,10 @@
 
 describe('NavBar Checks', () => {
   let data1;
+  let url =
+    process.env.NODE_ENV !== 'production'
+      ? 'http://localhost:3000'
+      : 'https://lolaadeoti.vercel.app/';
   before(() => {
     cy.fixture('navbar/1-navbar').then(function (data) {
       data1 = data;
@@ -9,7 +13,7 @@ describe('NavBar Checks', () => {
     });
   });
   beforeEach(() => {
-    cy.visit('http://localhost:3000');
+    cy.visit(url);
   });
   it('Navbar check for all buttons', () => {
     // for(const [key, value] of Object.entries(data1)){

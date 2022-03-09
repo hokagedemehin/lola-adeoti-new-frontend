@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Pull Request Action
+name: 📍 Pull Request Action
 
 on:
   # push:
@@ -16,63 +16,74 @@ on:
     # workflow_call:
 
 jobs:
-  build:
-    name: 'Build Application'
-    runs-on: ubuntu-latest
+  # build:
+  #   name: '🏗 Build Application'
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [16.x]
-    # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+  #   strategy:
+  #     matrix:
+  #       node-version: [16.x]
+  #   # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    steps:
-      - name: '☁ checkout repository'
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: '☁ checkout repository'
+  #       uses: actions/checkout@v2
 
-      - name: 'Use Node.js 16'
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{matrix.node-version}}
-          cache: 'yarn'
+  #     - name: '💾 Use Node.js 16'
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: ${{matrix.node-version}}
+  #         cache: 'yarn'
 
-      - name: 'Install dependencies'
-        uses: bahmutov/npm-install@v1.6.0
-      # - run: yarn install
+  #     - name: '📃 Install dependencies'
+  #       uses: bahmutov/npm-install@v1.6.0
+  #     # - run: yarn install
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-out name=dir::$(yarn cache dir)"
+  #     # - name: 🏁 Yarn build if cache is stale
+  #     #   run: yarn build
 
-      - name: Start Caching Build
-        uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: |
-            ~/.yarn
-            ${{ github.workspace }}/.next/cache
+  #     # - name: Get yarn cache directory path
+  #     #   id: yarn-cache-dir-path
+  #     #   run: echo "::set-out name=dir::$(yarn cache dir)"
 
-          key: ${{runner.os}}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+  #     # - name: 🚧 Start Caching Build
+  #     #   # uses: c-hive/gha-yarn-cache@v2
+  #     #   uses: actions/cache@v2
+  #     #   id: yarn-caches
+  #     #   with:
+  #         # path: |
+  #         #   ~${{ github.workspace }}/.next/cache
+  #         # path: |
+  #         #   ~/.yarn
+  #         #   ${{ github.workspace }}/.next/cache
+  #         # path: /home/runner/.cache/yarn/v6
 
-      - name: Yarn build if cache is stale
-        run: yarn build
+  #         # key: ${{runner.os}}-yarn-${{ hashFiles('**/yarn.lock') }}
+  #         # restore-keys: |
+  #         #   ${{ runner.os }}-yarn-
 
-      - name: 🌩 Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifact
-          path: |
-            ~/.yarn
-            ${{ github.workspace }}/.next/cache
-          if-no-files-found: ignore
+  #     # - name: Generate new build
+  #     #   if: steps.yarn-caches.outputs.cache-hit != 'true'
+  #     #   run: yarn build
+
+  #     # - name: 🏁 Yarn build if cache is stale
+  #     #   run: yarn build
+
+  #     # - name: 🌩 Upload artifact
+  #     #   uses: actions/upload-artifact@v3
+  #     #   with:
+  #     #     name: build-artifact
+  #     #     path: |
+  #     #       ~/.yarn
+  #     #       ${{ github.workspace }}/.next/cache
+  #     #     if-no-files-found: ignore
 
   # Cypress testing
   test:
     name: Cypress Testing Phase
     runs-on: ubuntu-latest
-    needs:
-      - build
+    # needs:
+    #   - build
     # strategy:
     #   matrix:
     #     node-version: [16.x]
@@ -87,18 +98,38 @@ jobs:
           node-version: 16.x
           cache: yarn
 
-      - name: 📩 Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: build-artifact
-
-      # - name: 🧪 Run all tests
-      #   uses: cypress-io/github-action@v2
+      # - name: 📩 Download Artifact
+      #   uses: actions/download-artifact@v3
       #   with:
-      #     browser: chrome
-      #     headless: true
+      #     name: build-artifact
 
-      # - name: 🌠 Display structure of downloaded file
-      #   run: ls -R
+      - name: '📃 Install dependencies'
+        uses: bahmutov/npm-install@v1.6.0
+
+      # - name: 🚧 Start Caching Build
+      #   uses: actions/cache@v2
+      #   id: yarn-caches
+      #   with:
+      #     path: |
+      #       ~/.yarn
+      #       ${{ github.workspace }}/.next/cache
+      #     # path: |
+      #     #   ~${{ github.workspace }}/.next/cache
+      #     # path: /home/runner/.cache/yarn/v6
+      #     key: ${{runner.os}}-yarn-${{ hashFiles('**/yarn.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-yarn-
+
+      - name: 🧪 Run all tests
+        uses: cypress-io/github-action@v2
+        with:
+          browser: chrome
+          headless: true
+          build: yarn build
+          start: yarn start
+          wait-on: http://localhost:3000
+
+  #     # - name: 🌠 Display structure of downloaded file
+  #     #   run: ls -R
 
   # steps:
