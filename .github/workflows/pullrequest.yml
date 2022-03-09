@@ -52,7 +52,7 @@ jobs:
         id: yarn-caches
         with:
           path: |
-            ~/${{ github.workspace }}/.next/cache
+            ~${{ github.workspace }}/.next/cache
           # path: |
           #   ~/.yarn
           #   ${{ github.workspace }}/.next/cache
@@ -114,7 +114,7 @@ jobs:
           #   ~/.yarn
           #   ${{ github.workspace }}/.next/cache
           path: |
-            ~/${{ github.workspace }}/.next/cache
+            ~${{ github.workspace }}/.next/cache
           # path: /home/runner/.cache/yarn/v6
           key: ${{runner.os}}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
