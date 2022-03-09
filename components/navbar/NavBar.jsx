@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import {
   Avatar,
   Box,
-  Center,
+  // Center,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -18,7 +18,7 @@ import {
   MenuList,
   Select,
   Spacer,
-  Text,
+  // Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import Image from 'next/image';
@@ -31,7 +31,7 @@ import {
   // ChevronUpIcon,
 } from '@chakra-ui/icons';
 import { BsCartCheck } from 'react-icons/bs';
-import { Badge, Switch } from 'antd';
+import { Badge } from 'antd';
 import CartDrawer from '../cart/CartDrawer';
 import { GrLogout, GrLogin } from 'react-icons/gr';
 import { MdOutlineDashboard } from 'react-icons/md';
@@ -45,6 +45,8 @@ const NavBar = () => {
    * ? cart is a draw that has the details in it
    * TODO: work out the logic of a guest making a purchase without login
    */
+
+  const user = true;
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -69,6 +71,7 @@ const NavBar = () => {
     const val = localStorage.getItem('active');
     setActive(val);
   }, []);
+
   return (
     <div className=' mx-auto max-w-screen-xl px-1 py-2 sm:py-3 sm:px-2 '>
       {/* large screens */}
@@ -173,7 +176,7 @@ const NavBar = () => {
                   // src='https://avatars.dicebear.com/api/micah/:child.svg?mouth[]=laughing&mouth[]=smile&glassesProbability=100'
                 />
               </MenuButton>
-              {true ? (
+              {user ? (
                 <MenuList>
                   <MenuItem
                     // as='box'
@@ -367,7 +370,7 @@ const NavBar = () => {
                   // src='https://avatars.dicebear.com/api/micah/:child.svg?mouth[]=laughing&mouth[]=smile&glassesProbability=100'
                 />
               </MenuButton>
-              {true ? (
+              {user ? (
                 <MenuList>
                   <MenuItem
                     // as='box'

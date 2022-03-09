@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
-import { BsArrowUpCircle } from 'react-icons/bs';
+// import { BsArrowUpCircle } from 'react-icons/bs';
 import NavBar from '../navbar/NavBar';
 import BackToTop from './BackToTop';
 

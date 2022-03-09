@@ -8,14 +8,14 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  useDisclosure,
+  // useDisclosure,
 } from '@chakra-ui/react';
 import React from 'react';
 
 const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
   // console.log(props);
 
-  const { onOpen } = useDisclosure();
+  // const { onOpen } = useDisclosure();
 
   return (
     <Drawer
