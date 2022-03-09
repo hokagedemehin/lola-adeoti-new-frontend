@@ -5,6 +5,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import ProgressBar from '@badrap/bar-of-progress';
 import Router from 'next/router';
 import { QueryClient, QueryClientProvider } from 'react-query';
+
 const progress = new ProgressBar({
   size: 4,
   color: '#2563eb',

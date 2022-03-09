@@ -36,6 +36,7 @@ import CartDrawer from '../cart/CartDrawer';
 import { GrLogout, GrLogin } from 'react-icons/gr';
 import { MdOutlineDashboard } from 'react-icons/md';
 import { useRouter } from 'next/router';
+import AOS from 'aos';
 
 const NavBar = () => {
   /**
@@ -70,12 +71,18 @@ const NavBar = () => {
   useEffect(() => {
     const val = localStorage.getItem('active');
     setActive(val);
+    AOS.init();
   }, []);
 
   return (
     <div className=' mx-auto max-w-screen-xl px-1 py-2 sm:py-3 sm:px-2 '>
       {/* large screens */}
-      <Box data-name='large-screen' className='hidden sm:block'>
+      <Box
+        // data-aos='zoom-in'
+        // data-aos-duration='1000'
+        data-name='large-screen'
+        className='hidden sm:block'
+      >
         <Flex justify='center' align='center'>
           <div className='relative h-8 w-8 sm:h-12 sm:w-12'>
             <Image
@@ -441,6 +448,22 @@ const NavBar = () => {
 export default NavBar;
 
 /**
+ * 
+ * <MenuItem
+                    // as='box'
+                    // href='/dashboard'
+                    icon={<MdOutlineDashboard />}
+                    className={` cursor-pointer py-2 px-2  transition duration-300 ease-in-out  hover:ring-1 hover:ring-gray-300 ${
+                      active == 'dashboard'
+                        ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
+                        : ''
+                    }`}
+                    onClick={() => handleDashboard('dashboard')}
+                  >
+                    Dashboard
+                  </MenuItem>
+
+
  * {false ? (
               <IconButton isRound variant='ghost' aria-label='User Profile'>
                 <Avatar
