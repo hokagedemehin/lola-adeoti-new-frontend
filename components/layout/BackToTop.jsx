@@ -1,7 +1,7 @@
 import React from 'react';
 import { BackTop } from 'antd';
-import { BsArrowUpCircle } from 'react-icons/bs';
-import { UpOutlined } from '@ant-design/icons';
+// import { BsArrowUpCircle } from 'react-icons/bs';
+// import { UpOutlined } from '@ant-design/icons';
 const BackToTop = () => {
   return (
     <div>
