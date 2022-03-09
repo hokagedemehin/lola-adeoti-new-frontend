@@ -1,11 +1,11 @@
-import Head from 'next/head';
-import Image from 'next/image';
-import { BsArrowUpCircle } from 'react-icons/bs';
+// import Head from 'next/head';
+// import Image from 'next/image';
+// import { BsArrowUpCircle } from 'react-icons/bs';
 import Layout from '../components/layout/Layout';
-import styles from '../styles/Home.module.css';
+// import styles from '../styles/Home.module.css';
 // fixed top-0 left-0 right-0
 import HeroSection from '../components/home/HeroSection';
-import NavBar from '../components/navbar/NavBar';
+// import NavBar from '../components/navbar/NavBar';
 export default function Home() {
   return (
     <Layout name='Home'>
