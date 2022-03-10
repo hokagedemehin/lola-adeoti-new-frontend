@@ -8,10 +8,19 @@ import HeroSection from '../components/home/HeroSection';
 import PersonalitySection from '../components/home/Personality';
 import CampaignSection from '../components/home/Campaign';
 import axios from 'axios';
+// import TawkTo from 'tawkto-react';
+// import { useEffect } from 'react';
 // import NavBar from '../components/navbar/NavBar';
-export default function Home({ data }) {
+export default function Home({ campaign, personality }) {
   // console.log('props :>> ', data?.data);
   // console.log(process.env.NODE_ENV);
+  // useEffect(() => {
+  //   const propertyId = process.env.NEXT_PUBLIC_PROPERTY_ID;
+  //   const tawkId = process.env.NEXT_PUBLIC_TAWK_ID;
+  //   var tawk = new TawkTo(propertyId, tawkId);
+  //   tawk.hideWidget();
+  // }, []);
+
   return (
     <Layout
       name='Home'
@@ -20,8 +29,8 @@ export default function Home({ data }) {
       <div className=''>
         <HeroSection />
         <div className='mx-2'>
-          <CampaignSection data={data?.data} />
-          <PersonalitySection />
+          <CampaignSection data={campaign?.data} />
+          <PersonalitySection data={personality?.data} />
         </div>
       </div>
     </Layout>
@@ -34,11 +43,13 @@ export async function getStaticProps() {
       ? 'http://localhost:1337'
       : 'https://lola-adeoti-new-backend.herokuapp.com';
 
-  const { data } = await axios.get(`${URL}/api/campaigns?populate=*`);
+  let campaign = await axios.get(`${URL}/api/campaigns?populate=*`);
+  let personality = await axios.get(`${URL}/api/personalities?populate=*`);
 
   return {
     props: {
-      data,
+      campaign: campaign.data,
+      personality: personality.data,
     },
     revalidate: 10,
   };
