@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 import Image from 'next/image';
+import AOS from 'aos';
+
 const CampaignSection = ({ data }) => {
   const [sliderRef] = useKeenSlider(
     {
@@ -39,13 +41,21 @@ const CampaignSection = ({ data }) => {
     ]
   );
 
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
+  // console.log('data', data);
+
   return (
-    <div ref={sliderRef} className='keen-slider'>
+    <div ref={sliderRef} className='keen-slider pt-10 sm:pt-20'>
       {data &&
         data.map((img, id) => (
           <div
             key={`${img.id}-${id}`}
             className='keen-slider__slide number-slide1 relative flex h-[25rem] w-screen items-center justify-center sm:h-[40rem] '
+            // data-aos='flip-left'
+            // data-aos-duration='1000'
           >
             <Image
               src={img?.attributes?.image?.data?.attributes?.url}
