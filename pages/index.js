@@ -10,7 +10,7 @@ import CampaignSection from '../components/home/Campaign';
 import axios from 'axios';
 // import NavBar from '../components/navbar/NavBar';
 export default function Home({ data }) {
-  console.log('props :>> ', data?.data);
+  // console.log('props :>> ', data?.data);
   // console.log(process.env.NODE_ENV);
   return (
     <Layout
@@ -33,15 +33,8 @@ export async function getStaticProps() {
     process.env.NODE_ENV !== 'production'
       ? 'http://localhost:1337'
       : 'https://lola-adeoti-new-backend.herokuapp.com';
-  // const res = await fetch(`${URL}/api/campaigns?populate=*`);
-  // const res = await fetch(`http://localhost:1337/api/campaigns?populate=*`);
-  // const result = await res.json();
-  // const { data } = await axios.get(
-  //   `http://localhost:1337/api/campaigns?populate=*`
-  // );
+
   const { data } = await axios.get(`${URL}/api/campaigns?populate=*`);
-  // console.log(res);
-  // const result = await res.data;
 
   return {
     props: {
