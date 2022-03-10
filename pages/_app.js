@@ -5,6 +5,8 @@ import { ChakraProvider } from '@chakra-ui/react';
 import ProgressBar from '@badrap/bar-of-progress';
 import Router from 'next/router';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { DefaultSeo } from 'next-seo';
+// import SEO from '../next-seo.config';
 
 const progress = new ProgressBar({
   size: 4,
@@ -27,6 +29,36 @@ function MyApp({ Component, pageProps }) {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
+        <DefaultSeo
+          title='Lola Adeoti Bags & Accessories'
+          openGraph={{
+            type: 'website',
+            locale: 'en_IE',
+            url: 'https://www.lolaadeoti.vercel.app/',
+            site_name: 'Lola Adeoti Bags & Accessories',
+            description:
+              'Classic bag for everyone for every purpose and occassion',
+            images: [
+              {
+                url: 'https://github.com/hokagedemehin/lola-adeoti-new-frontend/blob/main/public/logo/logo_only.png?raw=true',
+                width: 800,
+                height: 600,
+                alt: 'Og:lola-adeoti',
+              },
+              {
+                url: 'https://github.com/hokagedemehin/lola-adeoti-new-frontend/blob/main/public/logo/logo_and_name_coloured.png?raw=true',
+                width: 800,
+                height: 600,
+                alt: 'Og:lola-adeoti',
+              },
+            ],
+          }}
+          twitter={{
+            handle: '@lolaadeoti',
+            site: '@lolaadeoti',
+            cardType: 'summary_large_image',
+          }}
+        />
         <Component {...pageProps} />
       </ChakraProvider>
     </QueryClientProvider>
