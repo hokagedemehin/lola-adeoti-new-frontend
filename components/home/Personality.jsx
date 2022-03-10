@@ -50,9 +50,6 @@ const PersonalitySection = ({ data }) => {
                   elem?.attributes?.image?.data?.attributes?.formats?.small?.url
                 }
                 alt={elem?.attributes?.name}
-                // className='hidden'
-
-                // style={{ display: 'none' }}
               />
               <div className='inset absolute h-[25rem] w-full bg-gradient-to-t from-black  opacity-60 sm:h-[30rem]'></div>
               <div className='absolute inset-x-0 bottom-7 space-y-3 px-10 text-white'>
