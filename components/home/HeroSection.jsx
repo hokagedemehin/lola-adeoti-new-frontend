@@ -45,7 +45,7 @@ const HeroSection = () => {
           />
           <div className='inset absolute h-[25rem] w-full bg-white opacity-25 sm:h-[40rem]'></div>
         </div>
-        <div className='absolute left-[10%] top-[30%] space-y-4  sm:top-[20%]'>
+        <div className='absolute left-[10%] top-[10%] space-y-4'>
           {/* CTA Slogan */}
           <div data-aos='zoom-in' data-aos-duration='1000'>
             <Text className='text-3xl font-extrabold  sm:text-6xl'>
