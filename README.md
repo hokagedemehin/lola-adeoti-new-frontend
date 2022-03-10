@@ -2,7 +2,7 @@
 
 This is a web application for Lola Adeoti Brand of bags and accessories. It is fast, easy to use and seo friendly. All her types of nbags are available on the web application and you can interact with the owner directly via chat on the web application
 
-![lola-adeoti-web-application][]
+![lola-adeoti-web-application](https://user-images.githubusercontent.com/16826624/157561017-faf34b55-fec0-4d4e-b7d8-2b0eff9f1a2e.png)
 
 ## 🥇 Getting Started
 
@@ -11,6 +11,7 @@ First, run the development server:
 ```bash
 npm run dev
 # or
+
 yarn dev
 ```
 
