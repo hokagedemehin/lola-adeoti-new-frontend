@@ -98,10 +98,5 @@ export default PersonalitySection;
         >
           5
         </div>
-        <div
-          className='keen-slider__slide number-slide6 
-      flex h-[25rem] w-[20rem] items-center  justify-center border-2 bg-orange-200 text-2xl font-bold sm:h-[30rem]'
-        >
-          6
-        </div>
+        
  */
