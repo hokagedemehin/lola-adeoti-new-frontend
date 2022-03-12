@@ -58,7 +58,13 @@ const NavBar = () => {
   const btnRef = useRef();
   const cartRef = useRef();
   const [active, setActive] = useState('');
-  // console.log('active :>> ', active);
+  const [currency, setCurrency] = useState('');
+  // console.log('currenct :>> ', currency);
+
+  const handleCurrency = (val) => {
+    // console.log(val.target.value);
+    localStorage.setItem('currency', val.target.value);
+  };
   const handleActive = (val) => {
     // e.preventDefault();
     // setActive(val);
@@ -70,7 +76,9 @@ const NavBar = () => {
   };
   useEffect(() => {
     const val = localStorage.getItem('active');
+    const current = localStorage.getItem('currency');
     setActive(val);
+    setCurrency(current);
     AOS.init();
   }, []);
 
@@ -160,9 +168,10 @@ const NavBar = () => {
             <Box>
               {/* <Switch checkedChildren='&#8358;' unCheckedChildren='&#x24;' /> */}
               <Select
-                defaultValue='naira'
+                value={currency}
                 variant='unstyled'
                 className='cursor-pointer'
+                onChange={handleCurrency}
               >
                 <option value='naira'>&#8358;</option>
                 <option value='dollar'>&#x24;</option>
@@ -336,6 +345,46 @@ const NavBar = () => {
                       Contact Us
                     </a>
                   </Link>
+                  {user ? (
+                    <>
+                      <Link href='/dashboard' passHref>
+                        <a
+                          data-name='dashboard'
+                          className={`rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 ${
+                            active == 'dashboard'
+                              ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
+                              : ''
+                          }`}
+                          onClick={() => handleActive('dashboard')}
+                        >
+                          Dashboard
+                        </a>
+                      </Link>
+                      <Link href='/' passHref>
+                        <a
+                          data-name='logout'
+                          className={`rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 `}
+                          onClick={() => handleActive('home')}
+                        >
+                          Logout
+                        </a>
+                      </Link>
+                    </>
+                  ) : (
+                    <Link href='/login' passHref>
+                      <a
+                        data-name='login'
+                        className={`rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 ${
+                          active == 'login'
+                            ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
+                            : ''
+                        }`}
+                        onClick={() => handleActive('login')}
+                      >
+                        Login
+                      </a>
+                    </Link>
+                  )}
                 </Box>
               </DrawerBody>
             </DrawerContent>
@@ -355,65 +404,14 @@ const NavBar = () => {
           <Spacer />
           <Box className='flex items-center justify-center -space-x-1'>
             <Select
-              defaultValue='naira'
+              value={currency}
               variant='unstyled'
               className='cursor-pointer'
+              onChange={handleCurrency}
             >
               <option value='naira'>&#8358;</option>
               <option value='dollar'>&#x24;</option>
             </Select>
-            {/* profile */}
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                aria-label='Profile Menu'
-                isRound
-                variant='ghost'
-              >
-                <Avatar
-                  size='sm'
-                  bg='white'
-                  icon={<FaUser fontSize='1.2rem' />}
-                  // src='https://avatars.dicebear.com/api/micah/:child.svg?mouth[]=laughing&mouth[]=smile&glassesProbability=100'
-                />
-              </MenuButton>
-              {user ? (
-                <MenuList>
-                  <MenuItem
-                    // as='box'
-                    // href='/dashboard'
-                    icon={<MdOutlineDashboard />}
-                    className={` cursor-pointer py-2 px-2  transition duration-300 ease-in-out  hover:ring-1 hover:ring-gray-300 ${
-                      active == 'dashboard'
-                        ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
-                        : ''
-                    }`}
-                    onClick={() => handleDashboard('dashboard')}
-                  >
-                    Dashboard
-                  </MenuItem>
-                  <MenuItem as='a' href='/' icon={<GrLogout />}>
-                    Log Out
-                  </MenuItem>
-                </MenuList>
-              ) : (
-                <MenuList>
-                  <MenuItem
-                    as='a'
-                    href='/login'
-                    icon={<GrLogin />}
-                    className={` py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 ${
-                      active == 'login'
-                        ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
-                        : ''
-                    }`}
-                    onClick={() => handleActive('login')}
-                  >
-                    Login
-                  </MenuItem>
-                </MenuList>
-              )}
-            </Menu>
 
             {/* cart */}
             <IconButton

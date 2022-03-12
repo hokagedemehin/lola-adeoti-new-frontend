@@ -26,7 +26,7 @@ const PersonalitySection = ({ data }) => {
   // console.log('data :>> ', data);
   return (
     <div className='pt-10 sm:pt-20'>
-      <div className='space-y-3 pb-10 text-center '>
+      <div className='space-y-1 pb-10 text-center sm:space-y-3 '>
         <Text className=' text-xl font-black  sm:text-4xl'>
           Bags That Match Your Personality
         </Text>
