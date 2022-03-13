@@ -6,6 +6,7 @@ import ProgressBar from '@badrap/bar-of-progress';
 import Router from 'next/router';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { DefaultSeo } from 'next-seo';
+import GlobalProvider from '../utils/context/GlobalData';
 // import SEO from '../next-seo.config';
 
 const progress = new ProgressBar({
@@ -59,7 +60,9 @@ function MyApp({ Component, pageProps }) {
             cardType: 'summary_large_image',
           }}
         />
-        <Component {...pageProps} />
+        <GlobalProvider>
+          <Component {...pageProps} />
+        </GlobalProvider>
       </ChakraProvider>
     </QueryClientProvider>
   );

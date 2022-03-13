@@ -75,7 +75,7 @@ const HeroSection = () => {
             <Link href='/shop' passHref>
               <a
                 onClick={() => handleActive('shop')}
-                className='flex items-center justify-center rounded-lg bg-yellow-400 px-4 py-1  font-semibold text-black ring-1 ring-gray-200 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:text-black hover:shadow-md hover:shadow-gray-600 active:scale-100 active:shadow-md active:shadow-gray-600 sm:px-6 sm:py-2 sm:text-lg'
+                className='flex items-center justify-center rounded-lg bg-yellow-400 px-4 py-1  font-semibold text-black ring-1 ring-gray-200 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:text-black hover:shadow-md hover:shadow-gray-600 active:scale-90 active:shadow-md active:shadow-gray-600 sm:px-6 sm:py-2 sm:text-lg'
               >
                 Shop Collection
               </a>

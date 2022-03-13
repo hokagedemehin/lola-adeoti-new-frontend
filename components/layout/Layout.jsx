@@ -2,7 +2,7 @@ import Head from 'next/head';
 import React from 'react';
 // import { BsArrowUpCircle } from 'react-icons/bs';
 import NavBar from '../navbar/NavBar';
-import BackToTop from './BackToTop';
+// import BackToTop from './BackToTop';
 
 const Layout = ({ children, name, desc }) => {
   return (
@@ -20,7 +20,7 @@ const Layout = ({ children, name, desc }) => {
           <NavBar />
         </div>
         <main className=''>{children}</main>
-        <BackToTop />
+        {/* <BackToTop /> */}
       </div>
     </div>
   );

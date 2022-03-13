@@ -8,10 +8,12 @@ import HeroSection from '../components/home/HeroSection';
 import PersonalitySection from '../components/home/Personality';
 import CampaignSection from '../components/home/Campaign';
 import axios from 'axios';
+import Featured from '../components/home/Featured';
+const qs = require('qs');
 // import TawkTo from 'tawkto-react';
 // import { useEffect } from 'react';
 // import NavBar from '../components/navbar/NavBar';
-export default function Home({ campaign, personality }) {
+export default function Home({ campaign, personality, featured }) {
   // console.log('props :>> ', data?.data);
   // console.log(process.env.NODE_ENV);
   // useEffect(() => {
@@ -31,6 +33,7 @@ export default function Home({ campaign, personality }) {
         <div className='mx-2'>
           <CampaignSection data={campaign?.data} />
           <PersonalitySection data={personality?.data} />
+          <Featured data={featured?.data} />
         </div>
       </div>
     </Layout>
@@ -38,18 +41,56 @@ export default function Home({ campaign, personality }) {
 }
 
 export async function getStaticProps() {
+  // console.log('context :>> ', context);
+  const queryPopulate = qs.stringify(
+    {
+      populate: '*',
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  const queryProductPopulate = qs.stringify(
+    {
+      populate: ['image', 'variants.image'],
+      // populate: ['*'],
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  // const queryFilter = qs.stringify(
+  //   {
+  //     filters: {
+  //       featured: {
+  //         $eq: true,
+  //       },
+  //     },
+  //   },
+  //   {
+  //     encodeValuesOnly: true,
+  //   }
+  // );
   const URL =
     process.env.NODE_ENV !== 'production'
       ? 'http://localhost:1337'
       : 'https://lola-adeoti-new-backend.herokuapp.com';
 
-  let campaign = await axios.get(`${URL}/api/campaigns?populate=*`);
-  let personality = await axios.get(`${URL}/api/personalities?populate=*`);
-
+  let campaign = await axios.get(`${URL}/api/campaigns?${queryPopulate}`);
+  let personality = await axios.get(
+    `${URL}/api/personalities?${queryPopulate}`
+  );
+  let featuredData = await axios.get(
+    `${URL}/api/products?${queryProductPopulate}`
+  );
+  // let campaign = await axios.get(`${URL}/api/campaigns?populate=*`);
+  // let personality = await axios.get(`${URL}/api/personalities?populate=*`);
+  // let featuredData = await axios.get(`${URL}/api/products?populate=*`);
   return {
     props: {
       campaign: campaign.data,
       personality: personality.data,
+      featured: featuredData.data,
     },
     revalidate: 10,
   };
