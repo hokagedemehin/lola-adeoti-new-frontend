@@ -18,7 +18,8 @@ const HeroSection = () => {
 
   return (
     <div className='flex pt-14 sm:pt-16'>
-      <div className=' h-full w-full '>
+      <div className='relative h-full w-full '>
+        {/* large screen image */}
         <div className='hidden h-[25rem] w-full sm:relative sm:block sm:h-[40rem]'>
           <Image
             src={olaedo_babe_blue}
@@ -30,8 +31,9 @@ const HeroSection = () => {
             objectPosition='right'
             // style={{ display: 'none' }}
           />
-          <div className='inset absolute h-[25rem] w-full bg-white opacity-25 sm:h-[40rem]'></div>
+          <div className='absolute inset-0 h-[25rem] w-full bg-white opacity-25 sm:h-[40rem]'></div>
         </div>
+        {/* small screen image */}
         <div className='relative block h-[25rem] w-full sm:hidden sm:h-[40rem]'>
           <Image
             src={olaedo_babe_blue}
@@ -45,7 +47,7 @@ const HeroSection = () => {
           />
           <div className='inset absolute h-[25rem] w-full bg-white opacity-25 sm:h-[40rem]'></div>
         </div>
-        <div className='absolute left-[10%] top-[10%] space-y-4'>
+        <div className='absolute left-[10%] top-[20%] space-y-4'>
           {/* CTA Slogan */}
           <div data-aos='zoom-in' data-aos-duration='1000'>
             <Text className='text-3xl font-extrabold  sm:text-6xl'>

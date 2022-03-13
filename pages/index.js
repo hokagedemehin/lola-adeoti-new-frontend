@@ -1,9 +1,5 @@
-// import Head from 'next/head';
-// import Image from 'next/image';
-// import { BsArrowUpCircle } from 'react-icons/bs';
 import Layout from '../components/layout/Layout';
-// import styles from '../styles/Home.module.css';
-// fixed top-0 left-0 right-0
+
 import HeroSection from '../components/home/HeroSection';
 import PersonalitySection from '../components/home/Personality';
 import CampaignSection from '../components/home/Campaign';
@@ -12,19 +8,8 @@ import Featured from '../components/home/Featured';
 import Popular from '../components/home/Popular';
 import Notification from '../components/home/Notification';
 const qs = require('qs');
-// import TawkTo from 'tawkto-react';
-// import { useEffect } from 'react';
-// import NavBar from '../components/navbar/NavBar';
-export default function Home({ campaign, personality, featured, popular }) {
-  // console.log('props :>> ', data?.data);
-  // console.log(process.env.NODE_ENV);
-  // useEffect(() => {
-  //   const propertyId = process.env.NEXT_PUBLIC_PROPERTY_ID;
-  //   const tawkId = process.env.NEXT_PUBLIC_TAWK_ID;
-  //   var tawk = new TawkTo(propertyId, tawkId);
-  //   tawk.hideWidget();
-  // }, []);
 
+export default function Home({ campaign, personality, featured, popular }) {
   return (
     <Layout
       name='Home'
