@@ -9,11 +9,13 @@ import PersonalitySection from '../components/home/Personality';
 import CampaignSection from '../components/home/Campaign';
 import axios from 'axios';
 import Featured from '../components/home/Featured';
+import Popular from '../components/home/Popular';
+import Notification from '../components/home/Notification';
 const qs = require('qs');
 // import TawkTo from 'tawkto-react';
 // import { useEffect } from 'react';
 // import NavBar from '../components/navbar/NavBar';
-export default function Home({ campaign, personality, featured }) {
+export default function Home({ campaign, personality, featured, popular }) {
   // console.log('props :>> ', data?.data);
   // console.log(process.env.NODE_ENV);
   // useEffect(() => {
@@ -34,6 +36,8 @@ export default function Home({ campaign, personality, featured }) {
           <CampaignSection data={campaign?.data} />
           <PersonalitySection data={personality?.data} />
           <Featured data={featured?.data} />
+          <Popular data={popular?.data} />
+          <Notification />
         </div>
       </div>
     </Layout>
@@ -50,27 +54,34 @@ export async function getStaticProps() {
       encodeValuesOnly: true,
     }
   );
-  const queryProductPopulate = qs.stringify(
+  const queryFeaturedPopulate = qs.stringify(
     {
       populate: ['image', 'variants.image'],
-      // populate: ['*'],
+      filters: {
+        featured: {
+          $eq: true,
+        },
+      },
     },
     {
       encodeValuesOnly: true,
     }
   );
-  // const queryFilter = qs.stringify(
-  //   {
-  //     filters: {
-  //       featured: {
-  //         $eq: true,
-  //       },
-  //     },
-  //   },
-  //   {
-  //     encodeValuesOnly: true,
-  //   }
-  // );
+  const queryPopularPopulate = qs.stringify(
+    {
+      populate: ['image', 'variants.image'],
+      filters: {
+        popular: {
+          $eq: true,
+        },
+      },
+    },
+
+    {
+      encodeValuesOnly: true,
+    }
+  );
+
   const URL =
     process.env.NODE_ENV !== 'production'
       ? 'http://localhost:1337'
@@ -81,7 +92,10 @@ export async function getStaticProps() {
     `${URL}/api/personalities?${queryPopulate}`
   );
   let featuredData = await axios.get(
-    `${URL}/api/products?${queryProductPopulate}`
+    `${URL}/api/products?${queryFeaturedPopulate}`
+  );
+  let popularData = await axios.get(
+    `${URL}/api/products?${queryPopularPopulate}`
   );
   // let campaign = await axios.get(`${URL}/api/campaigns?populate=*`);
   // let personality = await axios.get(`${URL}/api/personalities?populate=*`);
@@ -91,6 +105,7 @@ export async function getStaticProps() {
       campaign: campaign.data,
       personality: personality.data,
       featured: featuredData.data,
+      popular: popularData.data,
     },
     revalidate: 10,
   };

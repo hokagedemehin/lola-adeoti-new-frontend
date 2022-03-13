@@ -5,17 +5,17 @@ import { useGlobal } from '../../utils/context/GlobalData';
 // import { BsHandbagFill } from 'react-icons/bs';
 import Link from 'next/link';
 
-const Featured = ({ data }) => {
+const Popular = ({ data }) => {
   /**
    * *when the color is selected a a function sets the following state (price, quantity, image)
    */
   const { globalCurr } = useGlobal();
-  console.log('globalCurr :>> ', globalCurr);
-  console.log('data :>> ', data[0]);
-  console.log('variants :>> ', data[0]?.attributes?.variants?.data[0]);
+  // console.log('globalCurr :>> ', globalCurr);
+  // console.log('data :>> ', data[0]);
+  // console.log('variants :>> ', data[0]?.attributes?.variants?.data[0]);
   const [varImg, setVarImg] = useState(null);
   const [varName, setVarName] = useState(null);
-  console.log('varName :>> ', varName);
+  // console.log('varName :>> ', varName);
   const handleActive = (val) => {
     // e.preventDefault();
     // setActive(val);
@@ -30,10 +30,10 @@ const Featured = ({ data }) => {
     <div className='pt-10 pb-10 sm:pt-20'>
       <div className='space-y-1 pb-10 text-center sm:space-y-3 '>
         <Text className=' text-xl font-black  sm:text-4xl'>
-          Featured Products
+          Popular Handbags
         </Text>
         <Text className='text-sm sm:text-lg '>
-          Best deals on some of our bags
+          Durable bags that sells fast
         </Text>
       </div>
       <div className='flex flex-wrap items-center justify-center gap-4'>
@@ -125,9 +125,17 @@ const Featured = ({ data }) => {
               </div>
             </div>
           ))}
+        <Link href='/shop' passHref>
+          <a
+            onClick={() => handleActive('shop')}
+            className='flex items-center justify-center rounded-lg bg-gray-200   px-16 py-10 font-semibold text-black ring-1 ring-gray-200 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-gray-300 hover:text-black hover:shadow-md hover:shadow-gray-600 active:scale-90 active:shadow-md active:shadow-gray-600 sm:text-lg'
+          >
+            View More 👉🏽
+          </a>
+        </Link>
       </div>
     </div>
   );
 };
 
-export default Featured;
+export default Popular;
