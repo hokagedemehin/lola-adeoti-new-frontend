@@ -40,11 +40,20 @@ export default function Home({ campaign, personality, featured }) {
   );
 }
 
-export async function getStaticProps(context) {
-  console.log('context :>> ', context);
+export async function getStaticProps() {
+  // console.log('context :>> ', context);
   const queryPopulate = qs.stringify(
     {
       populate: '*',
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  const queryProductPopulate = qs.stringify(
+    {
+      populate: ['image', 'variants.image'],
+      // populate: ['*'],
     },
     {
       encodeValuesOnly: true,
@@ -71,7 +80,9 @@ export async function getStaticProps(context) {
   let personality = await axios.get(
     `${URL}/api/personalities?${queryPopulate}`
   );
-  let featuredData = await axios.get(`${URL}/api/products?${queryPopulate}`);
+  let featuredData = await axios.get(
+    `${URL}/api/products?${queryProductPopulate}`
+  );
   // let campaign = await axios.get(`${URL}/api/campaigns?populate=*`);
   // let personality = await axios.get(`${URL}/api/personalities?populate=*`);
   // let featuredData = await axios.get(`${URL}/api/products?populate=*`);

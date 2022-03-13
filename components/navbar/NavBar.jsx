@@ -37,6 +37,7 @@ import { GrLogout, GrLogin } from 'react-icons/gr';
 import { MdOutlineDashboard } from 'react-icons/md';
 import { useRouter } from 'next/router';
 import AOS from 'aos';
+import { useGlobal } from '../../utils/context/GlobalData';
 
 const NavBar = () => {
   /**
@@ -46,6 +47,7 @@ const NavBar = () => {
    * ? cart is a draw that has the details in it
    * TODO: work out the logic of a guest making a purchase without login
    */
+  const { setGlobalCurr } = useGlobal();
 
   const user = true;
   const router = useRouter();
@@ -59,27 +61,37 @@ const NavBar = () => {
   const cartRef = useRef();
   const [active, setActive] = useState('');
   const [currency, setCurrency] = useState('');
+  const [currentCurr, setCurrentCurr] = useState('');
   // console.log('currenct :>> ', currency);
+  // console.log('currentCurr', currentCurr);
 
   const handleCurrency = (val) => {
     // console.log(val.target.value);
-    localStorage.setItem('currency', val.target.value);
+    setCurrentCurr(val?.target?.value);
+    setGlobalCurr(val?.target?.value);
+    localStorage.setItem('currency', val?.target?.value);
   };
   const handleActive = (val) => {
     // e.preventDefault();
     // setActive(val);
     localStorage.setItem('active', val);
   };
+
   const handleDashboard = (val) => {
     router.push('/dashboard');
     localStorage.setItem('active', val);
   };
   useEffect(() => {
     const val = localStorage.getItem('active');
-    const current = localStorage.getItem('currency');
+
     setActive(val);
-    setCurrency(current);
+
     AOS.init();
+  }, []);
+  useEffect(() => {
+    const current = localStorage.getItem('currency');
+
+    setCurrency(current);
   }, []);
 
   return (
@@ -168,10 +180,10 @@ const NavBar = () => {
             <Box>
               {/* <Switch checkedChildren='&#8358;' unCheckedChildren='&#x24;' /> */}
               <Select
-                value={currency}
+                value={currentCurr == '' ? currency : currentCurr}
                 variant='unstyled'
                 className='cursor-pointer'
-                onChange={handleCurrency}
+                onChange={(e) => handleCurrency(e)}
               >
                 <option value='naira'>&#8358;</option>
                 <option value='dollar'>&#x24;</option>
@@ -404,10 +416,10 @@ const NavBar = () => {
           <Spacer />
           <Box className='flex items-center justify-center -space-x-1'>
             <Select
-              value={currency}
+              value={currentCurr == '' ? currency : currentCurr}
               variant='unstyled'
               className='cursor-pointer'
-              onChange={handleCurrency}
+              onChange={(e) => handleCurrency(e)}
             >
               <option value='naira'>&#8358;</option>
               <option value='dollar'>&#x24;</option>
