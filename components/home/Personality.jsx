@@ -34,12 +34,12 @@ const PersonalitySection = ({ data }) => {
           There is a unique bag for everyone
         </Text>
       </div>
-      <div ref={sliderRef} className='keen-slider border-2'>
+      <div ref={sliderRef} className='keen-slider'>
         {data &&
           data.map((elem, id) => (
             <div
               key={id}
-              className=' keen-slider__slide number-slide1 relative flex h-[25rem] w-[20rem] items-center  justify-center border-2 bg-blue-200  sm:h-[30rem] '
+              className=' keen-slider__slide number-slide1 relative flex h-[25rem] w-[20rem] items-center  justify-center bg-blue-200  sm:h-[30rem] '
             >
               <Image
                 src={elem?.attributes?.image?.data?.attributes?.url}

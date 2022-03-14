@@ -2,6 +2,7 @@ import React from 'react';
 import Layout from '../../components/layout/Layout';
 import axios from 'axios';
 import ShopHeroSection from '../../components/shop/HeroSection';
+import ProductList from '../../components/shop/ProductList';
 const qs = require('qs');
 
 const ShopPage = ({ product }) => {
@@ -9,6 +10,9 @@ const ShopPage = ({ product }) => {
   return (
     <Layout name='Home'>
       <ShopHeroSection />
+      <div className='mx-2'>
+        <ProductList data={product.data} />
+      </div>
     </Layout>
   );
 };
@@ -19,7 +23,7 @@ export async function getStaticProps() {
   // console.log('context :>> ', context);
   const queryPopulate = qs.stringify(
     {
-      populate: '*',
+      populate: ['image'],
     },
     {
       encodeValuesOnly: true,
