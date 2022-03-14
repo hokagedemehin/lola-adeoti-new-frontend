@@ -18,6 +18,7 @@
   "plugins": [],
   "rules": {
     "react/no-unescaped-entities": "off"
+    // "react-hooks/exhaustive-deps": "off"
     // "react/no-children-prop": "off"
     // "no-console": "warn",
     // "no-console": [{ "allow": ["warn", "error"] }]

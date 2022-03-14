@@ -12,8 +12,8 @@ const ShopHeroSection = () => {
 
   return (
     <div className='flex pt-14 sm:pt-16'>
-      <div className=' h-full w-full '>
-        <div className='block h-[20rem] w-full sm:relative sm:h-[30rem]'>
+      <div className='relative h-full w-full '>
+        <div className=' relative h-[20rem] w-full sm:h-[30rem]'>
           <Image
             src={anike_lady_orange}
             layout='fill'

@@ -6,7 +6,13 @@ import NavBar from '../navbar/NavBar';
 
 const Layout = ({ children, name, desc }) => {
   return (
-    <div>
+    <div
+      className='min-h-screen bg-repeat'
+      style={{
+        backgroundImage:
+          'url(https://github.com/hokagedemehin/lola-adeoti-new-frontend/blob/main/public/logo/bag_bg_2_1.jpg?raw=true)',
+      }}
+    >
       <Head>
         <title>{name} | Lola Adeoti Bags & Accessories</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
@@ -19,7 +25,7 @@ const Layout = ({ children, name, desc }) => {
         <div className='fixed top-0 left-0 right-0 z-10 bg-white shadow-md'>
           <NavBar />
         </div>
-        <main className=''>{children}</main>
+        <main className='min-h-screen bg-white'>{children}</main>
         {/* <BackToTop /> */}
       </div>
     </div>
