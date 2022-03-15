@@ -230,7 +230,7 @@ const Footer = () => {
                   >
                     <div className='flex items-center space-x-3'>
                       <svg
-                        className='h-10 w-10'
+                        className='h-8 w-8'
                         fill='currentColor'
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox='0 0 24 24'
@@ -242,7 +242,7 @@ const Footer = () => {
                       </svg>
                       <div className='flex flex-col text-gray-100'>
                         <Text className='text-sm '>Whatsapp:</Text>
-                        <Text className='text-sm'>+2348073218933</Text>
+                        <Text className='text-xs'>+2348073218933</Text>
                       </div>
                     </div>
                   </a>
@@ -257,7 +257,7 @@ const Footer = () => {
                   >
                     <div className='flex items-center space-x-3'>
                       <svg
-                        className='h-10 w-10 '
+                        className='h-8 w-8 '
                         fill='currentColor'
                         xmlns='http://www.w3.org/2000/svg'
                         width='24'
@@ -268,7 +268,7 @@ const Footer = () => {
                       </svg>
                       <div className='flex flex-col text-gray-100'>
                         <Text className='text-sm '>Email:</Text>
-                        <Text className='text-sm'>lola.adeoti@email.com</Text>
+                        <Text className='text-xs'>lola.adeoti@email.com</Text>
                       </div>
                     </div>
                   </a>
