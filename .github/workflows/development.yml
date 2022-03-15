@@ -127,7 +127,6 @@ jobs:
         uses: bahmutov/npm-install@v1.6.0
 
       - name: 🚧 Start Caching Build
-        run: yarn build
         uses: actions/cache@v2
         id: yarn-caches
         with:
@@ -141,6 +140,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: 🏁 Yarn build if cache is stale
+        run: yarn build
       # - name: 🧪 Run all tests
       #   uses: cypress-io/github-action@v2
       #   with:
