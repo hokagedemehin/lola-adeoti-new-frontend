@@ -8,7 +8,7 @@ const qs = require('qs');
 const ShopPage = ({ product }) => {
   console.log('product', product);
   return (
-    <Layout name='Home'>
+    <Layout name='Shop' desc='Shop all your lola adeoti bags '>
       <ShopHeroSection />
       <div className='mx-2'>
         <ProductList data={product.data} />
@@ -36,7 +36,8 @@ export async function getStaticProps() {
       : 'https://lola-adeoti-new-backend.herokuapp.com';
 
   let product = await axios.get(`${URL}/api/products?${queryPopulate}`);
-
+  const { data } = await axios.get(`${URL}/api/products`);
+  console.log('data', data);
   return {
     props: {
       product: product.data,

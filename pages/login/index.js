@@ -3,7 +3,7 @@ import Layout from '../../components/layout/Layout';
 
 const LoginPage = () => {
   return (
-    <Layout name='Home'>
+    <Layout name='Login' desc='Login page to get authenticated'>
       <div className='mt-20'>Login Page</div>
     </Layout>
   );
