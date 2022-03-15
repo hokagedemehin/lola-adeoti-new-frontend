@@ -78,7 +78,7 @@ jobs:
   #     #       ${{ github.workspace }}/.next/cache
   #     #     if-no-files-found: ignore
 
-  # Full project Linting
+  # Full project Lintings
   lint:
     name: 🖌 Project Lint
     runs-on: ubuntu-latest
