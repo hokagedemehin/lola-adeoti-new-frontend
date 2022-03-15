@@ -43,9 +43,9 @@ jobs:
   #     # - name: 🏁 Yarn build if cache is stale
   #     #   run: yarn build
 
-  #     # - name: Get yarn cache directory path
-  #     #   id: yarn-cache-dir-path
-  #     #   run: echo "::set-out name=dir::$(yarn cache dir)"
+  # - name: Get yarn cache directory path
+  #   id: yarn-cache-dir-path
+  #   run: echo "::set-out name=dir::$(yarn cache dir)"
 
   #     - name: 🚧 Start Caching Build
   #       # uses: c-hive/gha-yarn-cache@v2
@@ -125,6 +125,9 @@ jobs:
 
       - name: '📃 Install dependencies'
         uses: bahmutov/npm-install@v1.6.0
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-out name=dir::$(yarn cache dir)"
 
       - name: 🚧 Start Caching Build
         uses: actions/cache@v2
@@ -132,9 +135,12 @@ jobs:
         with:
           # path: |
           #   ~/.next/cache
-
           path: |
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
             ${{ github.workspace }}/.next/cache
+
+          # path: |
+          #   ${{ github.workspace }}/.next/cache
           # path: /home/runner/.cache/yarn/v6
           key: ${{runner.os}}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
