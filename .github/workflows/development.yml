@@ -162,16 +162,16 @@ jobs:
           restore-keys: |
             new1-${{ runner.os }}-yarn-
 
-  # - name: 🏁 Yarn build if cache is stale
-  #   run: yarn build
-  # - name: 🧪 Run all tests
-  #   uses: cypress-io/github-action@v2
-  #   with:
-  #     browser: chrome
-  #     headless: true
-  #     # build: yarn build
-  #     start: yarn start
-  #     wait-on: http://localhost:3000
+      # - name: 🏁 Yarn build if cache is stale
+      #   run: yarn build
+      - name: 🧪 Run all tests
+        uses: cypress-io/github-action@v2
+        with:
+          browser: chrome
+          headless: true
+          # build: yarn build
+          start: yarn start
+          wait-on: http://localhost:3000
 
   #     # - name: 🌠 Display structure of downloaded file
   #     #   run: ls -R
