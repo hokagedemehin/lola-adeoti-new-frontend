@@ -92,10 +92,10 @@ jobs:
         with:
           node-version: 16.x
           cache: yarn
-      # - run: yarn install
+      - run: yarn install
 
-      - name: '📃 Install dependencies'
-        uses: bahmutov/npm-install@v1.6.0
+      # - name: '📃 Install dependencies'
+      #   uses: bahmutov/npm-install@v1.6.0
 
       # - run: yarn build
 
@@ -141,14 +141,14 @@ jobs:
         with:
           node-version: 16.x
           cache: yarn
-
+      - run: yarn install
       # - name: 📩 Download Artifact
       #   uses: actions/download-artifact@v3
       #   with:
       #     name: build-artifact
 
-      - name: '📃 Install dependencies'
-        uses: bahmutov/npm-install@v1.6.0
+      # - name: '📃 Install dependencies'
+      #   uses: bahmutov/npm-install@v1.6.0
 
       # - name: Get yarn cache directory path
       #   id: yarn-cache-dir-path
