@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap --config next-sitemap.config.js",
     "start": "next start",
     "lint": "next lint",
     "cypress:open": "cypress open",
@@ -37,6 +38,7 @@
     "keen-slider": "^6.6.3",
     "moment": "^2.29.1",
     "next-seo": "^5.1.0",
+    "next-sitemap": "^2.5.9",
     "postcss": "^8.4.7",
     "prettier": "^2.5.1",
     "prettier-plugin-tailwindcss": "^0.1.8",

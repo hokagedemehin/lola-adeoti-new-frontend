@@ -64,7 +64,7 @@ const NavBar = () => {
   const [currentCurr, setCurrentCurr] = useState('');
   // console.log('currenct :>> ', currency);
   // console.log('currentCurr', currentCurr);
-
+  // console.log(location);
   const handleCurrency = (val) => {
     // console.log(val.target.value);
     setCurrentCurr(val?.target?.value);

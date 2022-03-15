@@ -145,7 +145,7 @@ const ProductList = ({ data }) => {
                 </div>
                 {/* select options */}
                 <div className='flex  pt-4'>
-                  <Link href={`/product/${elem?.attributes?.slug}`} passHref>
+                  <Link href={`/product/${elem?.id}`} passHref>
                     <LinkOverlay
                       // onClick={() => handleActive('shop')}
                       className='flex items-center justify-center rounded-lg bg-teal-500 px-2 py-1 font-semibold text-white  transition duration-300 ease-in-out hover:bg-teal-700 hover:text-white hover:shadow-md hover:shadow-teal-200  sm:px-4 sm:py-2 '

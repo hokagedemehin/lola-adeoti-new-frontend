@@ -4,7 +4,10 @@ import Layout from '../../components/layout/Layout';
 
 const ContactPage = () => {
   return (
-    <Layout name='Home'>
+    <Layout
+      name='Contact'
+      desc='Get all contact details to reach lola adeoti stores'
+    >
       <div className='mt-20'>Contact Page</div>
     </Layout>
   );

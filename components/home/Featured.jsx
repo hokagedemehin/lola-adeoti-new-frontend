@@ -26,6 +26,7 @@ const Featured = ({ data }) => {
     setVarImg(val?.attributes?.image?.data?.attributes?.url);
     setVarName(elem?.attributes?.name);
   };
+
   return (
     <div className='pt-10 pb-10 sm:pt-20'>
       <div className='space-y-1 pb-10 text-center sm:space-y-3 '>
@@ -66,8 +67,8 @@ const Featured = ({ data }) => {
 
                   {/* name & price */}
                   <div className='flex'>
-                    {/* name */}
                     <div className='flex flex-col'>
+                      {/* name */}
                       <Text className='font-semibold sm:text-xl '>
                         {elem?.attributes?.name}
                       </Text>
@@ -114,7 +115,7 @@ const Featured = ({ data }) => {
               </div>
               {/* select options */}
               <div className='flex  pt-4'>
-                <Link href={`/product/${elem?.attributes?.slug}`} passHref>
+                <Link href={`/product/${elem?.id}`} passHref>
                   <a
                     onClick={() => handleActive('shop')}
                     className='flex items-center justify-center rounded-lg bg-teal-500 px-2 py-1 font-semibold text-white  transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-teal-700 hover:text-white hover:shadow-md hover:shadow-teal-200 active:scale-90 active:shadow-md active:shadow-gray-400 sm:px-4 sm:py-2 '
