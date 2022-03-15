@@ -97,7 +97,7 @@ jobs:
       - name: '📃 Install dependencies'
         uses: bahmutov/npm-install@v1.6.0
 
-      - run: yarn build
+      # - run: yarn build
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -110,7 +110,9 @@ jobs:
           key: new-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             $new-{{ runner.os }}-yarn-
-
+      - name: run this build if there is none
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn build
       - name: 🌌 Lint Check on all Files
         run: yarn lint
   # Cypress testing
