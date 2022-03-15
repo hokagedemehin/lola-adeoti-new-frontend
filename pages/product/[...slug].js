@@ -26,14 +26,14 @@ export async function getStaticPaths() {
   const { data } = await axios.get(`${URL}/api/products`);
 
   const paths = data.data.map((product) => ({
-    params: { id: product?.id.toString() },
+    params: { slug: [product?.id.toString(), product?.attributes?.slug] },
   }));
 
   return { paths, fallback: true };
 }
 
 export async function getStaticProps({ params }) {
-  console.log(params);
+  // console.log(params);
   const URL =
     process.env.NODE_ENV !== 'production'
       ? 'http://localhost:1337'
@@ -50,8 +50,11 @@ export async function getStaticProps({ params }) {
 
   // let product = await axios.get(`${URL}/api/products?${queryPopulate}`);
   const { data } = await axios.get(
-    `${URL}/api/products/${params.id}?${queryPopulate}`
+    `${URL}/api/products/${params.slug[0]}?${queryPopulate}`
   );
+  if (!data?.data) {
+    return { notFound: true };
+  }
   // console.log('data', data);
   return {
     props: {
@@ -60,6 +63,35 @@ export async function getStaticProps({ params }) {
     revalidate: 10,
   };
 }
+
+// // import {getServerSideSitemap} from 'next-sitemap'
+// export async function getServerSideProps({ params }) {
+//   const URL =
+//     process.env.NODE_ENV !== 'production'
+//       ? 'http://localhost:1337'
+//       : 'https://lola-adeoti-new-backend.herokuapp.com';
+
+//   const queryPopulate = qs.stringify(
+//     {
+//       populate: ['image', 'variants.image'],
+//     },
+//     {
+//       encodeValuesOnly: true,
+//     }
+//   );
+
+//   const { data } = await axios.get(
+//     `${URL}/api/products/${params.slug[0]}?${queryPopulate}`
+//   );
+//   if (!data?.data) {
+//     return { notFound: true };
+//   }
+//   // console.log('data', data);
+
+//   return {
+//     props: { product: data.data },
+//   };
+// }
 
 // const queryPopularPopulate = qs.stringify(
 //   {
