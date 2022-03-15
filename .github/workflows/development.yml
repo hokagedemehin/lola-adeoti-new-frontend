@@ -43,9 +43,9 @@ jobs:
   #     # - name: 🏁 Yarn build if cache is stale
   #     #   run: yarn build
 
-  #     # - name: Get yarn cache directory path
-  #     #   id: yarn-cache-dir-path
-  #     #   run: echo "::set-out name=dir::$(yarn cache dir)"
+  # - name: Get yarn cache directory path
+  #   id: yarn-cache-dir-path
+  #   run: echo "::set-out name=dir::$(yarn cache dir)"
 
   #     - name: 🚧 Start Caching Build
   #       # uses: c-hive/gha-yarn-cache@v2
@@ -78,7 +78,7 @@ jobs:
   #     #       ${{ github.workspace }}/.next/cache
   #     #     if-no-files-found: ignore
 
-  # Full project Linting
+  # Full project Lintings
   lint:
     name: 🖌 Project Lint
     runs-on: ubuntu-latest
@@ -92,21 +92,45 @@ jobs:
         with:
           node-version: 16.x
           cache: yarn
+      # - run: yarn install
 
       - name: '📃 Install dependencies'
         uses: bahmutov/npm-install@v1.6.0
 
+      # - run: yarn build
+
+      # - name: Get yarn cache directory path
+      #   id: yarn-cache-dir-path
+      #   run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      # - uses: actions/cache@v2
+      #   id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      #   with:
+      #     path: |
+      #       ~/.yarn
+      #       ${{ github.workspace }}/.next/cache
+      #     key: new3-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      #     restore-keys: |
+      #       new3-${{ runner.os }}-yarn-
+      # - run: yarn install
+      # - run: yarn build
+      # - name: run this build if there is none
+      #   if: steps.yarn-cache.outputs.cache-hit != 'true'
+      #   run: yarn build
       - name: 🌌 Lint Check on all Files
         run: yarn lint
-  # Cypress testing
+
+  # **********************************************************
+  # ? Cypress testing
+  # ***********************************************************
   test:
     name: 🩺 Cypress Testing Phase
     runs-on: ubuntu-latest
     needs:
       - lint
-    # strategy:
-    #   matrix:
-    #     node-version: [16.x]
+    strategy:
+      matrix:
+        node-version: [16.x]
 
     steps:
       - name: ⛅ checkout repository
@@ -126,20 +150,23 @@ jobs:
       - name: '📃 Install dependencies'
         uses: bahmutov/npm-install@v1.6.0
 
+      # - name: Get yarn cache directory path
+      #   id: yarn-cache-dir-path
+      #   run: echo "::set-out name=dir::$(yarn cache dir)"
+
       # - name: 🚧 Start Caching Build
       #   uses: actions/cache@v2
       #   id: yarn-caches
       #   with:
       #     path: |
-      #       ~/.yarn
+      #       ~/.npm
       #       ${{ github.workspace }}/.next/cache
-      #     # path: |
-      #     #   ~${{ github.workspace }}/.next/cache
-      #     # path: /home/runner/.cache/yarn/v6
-      #     key: ${{runner.os}}-yarn-${{ hashFiles('**/yarn.lock') }}
+      #     key: new2-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
       #     restore-keys: |
-      #       ${{ runner.os }}-yarn-
+      #       new2-${{ runner.os }}-yarn-
 
+      # - name: 🏁 Yarn build if cache is stale
+      #   run: yarn build
       - name: 🧪 Run all tests
         uses: cypress-io/github-action@v2
         with:

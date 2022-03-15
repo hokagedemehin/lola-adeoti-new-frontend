@@ -4,7 +4,7 @@ import axios from 'axios';
 const qs = require('qs');
 
 const ProductDetails = ({ product }) => {
-  console.log('product details:>> ', product);
+  // console.log('product details:>> ', product);
   return (
     <Layout
       name={`${product?.attributes?.name}`}

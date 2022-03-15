@@ -16,28 +16,28 @@ const ProductList = ({ data }) => {
    */
   // console.log('data', data);
   const { globalCurr } = useGlobal();
-  const [searchTerm, setSearchTerm] = useState('');
+  // const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(data.length);
-  console.log('searchTerm :>> ', searchTerm);
+  // console.log('searchTerm :>> ', searchTerm);
 
   const [pageSiz] = useState(2);
 
   const [fullData, setFullData] = useState(data);
   let startData = fullData.slice(0, pageSiz);
   let [newData, setNewData] = useState(startData);
-  console.log('newData :>> ', newData);
-  console.log('fullData', fullData);
+  // console.log('newData :>> ', newData);
+  // console.log('fullData', fullData);
   let data1 = [];
   // #####################################
   // * filter the data and slice it by pagesize afterwards
   // ########################################
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+    // setSearchTerm(e.target.value);
     let searchValue = e.target.value;
-    console.log('searchValue', searchValue);
+    // console.log('searchValue', searchValue);
     data1 = data.filter((val) => {
-      console.log('search here :>> ', searchTerm);
+      // console.log('search here :>> ', searchTerm);
       if (searchValue == '' || searchValue.length === 0) {
         return val;
       } else if (
@@ -47,7 +47,7 @@ const ProductList = ({ data }) => {
         return val;
       }
     });
-    console.log('data1 :>> ', data1);
+    // console.log('data1 :>> ', data1);
 
     let data2 = data1.slice(0, pageSiz);
     // console.log('data2 :>> ', data2);

@@ -12,6 +12,7 @@ import React, { useState } from 'react';
 // import { AtSignIcon } from '@chakra-ui/icons';
 import { AiOutlineSend } from 'react-icons/ai';
 import axios from 'axios';
+
 const Notification = () => {
   const [formValue, setFormValue] = useState({ email: '' });
   // console.log('formValue', formValue);

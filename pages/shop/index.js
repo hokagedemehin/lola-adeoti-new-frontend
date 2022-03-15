@@ -6,7 +6,7 @@ import ProductList from '../../components/shop/ProductList';
 const qs = require('qs');
 
 const ShopPage = ({ product }) => {
-  console.log('product', product);
+  // console.log('product', product);
   return (
     <Layout name='Shop' desc='Shop all your lola adeoti bags '>
       <ShopHeroSection />
