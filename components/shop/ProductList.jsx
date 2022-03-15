@@ -1,6 +1,6 @@
 import { Input, Select, Text } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { LinkBox, LinkOverlay } from '@chakra-ui/react';
+// import { LinkBox, LinkOverlay } from '@chakra-ui/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useGlobal } from '../../utils/context/GlobalData';
@@ -88,73 +88,76 @@ const ProductList = ({ data }) => {
       <div className='flex flex-wrap items-center justify-center gap-5 py-4'>
         {newData &&
           newData.map((elem, id) => (
-            <div key={id} className='flex'>
-              <LinkBox
-                as='div'
-                className='rounded-lg p-3 transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-md'
+            <div
+              key={id}
+              className='flex rounded-lg p-3 transition duration-300 ease-in-out hover:shadow-md'
+            >
+              <Link
+                href={`/product/${elem?.id}/${elem?.attributes?.slug}`}
+                passHref
               >
-                {/* image */}
-                <div className='relative h-36 w-36 sm:h-52 sm:w-52'>
-                  <Image
-                    src={elem?.attributes?.image?.data?.attributes?.url}
-                    layout='fill'
-                    objectFit='cover'
-                    placeholder='blur'
-                    blurDataURL={
-                      elem?.attributes?.image?.data?.attributes?.formats?.small
-                        ?.url
-                    }
-                    alt={elem?.attributes?.name}
-                    className='transition delay-150 duration-500 ease-in-out hover:scale-110'
-                  />
-                </div>
-                {/* name & price */}
-                <div className='flex'>
-                  {/* name */}
-                  <div className='flex flex-col'>
-                    <Text className='font-semibold sm:text-xl '>
-                      {elem?.attributes?.name}
-                    </Text>
-                    {/* price */}
-                    {globalCurr == 'naira' ? (
-                      <div className='flex items-center space-x-2'>
-                        <Text className='font-semibold sm:text-lg'>
-                          &#8358;{elem?.attributes?.nairaSalePrice}
-                        </Text>
-                        <Text
-                          as='s'
-                          className='text-sm font-semibold text-gray-400'
-                        >
-                          &#8358;{elem?.attributes?.nairaPrice}
-                        </Text>
-                      </div>
-                    ) : (
-                      <div className='flex items-center space-x-2'>
-                        <Text className='font-semibold sm:text-lg'>
-                          &#x24;{elem?.attributes?.dollarSalePrice}
-                        </Text>
-                        <Text
-                          as='s'
-                          className='text-sm font-semibold text-gray-400'
-                        >
-                          &#x24;{elem?.attributes?.dollarPrice}
-                        </Text>
-                      </div>
-                    )}
+                <a className='hover:text-current'>
+                  {/* image */}
+                  <div className='relative h-36 w-36 sm:h-52 sm:w-52'>
+                    <Image
+                      src={elem?.attributes?.image?.data?.attributes?.url}
+                      layout='fill'
+                      objectFit='cover'
+                      placeholder='blur'
+                      blurDataURL={
+                        elem?.attributes?.image?.data?.attributes?.formats
+                          ?.small?.url
+                      }
+                      alt={elem?.attributes?.name}
+                      className='transition delay-150 duration-500 ease-in-out hover:scale-110'
+                    />
                   </div>
-                </div>
-                {/* select options */}
-                <div className='flex  pt-4'>
-                  <Link href={`/product/${elem?.id}`} passHref>
-                    <LinkOverlay
+                  {/* name & price */}
+                  <div className='flex'>
+                    {/* name */}
+                    <div className='flex flex-col'>
+                      <Text className='font-semibold sm:text-xl '>
+                        {elem?.attributes?.name}
+                      </Text>
+                      {/* price */}
+                      {globalCurr == 'naira' ? (
+                        <div className='flex items-center space-x-2'>
+                          <Text className='font-semibold sm:text-lg'>
+                            &#8358;{elem?.attributes?.nairaSalePrice}
+                          </Text>
+                          <Text
+                            as='s'
+                            className='text-sm font-semibold text-gray-400'
+                          >
+                            &#8358;{elem?.attributes?.nairaPrice}
+                          </Text>
+                        </div>
+                      ) : (
+                        <div className='flex items-center space-x-2'>
+                          <Text className='font-semibold sm:text-lg'>
+                            &#x24;{elem?.attributes?.dollarSalePrice}
+                          </Text>
+                          <Text
+                            as='s'
+                            className='text-sm font-semibold text-gray-400'
+                          >
+                            &#x24;{elem?.attributes?.dollarPrice}
+                          </Text>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {/* slect option */}
+                  <div className='flex  pt-4'>
+                    <div
                       // onClick={() => handleActive('shop')}
-                      className='flex items-center justify-center rounded-lg bg-teal-500 px-2 py-1 font-semibold text-white  transition duration-300 ease-in-out hover:bg-teal-700 hover:text-white hover:shadow-md hover:shadow-teal-200  sm:px-4 sm:py-2 '
+                      className='flex items-center justify-center rounded-lg bg-teal-500 px-2 py-1 font-semibold text-white  transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-teal-700 hover:text-white hover:shadow-md hover:shadow-teal-200 active:scale-90 active:shadow-md active:shadow-gray-400 sm:px-4 sm:py-2 '
                     >
                       Select Options
-                    </LinkOverlay>
-                  </Link>
-                </div>
-              </LinkBox>
+                    </div>
+                  </div>
+                </a>
+              </Link>
             </div>
           ))}
       </div>
