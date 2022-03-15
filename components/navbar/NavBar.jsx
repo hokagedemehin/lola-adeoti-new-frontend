@@ -101,7 +101,7 @@ const NavBar = () => {
         // data-aos='zoom-in'
         // data-aos-duration='1000'
         data-name='large-screen'
-        className='hidden sm:block'
+        className='mx-4 hidden sm:block'
       >
         <Flex justify='center' align='center'>
           <div className='relative h-8 w-8 sm:h-12 sm:w-12'>
@@ -264,7 +264,7 @@ const NavBar = () => {
         </Flex>
       </Box>
       {/*small screens */}
-      <Box data-name='small-screen' className=' block sm:hidden'>
+      <Box data-name='small-screen' className=' mx-1 block sm:hidden'>
         <Flex justify='center' align='center'>
           <IconButton
             // colorScheme='blue'

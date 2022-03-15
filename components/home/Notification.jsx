@@ -31,7 +31,7 @@ const Notification = () => {
 
   return (
     <div className='bg-white py-6 sm:py-8 lg:py-12'>
-      <div className='mx-auto max-w-screen-2xl px-4 md:px-8'>
+      <div className='mx-auto max-w-screen-xl px-4 md:px-8'>
         <div className='flex flex-col items-center rounded-lg bg-gray-100 p-4 sm:p-8 lg:flex-row lg:justify-between'>
           <div className='mb-4 sm:mb-8 lg:mb-0'>
             <Text className='text-center text-xl font-bold text-emerald-600 sm:text-2xl lg:text-left lg:text-3xl'>
