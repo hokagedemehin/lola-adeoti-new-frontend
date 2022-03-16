@@ -79,6 +79,7 @@ jobs:
   #     #     if-no-files-found: ignore
 
   # Full project Lintings
+  # fix
   lint:
     name: 🖌 Project Lint
     runs-on: ubuntu-latest

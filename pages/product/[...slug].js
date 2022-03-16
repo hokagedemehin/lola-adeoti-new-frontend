@@ -8,7 +8,7 @@ import { Text } from '@chakra-ui/react';
 const qs = require('qs');
 
 const ProductDetails = ({ product }) => {
-  console.log('product details:>> ', product);
+  // console.log('product details:>> ', product);
 
   const { globalCurr } = useGlobal();
   const [varImg, setVarImg] = useState(null);
