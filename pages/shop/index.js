@@ -36,8 +36,8 @@ export async function getStaticProps() {
       : 'https://lola-adeoti-new-backend.herokuapp.com';
 
   let product = await axios.get(`${URL}/api/products?${queryPopulate}`);
-  const { data } = await axios.get(`${URL}/api/products`);
-  console.log('data', data);
+  // const { data } = await axios.get(`${URL}/api/products`);
+  // console.log('data', data);
   return {
     props: {
       product: product.data,
