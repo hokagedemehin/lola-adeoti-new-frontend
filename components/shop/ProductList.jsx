@@ -89,6 +89,9 @@ const ProductList = ({ data }) => {
         {newData &&
           newData.map((elem, id) => (
             <div
+              // data-aos='fade-down'
+              // data-aos-duration='1000'
+              // data-aos-easing='ease-in-out'
               key={id}
               className='flex rounded-lg p-3 transition duration-300 ease-in-out hover:shadow-md'
             >

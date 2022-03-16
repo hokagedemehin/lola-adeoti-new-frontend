@@ -1,9 +1,10 @@
 import { Text } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useGlobal } from '../../utils/context/GlobalData';
 // import { BsHandbagFill } from 'react-icons/bs';
 import Link from 'next/link';
+import Aos from 'aos';
 
 const Featured = ({ data }) => {
   /**
@@ -27,6 +28,10 @@ const Featured = ({ data }) => {
     setVarName(elem?.attributes?.name);
   };
 
+  useEffect(() => {
+    Aos.init();
+  }, []);
+
   return (
     <div className='pt-10 pb-10 sm:pt-20'>
       <div className='space-y-1 pb-10 text-center sm:space-y-3 '>
@@ -40,7 +45,12 @@ const Featured = ({ data }) => {
       <div className='flex flex-wrap items-center justify-center gap-4'>
         {data &&
           data.map((elem, id) => (
-            <div key={id} className='flex flex-col'>
+            <div
+              data-aos='zoom-in-right'
+              data-aos-duration='2000'
+              key={id}
+              className='flex flex-col'
+            >
               {/* image | name | price | color pallet */}
               <div className='flex space-x-2'>
                 {/* image & name & price */}

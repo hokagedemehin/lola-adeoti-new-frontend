@@ -39,7 +39,13 @@ const Popular = ({ data }) => {
       <div className='flex flex-wrap items-center justify-center gap-4'>
         {data &&
           data.map((elem, id) => (
-            <div key={id} className='flex flex-col'>
+            <div
+              data-aos='flip-right'
+              data-aos-duration='2000'
+              data-aos-easing='ease-in-out'
+              key={id}
+              className='flex flex-col'
+            >
               {/* image | name | price | color pallet */}
               <div className='flex space-x-2'>
                 {/* image & name & price */}
