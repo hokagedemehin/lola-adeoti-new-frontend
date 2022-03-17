@@ -1,25 +1,143 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Layout from '../../components/layout/Layout';
 import axios from 'axios';
 // import { Image } from 'antd';
 import Image from 'next/image';
 import { useGlobal } from '../../utils/context/GlobalData';
-import { Text } from '@chakra-ui/react';
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Select,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { nanoid } from 'nanoid';
 const qs = require('qs');
 
 const ProductDetails = ({ product }) => {
   // console.log('product details:>> ', product);
-
-  const { globalCurr } = useGlobal();
+  const { globalCurr, userID, setUserID, cartInfo, setCartInfo } = useGlobal();
   const [varImg, setVarImg] = useState(null);
   const [varName, setVarName] = useState(null);
   const [varColor, setVarColor] = useState(null);
+  const [varID, setVarID] = useState(null);
+  const [varQty, setVarQty] = useState(null);
+  const [btnLoad, setBtnLoad] = useState(false);
+  const [cartLoad, setCartLoad] = useState(false);
+  const [indexID, setIndexID] = useState(null);
+  const [qty, setQty] = useState(1);
+  console.log(setQty, userID, setUserID);
+  // const [isLoading, setIsLoading] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
+  const [formValue, setFormValue] = useState({});
+  // console.log('formValue', formValue);
+  // console.log('indexID :>> ', indexID);
 
-  const handleVariant = (val, elem) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const initialRef = useRef();
+  const finalRef = useRef();
+
+  const handleNotify = async () => {
+    try {
+      setModalLoading(true);
+      const URL =
+        process.env.NODE_ENV !== 'production'
+          ? 'http://localhost:1337'
+          : 'https://lola-adeoti-new-backend.herokuapp.com';
+      await axios.post(`${URL}/api/bagnotifications`, {
+        data: {
+          variantId: varID,
+          name: product?.attributes?.name,
+          color:
+            product?.attributes?.variants?.data[indexID]?.attributes?.color,
+
+          userName: formValue?.name,
+          userEmail: formValue?.email,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setModalLoading(false);
+      onClose();
+    }
+  };
+
+  const handleForm = (e) => {
+    e.preventDefault();
+    let name = e.target.name;
+    let value = e.target.value;
+    setFormValue({ ...formValue, [name]: value });
+  };
+
+  const handleChange = (value) => {
+    console.log(value.target.value);
+  };
+
+  const handleVariant = (val, elem, id) => {
+    // console.log(val);
     setVarImg(val?.attributes?.image?.data?.attributes?.url);
     setVarName(elem?.attributes?.name);
     setVarColor(val?.attributes?.color);
+    setVarID(val?.id);
+    setIndexID(id);
+    setVarQty(val?.attributes?.quantity);
+    if (val?.attributes?.quantity !== 0) {
+      setBtnLoad(true);
+      // setVarQty(true);
+      setCartLoad(false);
+    } else {
+      setBtnLoad(false);
+      setCartLoad(true);
+    }
   };
+
+  const handleCart = () => {
+    if (!cartInfo) {
+      const id = nanoid();
+      setCartInfo({
+        cartId: id,
+        quantity: qty,
+        nairaPrice: product?.attributes?.nairaSalePrice,
+        dollarPrice: product?.attributes?.dollarSalePrice,
+        totalNaira: product?.attributes?.nairaSalePrice * qty,
+        totalDollar: product?.attributes?.dollarSalePrice * qty,
+        variantId: varID,
+      });
+      const arr = {
+        cartId: id,
+        quantity: qty,
+        nairaPrice: product?.attributes?.nairaSalePrice,
+        dollarPrice: product?.attributes?.dollarSalePrice,
+        totalNaira: product?.attributes?.nairaSalePrice * qty,
+        totalDollar: product?.attributes?.dollarSalePrice * qty,
+        variantId: varID,
+      };
+      const stringifyCart = JSON.stringify(arr);
+      localStorage.setItem('lola-cart', stringifyCart);
+    }
+  };
+
+  const range = (start, end) => {
+    const length = end - start + 1;
+    return Array.from({ length }, (_, i) => start + i);
+  };
+
+  // console.log('range', range(1, 4));
 
   return (
     <Layout
@@ -42,7 +160,7 @@ const ProductDetails = ({ product }) => {
                         : product?.attributes?.image?.data?.attributes?.url
                     }
                     layout='fill'
-                    objectFit='contain'
+                    objectFit='cover'
                     // objectPosition='center'
                     placeholder='blur'
                     blurDataURL={
@@ -99,27 +217,11 @@ const ProductDetails = ({ product }) => {
                       <div
                         key={id}
                         style={{ backgroundColor: val?.attributes?.hex }}
-                        onClick={() => handleVariant(val, product)}
+                        onClick={() => handleVariant(val, product, id)}
                         className='h-8 w-8 cursor-pointer rounded-full ring-1 ring-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:shadow-gray-800 sm:h-10 sm:w-10'
                       ></div>
                     ))}
                   </div>
-
-                  {/* <div className='flex flex-wrap gap-2'>
-                    <span className='h-8 w-8 rounded-full border bg-gray-800 ring-2 ring-gray-800 ring-offset-1 transition duration-100'></span>
-                    <button
-                      type='button'
-                      className='h-8 w-8 rounded-full border bg-gray-500 ring-2 ring-transparent ring-offset-1 transition duration-100 hover:ring-gray-200'
-                    ></button>
-                    <button
-                      type='button'
-                      className='h-8 w-8 rounded-full border bg-gray-200 ring-2 ring-transparent ring-offset-1 transition duration-100 hover:ring-gray-200'
-                    ></button>
-                    <button
-                      type='button'
-                      className='h-8 w-8 rounded-full border bg-white ring-2 ring-transparent ring-offset-1 transition duration-100 hover:ring-gray-200'
-                    ></button>
-                  </div> */}
                 </div>
                 {/* <!-- color - end --> */}
 
@@ -161,39 +263,219 @@ const ProductDetails = ({ product }) => {
                 </div>
                 {/* <!-- price - end --> */}
 
-                {/* <!-- buttons - start --> */}
-                <div className='flex gap-2.5'>
-                  <a
-                    href='#'
-                    className='inline-block flex-1 rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-600 focus-visible:ring active:bg-indigo-700 sm:flex-none md:text-base'
-                  >
-                    Add to cart
-                  </a>
+                {/* quantity start */}
+                <div className='mb-4 flex'>
+                  {cartLoad ? (
+                    ''
+                  ) : (
+                    <Select
+                      placeholder='Quantity'
+                      maxW='120px'
+                      className='cursor-pointer'
+                      onChange={(e) => handleChange(e)}
+                      isDisabled={!btnLoad}
+                    >
+                      {range(1, varQty).map((elem) => (
+                        <option key={elem} value={elem}>
+                          {elem}
+                        </option>
+                      ))}
+                    </Select>
+                  )}
                 </div>
-                {/* <!-- buttons - end --> */}
+                {/* quantity end */}
+
+                {/* <!-- cart buttons - start --> */}
+                <div className='flex'>
+                  {cartLoad ? (
+                    <div className='flex flex-col space-y-2'>
+                      <Text className='text-xl font-bold text-red-700'>
+                        Out of Stock
+                      </Text>
+                      <Button
+                        onClick={onOpen}
+                        colorScheme='blue'
+                        variant='outline'
+                        ref={finalRef}
+                        // isDisabled={true}
+                      >
+                        Notify Me When Available
+                      </Button>
+                      <Modal
+                        initialFocusRef={initialRef}
+                        finalFocusRef={finalRef}
+                        isOpen={isOpen}
+                        onClose={onClose}
+                      >
+                        <ModalOverlay />
+                        <ModalContent>
+                          <ModalHeader>Notify Me</ModalHeader>
+                          <ModalCloseButton />
+                          <ModalBody pb={6}>
+                            <Text className='mb-3 text-lg font-semibold'>
+                              We will notify you when this bag is available
+                            </Text>
+                            <FormControl>
+                              <FormLabel htmlFor='name'>Name</FormLabel>
+                              <Input
+                                onChange={(e) => handleForm(e)}
+                                name='name'
+                                id='name'
+                                ref={initialRef}
+                                placeholder='Name...'
+                              />
+                            </FormControl>
+
+                            <FormControl mt={4}>
+                              <FormLabel htmlFor='email'>Email</FormLabel>
+                              <Input
+                                onChange={(e) => handleForm(e)}
+                                name='email'
+                                id='email'
+                                placeholder='Email...'
+                                type='email'
+                              />
+                            </FormControl>
+                          </ModalBody>
+
+                          <ModalFooter>
+                            <Button
+                              onClick={() => handleNotify()}
+                              colorScheme='blue'
+                              mr={3}
+                              isLoading={modalLoading}
+                            >
+                              Send
+                            </Button>
+                            <Button onClick={onClose}>Close</Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
+                    </div>
+                  ) : (
+                    <Button
+                      // href='#'
+                      onClick={() => handleCart()}
+                      colorScheme='purple'
+                      variant='solid'
+                      isDisabled={!btnLoad}
+                    >
+                      Add to cart
+                    </Button>
+                  )}
+                  {/* {!cartLoad ? (
+                    <Button
+                      // href='#'
+
+                      colorScheme='purple'
+                      variant='solid'
+                      isDisabled={true}
+                    >
+                      Add to cart
+                    </Button>
+                  ) : varQty ? (
+                    <div className='flex flex-col space-y-2'>
+                      <Text className='text-xl font-bold text-red-700'>
+                        Out of Stock
+                      </Text>
+                      <Button
+                        onClick={onOpen}
+                        colorScheme='blue'
+                        variant='outline'
+                        ref={finalRef}
+                        // isDisabled={true}
+                      >
+                        Notify Me When Available
+                      </Button>
+                      <Modal
+                        initialFocusRef={initialRef}
+                        finalFocusRef={finalRef}
+                        isOpen={isOpen}
+                        onClose={onClose}
+                      >
+                        <ModalOverlay />
+                        <ModalContent>
+                          <ModalHeader>Notify Me</ModalHeader>
+                          <ModalCloseButton />
+                          <ModalBody pb={6}>
+                            <Text className='mb-3 text-lg font-semibold'>
+                              We will notify you when this bag is available
+                            </Text>
+                            <FormControl>
+                              <FormLabel htmlFor='name'>Name</FormLabel>
+                              <Input
+                                onChange={(e) => handleForm(e)}
+                                name='name'
+                                id='name'
+                                ref={initialRef}
+                                placeholder='Name...'
+                              />
+                            </FormControl>
+
+                            <FormControl mt={4}>
+                              <FormLabel htmlFor='email'>Email</FormLabel>
+                              <Input
+                                onChange={(e) => handleForm(e)}
+                                name='email'
+                                id='email'
+                                placeholder='Email...'
+                                type='email'
+                              />
+                            </FormControl>
+                          </ModalBody>
+
+                          <ModalFooter>
+                            <Button
+                              onClick={() => handleNotify()}
+                              colorScheme='blue'
+                              mr={3}
+                              isLoading={modalLoading}
+                            >
+                              Send
+                            </Button>
+                            <Button onClick={onClose}>Close</Button>
+                          </ModalFooter>
+                        </ModalContent>
+                      </Modal>
+                    </div>
+                  ) : (
+                    <Button
+                      // href='#'
+                      onClick={() => handleCart()}
+                      colorScheme='purple'
+                      variant='solid'
+                      // className='inline-block flex-1 rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-600 focus-visible:ring active:bg-indigo-700 sm:flex-none md:text-base'
+                    >
+                      Add to cart
+                    </Button>
+                  )} */}
+                </div>
+                {/* <!-- cart buttons - end --> */}
               </div>
               {/* <!-- content - end --> */}
             </div>
             {/* <!-- description - start --> */}
             <div className='mt-10 md:mt-16 lg:mt-20'>
-              <div className='mb-3 text-lg font-semibold text-gray-800'>
+              <Tabs isFitted variant='enclosed'>
+                <TabList mb='1em'>
+                  <Tab>Description</Tab>
+                  <Tab>Reviews</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    <Text>{product?.attributes?.shortDescription}</Text>
+                    <br />
+                    {/* <br /> */}
+                    <Text>{product?.attributes?.description}</Text>
+                  </TabPanel>
+                  <TabPanel>
+                    <Text>review</Text>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+              {/* <div className='mb-3 text-lg font-semibold text-gray-800'>
                 Description
-              </div>
-              <Text>{product?.attributes?.shortDescription}</Text>
-              <br />
-              {/* <br /> */}
-              <Text>{product?.attributes?.description}</Text>
-              {/* <p className='text-gray-500'>
-                This is a section of some simple filler text, also known as
-                placeholder text. It shares some characteristics of a real
-                written text but is random or otherwise generated. It may be
-                used to display a sample of fonts or generate text for testing.
-                <br />
-                <br />
-                This is a section of some simple filler text, also known as
-                placeholder text. It shares some characteristics of a real
-                written text but is random or otherwise generated.
-              </p> */}
+              </div> */}
             </div>
             {/* <!-- description - end --> */}
           </div>

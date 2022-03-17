@@ -6,17 +6,21 @@ export const GlobalContext = createContext();
 export default function GlobalDataContext({ children }) {
   const [globalCurr, setGlobalCurr] = useState(null);
   const [userID, setUserID] = useState(null);
+  const [cartInfo, setCartInfo] = useState(null);
+  // console.log('userID', userID);
 
   useEffect(() => {
     const curr = localStorage.getItem('currency');
     const anonID = localStorage.getItem('lola-userId');
+    const cleanedAnon = JSON.parse(anonID);
+
     const handleUser = async () => {
-      if (anonID) {
-        setUserID(anonID);
+      if (cleanedAnon) {
+        setUserID(cleanedAnon);
       } else {
         let id = nanoid();
-        localStorage.setItem('lola-userId', id);
-        setUserID(id);
+        localStorage.setItem('lola-userId', JSON.stringify({ userID: id }));
+        setUserID({ userID: id });
         await createNewUser(id);
       }
     };
@@ -37,7 +41,16 @@ export default function GlobalDataContext({ children }) {
   };
 
   return (
-    <GlobalContext.Provider value={{ globalCurr, setGlobalCurr, userID }}>
+    <GlobalContext.Provider
+      value={{
+        globalCurr,
+        setGlobalCurr,
+        userID,
+        setUserID,
+        cartInfo,
+        setCartInfo,
+      }}
+    >
       {children}
     </GlobalContext.Provider>
   );
