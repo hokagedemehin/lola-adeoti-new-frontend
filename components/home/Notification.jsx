@@ -15,18 +15,26 @@ import axios from 'axios';
 
 const Notification = () => {
   const [formValue, setFormValue] = useState({ email: '' });
+  const [isLoading, setIsLoading] = useState(false);
   // console.log('formValue', formValue);
   const handleSubmit = async () => {
-    const URL =
-      process.env.NODE_ENV !== 'production'
-        ? 'http://localhost:1337'
-        : 'https://lola-adeoti-new-backend.herokuapp.com';
-    await axios.post(`${URL}/api/promos`, {
-      data: {
-        email: formValue.email,
-      },
-    });
-    setFormValue({ email: '' });
+    try {
+      setIsLoading(true);
+      const URL =
+        process.env.NODE_ENV !== 'production'
+          ? 'http://localhost:1337'
+          : 'https://lola-adeoti-new-backend.herokuapp.com';
+      await axios.post(`${URL}/api/promos`, {
+        data: {
+          email: formValue.email,
+        },
+      });
+      setFormValue({ email: '' });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -57,6 +65,8 @@ const Notification = () => {
                 variant='outline'
                 colorScheme='whatsapp'
                 onClick={() => handleSubmit()}
+                isLoading={isLoading}
+                loadingText='Saving'
               >
                 Submit
               </Button>
