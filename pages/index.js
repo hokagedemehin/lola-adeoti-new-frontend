@@ -7,9 +7,18 @@ import axios from 'axios';
 import Featured from '../components/home/Featured';
 import Popular from '../components/home/Popular';
 import Notification from '../components/home/Notification';
+import TawkTo from 'tawkto-react';
+import { useEffect } from 'react';
 const qs = require('qs');
 
 export default function Home({ campaign, personality, featured, popular }) {
+  useEffect(() => {
+    new TawkTo(
+      process.env.NEXT_PUBLIC_PROPERTY_ID,
+      process.env.NEXT_PUBLIC_TAWK_ID
+    );
+  }, []);
+
   return (
     <Layout
       name='Home'

@@ -24,13 +24,18 @@ import {
   Tabs,
   Text,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 const qs = require('qs');
 
 const ProductDetails = ({ product }) => {
   // console.log('product details:>> ', product);
-  const { globalCurr, userID, setUserID, cartInfo, setCartInfo } = useGlobal();
+  const URL =
+    process.env.NODE_ENV !== 'production'
+      ? 'http://localhost:1337'
+      : 'https://lola-adeoti-new-backend.herokuapp.com';
+  const { globalCurr, userID, cartInfo, setCartInfo } = useGlobal();
   const [varImg, setVarImg] = useState(null);
   const [varName, setVarName] = useState(null);
   const [varColor, setVarColor] = useState(null);
@@ -40,7 +45,8 @@ const ProductDetails = ({ product }) => {
   const [cartLoad, setCartLoad] = useState(false);
   const [indexID, setIndexID] = useState(null);
   const [qty, setQty] = useState(1);
-  console.log(setQty, userID, setUserID);
+
+  // console.log(userID, setUserID);
   // const [isLoading, setIsLoading] = useState(false);
   const [modalLoading, setModalLoading] = useState(false);
   const [formValue, setFormValue] = useState({});
@@ -54,10 +60,7 @@ const ProductDetails = ({ product }) => {
   const handleNotify = async () => {
     try {
       setModalLoading(true);
-      const URL =
-        process.env.NODE_ENV !== 'production'
-          ? 'http://localhost:1337'
-          : 'https://lola-adeoti-new-backend.herokuapp.com';
+
       await axios.post(`${URL}/api/bagnotifications`, {
         data: {
           variantId: varID,
@@ -85,7 +88,7 @@ const ProductDetails = ({ product }) => {
   };
 
   const handleChange = (value) => {
-    console.log(value.target.value);
+    setQty(+value.target.value);
   };
 
   const handleVariant = (val, elem, id) => {
@@ -93,6 +96,7 @@ const ProductDetails = ({ product }) => {
     setVarImg(val?.attributes?.image?.data?.attributes?.url);
     setVarName(elem?.attributes?.name);
     setVarColor(val?.attributes?.color);
+    setQty(1);
     setVarID(val?.id);
     setIndexID(id);
     setVarQty(val?.attributes?.quantity);
@@ -106,29 +110,110 @@ const ProductDetails = ({ product }) => {
     }
   };
 
-  const handleCart = () => {
-    if (!cartInfo) {
-      const id = nanoid();
-      setCartInfo({
-        cartId: id,
-        quantity: qty,
-        nairaPrice: product?.attributes?.nairaSalePrice,
-        dollarPrice: product?.attributes?.dollarSalePrice,
-        totalNaira: product?.attributes?.nairaSalePrice * qty,
-        totalDollar: product?.attributes?.dollarSalePrice * qty,
-        variantId: varID,
+  const handleCart = async () => {
+    const id = nanoid();
+    const link = `/product/${product?.id}/${product?.attributes?.slug}`;
+    const newCart = {
+      cartId: id,
+      strapiId: null,
+      name: product?.attributes?.name,
+      color: product?.attributes?.variants?.data[indexID]?.attributes?.color,
+      link: link,
+      image:
+        product?.attributes?.variants?.data[indexID]?.attributes?.image?.data
+          ?.attributes?.url,
+      quantity: qty,
+      nairaPrice: product?.attributes?.nairaSalePrice,
+      dollarPrice: product?.attributes?.dollarSalePrice,
+      // totalNaira: +product?.attributes?.nairaSalePrice * +qty,
+      // totalDollar: +product?.attributes?.dollarSalePrice * +qty,
+      variantId: varID,
+      anonuser: userID?.anonID,
+      variant: varID,
+      variantQty: varQty,
+    };
+    // console.log('newCart', newCart);
+    const arr = {
+      cartId: id,
+      variantId: varID,
+      datID: null,
+    };
+    if (cartInfo.length === 0) {
+      const { data } = await axios.post(`${URL}/api/carts`, {
+        data: newCart,
       });
-      const arr = {
-        cartId: id,
-        quantity: qty,
-        nairaPrice: product?.attributes?.nairaSalePrice,
-        dollarPrice: product?.attributes?.dollarSalePrice,
-        totalNaira: product?.attributes?.nairaSalePrice * qty,
-        totalDollar: product?.attributes?.dollarSalePrice * qty,
-        variantId: varID,
-      };
-      const stringifyCart = JSON.stringify(arr);
-      localStorage.setItem('lola-cart', stringifyCart);
+      const newID = data?.data?.id;
+      newCart.strapiId = newID;
+      arr.datID = newID;
+      localStorage.setItem('lola-cart', JSON.stringify({ [varID]: arr }));
+      // const query = qs.stringify(
+      //   {
+      //     filters: {
+      //       cartId: {
+      //         $eq: elem?.cartId.toString(),
+      //       },
+      //     },
+      //   },
+      //   {
+      //     encodeValuesOnly: true,
+      //   }
+      // );
+      await axios.put(`${URL}/api/carts/${newID}`, {
+        data: { strapiId: newID },
+      });
+      // localStorage.setItem('lola-cart-1', JSON.stringify({[varID]: newCart}))
+      setCartInfo([newCart]);
+      toast({
+        title: 'Added to cart 🎉',
+        description: 'Open your cart to see your bags',
+        status: 'success',
+        // duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      const carts = JSON.parse(localStorage.getItem('lola-cart'));
+      // const carts1 = JSON.parse(localStorage.getItem('lola-cart-1'));
+
+      const cartKeys = Object.keys(carts);
+      // const cartKeys1 = Object.keys(carts1);
+
+      if (!cartKeys.includes(newCart.variantId.toString())) {
+        const { data } = await axios.post(`${URL}/api/carts`, {
+          data: newCart,
+        });
+        const newID = data?.data?.id;
+        newCart.strapiId = newID;
+        arr.datID = newID;
+        const newCart1 = Object.assign(carts, {
+          [varID]: arr,
+        });
+        // const newCart2 = Object.assign(carts1, {
+        //   [varID]: newCart,
+        // });
+
+        localStorage.setItem('lola-cart', JSON.stringify(newCart1));
+        await axios.put(`${URL}/api/carts/${newID}`, {
+          data: { strapiId: newID },
+        });
+        // localStorage.setItem('lola-cart-1', JSON.stringify(newCart2));
+        setCartInfo([...cartInfo, newCart]);
+        toast({
+          title: 'Added to cart 🎉',
+          description: 'Open your cart to see your bags',
+          status: 'success',
+          // duration: 9000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: 'Bag already in cart 🛒',
+          description: 'Open your cart to see your bags',
+          status: 'info',
+          variant: 'left-accent',
+          // duration: 9000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -136,6 +221,8 @@ const ProductDetails = ({ product }) => {
     const length = end - start + 1;
     return Array.from({ length }, (_, i) => start + i);
   };
+
+  const toast = useToast();
 
   // console.log('range', range(1, 4));
 
@@ -230,35 +317,39 @@ const ProductDetails = ({ product }) => {
                   <div className='flex items-end gap-2'>
                     {globalCurr == 'naira' ? (
                       <div className='flex items-center space-x-2'>
-                        <Text className='text-xl font-bold md:text-2xl'>
+                        <Text className='font-semibold sm:text-lg'>
                           &#8358;{product?.attributes?.nairaSalePrice}
                         </Text>
                         <Text
                           as='s'
-                          className='text-sm font-semibold text-gray-400'
+                          className={`text-sm font-semibold text-gray-400 ${
+                            product?.attributes?.nairaSalePrice ==
+                            product?.attributes?.nairaPrice
+                              ? 'hidden'
+                              : ''
+                          }`}
                         >
                           &#8358;{product?.attributes?.nairaPrice}
                         </Text>
                       </div>
                     ) : (
                       <div className='flex items-center space-x-2'>
-                        <Text className='text-xl font-bold md:text-2xl'>
+                        <Text className='font-semibold sm:text-lg'>
                           &#x24;{product?.attributes?.dollarSalePrice}
                         </Text>
                         <Text
                           as='s'
-                          className='text-sm font-semibold text-gray-400'
+                          className={`text-sm font-semibold text-gray-400 ${
+                            product?.attributes?.dollarSalePrice ==
+                            product?.attributes?.dollarPrice
+                              ? 'hidden'
+                              : ''
+                          }`}
                         >
                           &#x24;{product?.attributes?.dollarPrice}
                         </Text>
                       </div>
                     )}
-                    {/* <span className='text-xl font-bold text-gray-800 md:text-2xl'>
-                      $15.00
-                    </span>
-                    <span className='mb-0.5 text-gray-500 line-through'>
-                      $30.00
-                    </span> */}
                   </div>
                 </div>
                 {/* <!-- price - end --> */}
@@ -269,7 +360,8 @@ const ProductDetails = ({ product }) => {
                     ''
                   ) : (
                     <Select
-                      placeholder='Quantity'
+                      // placeholder='Quantity'
+                      value={qty}
                       maxW='120px'
                       className='cursor-pointer'
                       onChange={(e) => handleChange(e)}
@@ -363,92 +455,6 @@ const ProductDetails = ({ product }) => {
                       Add to cart
                     </Button>
                   )}
-                  {/* {!cartLoad ? (
-                    <Button
-                      // href='#'
-
-                      colorScheme='purple'
-                      variant='solid'
-                      isDisabled={true}
-                    >
-                      Add to cart
-                    </Button>
-                  ) : varQty ? (
-                    <div className='flex flex-col space-y-2'>
-                      <Text className='text-xl font-bold text-red-700'>
-                        Out of Stock
-                      </Text>
-                      <Button
-                        onClick={onOpen}
-                        colorScheme='blue'
-                        variant='outline'
-                        ref={finalRef}
-                        // isDisabled={true}
-                      >
-                        Notify Me When Available
-                      </Button>
-                      <Modal
-                        initialFocusRef={initialRef}
-                        finalFocusRef={finalRef}
-                        isOpen={isOpen}
-                        onClose={onClose}
-                      >
-                        <ModalOverlay />
-                        <ModalContent>
-                          <ModalHeader>Notify Me</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody pb={6}>
-                            <Text className='mb-3 text-lg font-semibold'>
-                              We will notify you when this bag is available
-                            </Text>
-                            <FormControl>
-                              <FormLabel htmlFor='name'>Name</FormLabel>
-                              <Input
-                                onChange={(e) => handleForm(e)}
-                                name='name'
-                                id='name'
-                                ref={initialRef}
-                                placeholder='Name...'
-                              />
-                            </FormControl>
-
-                            <FormControl mt={4}>
-                              <FormLabel htmlFor='email'>Email</FormLabel>
-                              <Input
-                                onChange={(e) => handleForm(e)}
-                                name='email'
-                                id='email'
-                                placeholder='Email...'
-                                type='email'
-                              />
-                            </FormControl>
-                          </ModalBody>
-
-                          <ModalFooter>
-                            <Button
-                              onClick={() => handleNotify()}
-                              colorScheme='blue'
-                              mr={3}
-                              isLoading={modalLoading}
-                            >
-                              Send
-                            </Button>
-                            <Button onClick={onClose}>Close</Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
-                    </div>
-                  ) : (
-                    <Button
-                      // href='#'
-                      onClick={() => handleCart()}
-                      colorScheme='purple'
-                      variant='solid'
-                      // className='inline-block flex-1 rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-600 focus-visible:ring active:bg-indigo-700 sm:flex-none md:text-base'
-                    >
-                      Add to cart
-                    </Button>
-                  )} */}
                 </div>
                 {/* <!-- cart buttons - end --> */}
               </div>
@@ -469,7 +475,92 @@ const ProductDetails = ({ product }) => {
                     <Text>{product?.attributes?.description}</Text>
                   </TabPanel>
                   <TabPanel>
-                    <Text>review</Text>
+                    <div className=' py-4 sm:py-6'>
+                      <div className='mx-auto max-w-screen-lg px-2 md:px-4'>
+                        <div className='mb-4 flex items-center border-b py-4'>
+                          <Button
+                            // href='#'
+                            className='inline-block rounded-lg border bg-white px-4 py-2 text-center text-sm font-semibold text-gray-500 outline-none ring-indigo-300 transition duration-100 hover:bg-gray-100 focus-visible:ring active:bg-gray-200 md:px-8 md:py-3 md:text-base'
+                          >
+                            Write a review
+                          </Button>
+                        </div>
+
+                        <div className='divide-y'>
+                          {/* <!-- review - start --> */}
+                          <div className='flex flex-col gap-3 py-4 md:py-8'>
+                            <div>
+                              <span className='block text-sm font-bold'>
+                                John McCulling
+                              </span>
+                              <span className='block text-sm text-gray-500'>
+                                August 28, 2021
+                              </span>
+                            </div>
+
+                            {/* <!-- stars - start --> */}
+                            <div className='-ml-1 flex gap-0.5'>
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                className='h-5 w-5 text-yellow-400'
+                                viewBox='0 0 20 20'
+                                fill='currentColor'
+                              >
+                                <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                              </svg>
+
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                className='h-5 w-5 text-yellow-400'
+                                viewBox='0 0 20 20'
+                                fill='currentColor'
+                              >
+                                <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                              </svg>
+
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                className='h-5 w-5 text-yellow-400'
+                                viewBox='0 0 20 20'
+                                fill='currentColor'
+                              >
+                                <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                              </svg>
+
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                className='h-5 w-5 text-yellow-400'
+                                viewBox='0 0 20 20'
+                                fill='currentColor'
+                              >
+                                <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                              </svg>
+
+                              <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                className='h-5 w-5 text-yellow-400'
+                                viewBox='0 0 20 20'
+                                fill='currentColor'
+                              >
+                                <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                              </svg>
+                            </div>
+                            {/* <!-- stars - end --> */}
+
+                            <p className='text-gray-600'>
+                              This is a section of some simple filler text, also
+                              known as placeholder text. It shares some
+                              characteristics of a real written text but is
+                              random or otherwise generated. It may be used to
+                              display a sample of fonts or generate text for
+                              testing.
+                            </p>
+                          </div>
+                          {/* <!-- review - end --> */}
+                        </div>
+                      </div>
+                    </div>
+                    ;
                   </TabPanel>
                 </TabPanels>
               </Tabs>
