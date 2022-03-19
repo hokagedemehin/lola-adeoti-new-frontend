@@ -1,12 +1,14 @@
 import '../styles/globals.css';
 import 'antd/dist/antd.css';
 // import 'keen-slider/keen-slider.min.css';
+// import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 import { ChakraProvider } from '@chakra-ui/react';
 import ProgressBar from '@badrap/bar-of-progress';
 import Router from 'next/router';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { DefaultSeo } from 'next-seo';
 import GlobalProvider from '../utils/context/GlobalData';
+import { ReactQueryDevtools } from 'react-query/devtools';
 // import SEO from '../next-seo.config';
 
 const progress = new ProgressBar({
@@ -61,6 +63,11 @@ function MyApp({ Component, pageProps }) {
           }}
         />
         <GlobalProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <TawkMessengerReact
+            propertyId={process.env.NEXT_PUBLIC_PROPERTY_ID}
+            widgetId={process.env.NEXT_PUBLIC_TAWK_ID}
+          /> */}
           <Component {...pageProps} />
         </GlobalProvider>
       </ChakraProvider>

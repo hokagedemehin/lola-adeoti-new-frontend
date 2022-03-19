@@ -4,7 +4,7 @@ import Layout from '../../components/layout/Layout';
 
 const AboutPage = () => {
   return (
-    <Layout name='Home'>
+    <Layout name='About'>
       <div className='mt-20'>About Page</div>
     </Layout>
   );

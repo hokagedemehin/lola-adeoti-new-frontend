@@ -7,6 +7,12 @@ import logo_coloured2 from '../../public/logo/logo_coloured2.png';
 
 const Footer = () => {
   const year = new Date().getFullYear();
+  const handleActive = (val) => {
+    // e.preventDefault();
+    // setActive(val);
+    localStorage.setItem('active', val);
+  };
+
   return (
     <div>
       <div className='bg-gray-900'>
@@ -162,28 +168,40 @@ const Footer = () => {
               <nav className='flex flex-col gap-4'>
                 <div>
                   <Link href='/shop' passHref>
-                    <a className='text-gray-400 transition duration-100 hover:text-yellow-500 active:text-yellow-600'>
+                    <a
+                      onClick={() => handleActive('shop')}
+                      className='text-gray-400 transition duration-100 hover:text-yellow-500 active:text-yellow-600'
+                    >
                       Shop
                     </a>
                   </Link>
                 </div>
                 <div>
                   <Link href='/contact' passHref>
-                    <a className='text-gray-400 transition duration-100 hover:text-yellow-500 active:text-yellow-600'>
+                    <a
+                      onClick={() => handleActive('contact')}
+                      className='text-gray-400 transition duration-100 hover:text-yellow-500 active:text-yellow-600'
+                    >
                       Contact Us
                     </a>
                   </Link>
                 </div>
                 <div>
                   <Link href='/about' passHref>
-                    <a className='text-gray-400 transition duration-100 hover:text-yellow-500 active:text-yellow-600'>
+                    <a
+                      onClick={() => handleActive('about')}
+                      className='text-gray-400 transition duration-100 hover:text-yellow-500 active:text-yellow-600'
+                    >
                       About Us
                     </a>
                   </Link>
                 </div>
                 <div>
                   <Link href='/dashboard' passHref>
-                    <a className='text-gray-400 transition duration-100 hover:text-yellow-500 active:text-yellow-600'>
+                    <a
+                      onClick={() => handleActive('dashboard')}
+                      className='text-gray-400 transition duration-100 hover:text-yellow-500 active:text-yellow-600'
+                    >
                       My Account
                     </a>
                   </Link>
@@ -201,7 +219,10 @@ const Footer = () => {
               <nav className='flex flex-col gap-4'>
                 <div>
                   <Link href='/about' passHref>
-                    <a className='text-gray-400 transition duration-100 hover:text-yellow-500 active:text-yellow-600'>
+                    <a
+                      onClick={() => handleActive('about')}
+                      className='text-gray-400 transition duration-100 hover:text-yellow-500 active:text-yellow-600'
+                    >
                       Our Story
                     </a>
                   </Link>

@@ -90,7 +90,12 @@ const Featured = ({ data }) => {
                           </Text>
                           <Text
                             as='s'
-                            className='text-sm font-semibold text-gray-400'
+                            className={`text-sm font-semibold text-gray-400 ${
+                              elem?.attributes?.nairaSalePrice ==
+                              elem?.attributes?.nairaPrice
+                                ? 'hidden'
+                                : ''
+                            }`}
                           >
                             &#8358;{elem?.attributes?.nairaPrice}
                           </Text>
@@ -102,7 +107,12 @@ const Featured = ({ data }) => {
                           </Text>
                           <Text
                             as='s'
-                            className='text-sm font-semibold text-gray-400'
+                            className={`text-sm font-semibold text-gray-400 ${
+                              elem?.attributes?.dollarSalePrice ==
+                              elem?.attributes?.dollarPrice
+                                ? 'hidden'
+                                : ''
+                            }`}
                           >
                             &#x24;{elem?.attributes?.dollarPrice}
                           </Text>
