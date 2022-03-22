@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 import { Text } from '@chakra-ui/react';
@@ -67,14 +67,17 @@ const RelatedProducts = ({ id }) => {
     return array;
   }
 
-  if (isSuccess) {
-    const data1 = data?.data.filter((elem) => elem?.id !== id);
-    // console.log(data1);
-    const data2 = shuffle(data1);
-    const data3 = data2.slice(0, 4);
-    // console.log(finalData);
-    setFinalData(data3);
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      const data1 = data?.data.filter((elem) => elem?.id !== id);
+      // console.log(data1);
+      const data2 = shuffle(data1);
+      const data3 = data2.slice(0, 4);
+      // console.log(finalData);
+      setFinalData(data3);
+    }
+  }, []);
+
   return (
     <div className='w-full'>
       <div className='mx-2 flex flex-col space-y-5'>
