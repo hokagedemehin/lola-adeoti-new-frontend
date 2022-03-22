@@ -85,7 +85,7 @@ const NavBar = () => {
   };
   useEffect(() => {
     let val = '';
-    console.log(window.location);
+    // console.log(window.location);
     if (window.location.pathname === '/') {
       localStorage.setItem('active', 'home');
       val = localStorage.getItem('active');

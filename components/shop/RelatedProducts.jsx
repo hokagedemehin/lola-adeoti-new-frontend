@@ -13,6 +13,7 @@ const RelatedProducts = ({ id }) => {
     process.env.NODE_ENV !== 'production'
       ? 'http://localhost:1337'
       : 'https://lola-adeoti-new-backend.herokuapp.com';
+
   const { globalCurr } = useGlobal();
 
   const [finalData, setFinalData] = useState([]);
@@ -55,8 +56,8 @@ const RelatedProducts = ({ id }) => {
     'products',
     async () => await handleProducts()
   );
-  console.log('data :>> ', data);
-  console.log('isSuccess :>> ', isSuccess);
+  // console.log('data :>> ', data);
+  // console.log('isSuccess :>> ', isSuccess);
 
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {

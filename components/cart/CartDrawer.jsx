@@ -25,7 +25,7 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
   const { cartInfo, globalCurr, setCartInfo } = useGlobal();
   const [updateDisable, setUpdateDisable] = useState(true);
   const router = useRouter();
-  console.log('cart drawer :>> ', cartInfo);
+  // console.log('cart drawer :>> ', cartInfo);
   const nairaTotal = cartInfo.reduce((prev, curr) => {
     const naira = +curr?.quantity * +curr?.nairaPrice;
     // const dollar = +curr?.quantity * +curr?.dollarPrice

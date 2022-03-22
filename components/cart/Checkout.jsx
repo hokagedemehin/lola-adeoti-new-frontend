@@ -33,8 +33,8 @@ import order_complete from '../../public/cart/order_complete.png';
 const CheckoutComponent = () => {
   const { cartInfo, setCartInfo, globalCurr, userID } = useGlobal();
   const router = useRouter();
-  console.log('userID', userID);
-  console.log('checkout cart :>> ', cartInfo);
+  // console.log('userID', userID);
+  // console.log('checkout cart :>> ', cartInfo);
   const { Step } = Steps;
   const [currentStep, setCurrentStep] = useState(0);
   // const [noCart, setNoCart] = useState(false)
@@ -52,7 +52,7 @@ const CheckoutComponent = () => {
     deliveryAddress: '',
     additionalInfo: '',
   });
-  console.log('formValue', formValue);
+  // console.log('formValue', formValue);
   // if (cartInfo.length === 0) {
   //   return () => router.push('/shop');
   // }
@@ -76,7 +76,7 @@ const CheckoutComponent = () => {
   // const [currentComp, setCurrentComp] = useState('address');
   useEffect(() => {
     // ? set the cart info fresh here
-    console.log('fire');
+    // console.log('fire');
     const address = localStorage.getItem('lola-address');
     const cleanedAddress = JSON.parse(address);
     setFormValue(cleanedAddress);
@@ -85,7 +85,7 @@ const CheckoutComponent = () => {
     // }
   }, []);
   const toast = useToast();
-  console.log('currentstep', currentStep);
+  // console.log('currentstep', currentStep);
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -212,7 +212,7 @@ const CheckoutComponent = () => {
         setCurrentStep(currentStep + 1);
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -682,14 +682,14 @@ const CheckoutComponent = () => {
             onClick={() => {
               handleFlutterPayment({
                 callback: (response) => {
-                  console.log(response);
+                  // console.log(response);
                   if (response.status == 'successful') {
-                    console.log(response);
+                    // console.log(response);
                     handlePay(response);
                   } else {
-                    console.log('not working');
+                    // console.log('not working');
 
-                    // console.error(response);
+                    console.error('payment not working');
                   }
                   closePaymentModal(); // this will close the modal programmatically
                 },
