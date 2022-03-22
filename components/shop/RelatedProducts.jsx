@@ -17,28 +17,28 @@ const RelatedProducts = ({ id }) => {
   const { globalCurr } = useGlobal();
 
   const [finalData, setFinalData] = useState([]);
-
+  console.log('finalData', finalData);
   const [sliderRef] = useKeenSlider({
     loop: true,
     mode: 'free-snap',
     breakpoints: {
       '(min-width: 640px)': {
         slides: {
-          origin: 'center',
+          // origin: 'center',
           perView: 2,
           spacing: 15,
         },
       },
       '(min-width: 1000px)': {
         slides: {
-          origin: 'center',
+          // origin: 'center',
           perView: 3,
           spacing: 15,
         },
       },
     },
     slides: {
-      origin: 'center',
+      // origin: 'center',
       perView: 2,
       spacing: 15,
     },
@@ -56,6 +56,10 @@ const RelatedProducts = ({ id }) => {
     'products',
     async () => await handleProducts()
   );
+  // const data1 = data?.data.filter((elem) => elem?.id !== id);
+  // // console.log(data1);
+  // const data2 = shuffle(data1);
+  // const data3 = data2.slice(0, 4);
   // console.log('data :>> ', data);
   // console.log('isSuccess :>> ', isSuccess);
 
@@ -76,20 +80,17 @@ const RelatedProducts = ({ id }) => {
       // console.log(finalData);
       setFinalData(data3);
     }
-  }, []);
+  }, [isSuccess, data]);
 
   return (
     <div className='w-full'>
       <div className='mx-2 flex flex-col space-y-5'>
         <Text className='text-xl font-bold'>Related Products</Text>
-        <div
-          ref={sliderRef}
-          className='keen-slider flex items-center justify-center'
-        >
-          {isSuccess &&
-            finalData.length !== 0 &&
-            finalData.map((elem, id) => (
-              // data?.data.map((elem, id) => (
+        {isSuccess && finalData.length !== 0 && (
+          <div ref={sliderRef} className='keen-slider '>
+            {/* {isSuccess && */}
+
+            {finalData.map((elem, id) => (
               <div key={id} className='keen-slider__slide'>
                 <div className='flex items-center justify-center rounded-lg p-3 transition duration-300 ease-in-out'>
                   <Link
@@ -161,7 +162,8 @@ const RelatedProducts = ({ id }) => {
                 </div>
               </div>
             ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

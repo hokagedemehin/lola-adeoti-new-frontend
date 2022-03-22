@@ -24,7 +24,7 @@ import {
   RegionDropdown,
   // CountryRegionData,
 } from 'react-country-region-selector';
-// import { usePaystackPayment } from 'react-paystack';
+import { usePaystackPayment } from 'react-paystack';
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
@@ -86,7 +86,8 @@ const CheckoutComponent = () => {
   }, []);
   const toast = useToast();
   // console.log('currentstep', currentStep);
-
+  const amount = globalCurr == 'naira' ? nairaTotal : dollarTotal;
+  const currency = globalCurr == 'naira' ? 'NGN' : 'USD';
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -165,18 +166,24 @@ const CheckoutComponent = () => {
         state: formValue?.state,
         deliveryAddress: formValue?.deliveryAddress,
         additionalInfo: formValue?.additionalInfo,
-        transactionId: response?.transaction_id.toString(),
-        flwRef: response?.flw_ref,
-        txRef: response?.tx_ref.toString(),
-        amount: +response?.amount,
-        currency: response?.currency,
+        amount: +amount,
+        currency: currency,
+        payment: globalCurr == 'dollar' ? 'Flutterwave' : 'Paystack',
+        transactionId:
+          globalCurr === 'dollar'
+            ? response?.transaction_id.toString()
+            : response?.transaction,
+        ref: globalCurr === 'dollar' ? response?.flw_ref : response?.reference,
+        trxRef:
+          globalCurr === 'dollar'
+            ? response?.tx_ref.toString()
+            : response?.trxref,
         status: response?.status,
         anonuser: anonid,
         address: addressid,
       };
       const { data: orderData } = await axios.post(
         `${URL}/api/confirmedcarts`,
-        // `http://localhost:1337/api/confirmedcarts`,
         {
           data: newOrder,
         }
@@ -190,7 +197,7 @@ const CheckoutComponent = () => {
         );
         // console.log(variant);
         const newQuantity =
-          +variant?.data?.attributes?.quantity - +elem?.quantity;
+          variant?.data?.attributes?.quantity - +elem?.quantity;
         // console.log('newQuantity', newQuantity);
         // *** change the cart status ***
         await axios.put(`${URL}/api/carts/${elem?.strapiId}`, {
@@ -206,20 +213,46 @@ const CheckoutComponent = () => {
           },
         });
         // console.log('varData', varData);
-        //  ***clear cart everywhere****
-        localStorage.removeItem('lola-cart');
-        setCartInfo([]);
-        setCurrentStep(currentStep + 1);
       });
+      //  ***clear cart everywhere****
+      localStorage.removeItem('lola-cart');
+      setCartInfo([]);
+      setCurrentStep(currentStep + 1);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const amount = globalCurr == 'naira' ? nairaTotal : dollarTotal;
-  const currency = globalCurr == 'naira' ? 'NGN' : 'USD';
+  const handlePaymentOption = async () => {
+    if (globalCurr == 'dollar') {
+      handleFlutterPayment({
+        callback: async (response) => {
+          console.log(response);
+          if (response?.status == 'successful') {
+            // console.log(response);
+            await handlePay(response);
+          } else {
+            // console.log('not working');
 
-  const config = {
+            console.error('payment not working');
+          }
+          closePaymentModal(); // this will close the modal programmatically
+        },
+        onClose: () => {
+          console.log('closed payment');
+        },
+      });
+    } else {
+      initializePayment(onSuccess, onClose);
+    }
+  };
+
+  /**
+   * **************************************************************
+   * FLUTTERWAVE CONFIG
+   * ****************************************************************
+   */
+  const flutterwaveConfig = {
     public_key: process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_API,
     tx_ref: Date.now(),
     amount: amount,
@@ -239,7 +272,32 @@ const CheckoutComponent = () => {
     },
   };
 
-  const handleFlutterPayment = useFlutterwave(config);
+  /**
+   * *****************************************************************
+   * PAYSTACK CONFIG
+   * ****************************************************************
+   */
+  const handleFlutterPayment = useFlutterwave(flutterwaveConfig);
+
+  const payStackConfig = {
+    reference: new Date().getTime().toString(),
+    email: `${formValue?.emailAddress}`,
+    amount: amount * 100,
+    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_API,
+  };
+
+  const onSuccess = async (reference) => {
+    // Implementation for whatever you want to do with reference and after success call.
+    console.log(reference);
+    await handlePay(reference);
+  };
+
+  const onClose = () => {
+    // implementation for  whatever you want to do when the Paystack dialog closed.
+    console.log('closed');
+  };
+
+  const initializePayment = usePaystackPayment(payStackConfig);
 
   return (
     <div className='mx-auto mb-5 max-w-screen-xl sm:py-5'>
@@ -679,25 +737,7 @@ const CheckoutComponent = () => {
             isDisabled={cartInfo.length === 0}
             rightIcon={<BsCreditCard />}
             // onClick={() => handlePay()}
-            onClick={() => {
-              handleFlutterPayment({
-                callback: (response) => {
-                  // console.log(response);
-                  if (response.status == 'successful') {
-                    // console.log(response);
-                    handlePay(response);
-                  } else {
-                    // console.log('not working');
-
-                    console.error('payment not working');
-                  }
-                  closePaymentModal(); // this will close the modal programmatically
-                },
-                onClose: () => {
-                  console.log('closed payment');
-                },
-              });
-            }}
+            onClick={() => handlePaymentOption()}
           >
             Pay Now
           </Button>
