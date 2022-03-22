@@ -14,6 +14,10 @@ class MyDocument extends Document {
             rel='stylesheet'
             href='https://unpkg.com/aos@next/dist/aos.css'
           />
+          <meta
+            name='google-site-verification'
+            content='wp3A-ezGXoPfSCif3ObQc4BSJrx_fvFYvamsIYP27gk'
+          />
         </Head>
         <body>
           <Main />
