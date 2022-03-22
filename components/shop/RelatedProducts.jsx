@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 import { Text } from '@chakra-ui/react';
@@ -14,6 +14,8 @@ const RelatedProducts = ({ id }) => {
       ? 'http://localhost:1337'
       : 'https://lola-adeoti-new-backend.herokuapp.com';
   const { globalCurr } = useGlobal();
+
+  const [finalData, setFinalData] = useState([]);
 
   const [sliderRef] = useKeenSlider({
     loop: true,
@@ -64,10 +66,14 @@ const RelatedProducts = ({ id }) => {
     return array;
   }
 
-  const data1 = data?.data.filter((elem) => elem?.id !== id);
-  const data2 = shuffle(data1);
-  const finalData = data2.slice(0, 5);
-  console.log(finalData);
+  if (isSuccess) {
+    const data1 = data?.data.filter((elem) => elem?.id !== id);
+    // console.log(data1);
+    const data2 = shuffle(data1);
+    const data3 = data2.slice(0, 4);
+    // console.log(finalData);
+    setFinalData(data3);
+  }
   return (
     <div className='w-full'>
       <div className='mx-2 flex flex-col space-y-5'>
@@ -77,6 +83,7 @@ const RelatedProducts = ({ id }) => {
           className='keen-slider flex items-center justify-center'
         >
           {isSuccess &&
+            finalData.length !== 0 &&
             finalData.map((elem, id) => (
               // data?.data.map((elem, id) => (
               <div key={id} className='keen-slider__slide'>
