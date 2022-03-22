@@ -27,6 +27,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
+import RelatedProducts from '../../components/shop/RelatedProducts';
 const qs = require('qs');
 
 const ProductDetails = ({ product }) => {
@@ -141,6 +142,7 @@ const ProductDetails = ({ product }) => {
     if (cartInfo.length === 0) {
       const { data } = await axios.post(`${URL}/api/carts`, {
         data: newCart,
+        variant: varID,
       });
       const newID = data?.data?.id;
       newCart.strapiId = newID;
@@ -180,6 +182,7 @@ const ProductDetails = ({ product }) => {
       if (!cartKeys.includes(newCart.variantId.toString())) {
         const { data } = await axios.post(`${URL}/api/carts`, {
           data: newCart,
+          variant: varID,
         });
         const newID = data?.data?.id;
         newCart.strapiId = newID;
@@ -234,6 +237,7 @@ const ProductDetails = ({ product }) => {
       <div className='pt-16'>
         <div className=' py-6 sm:py-8 lg:py-12'>
           <div className='mx-auto max-w-screen-lg px-4 md:px-8'>
+            {/* product detail start */}
             <div className='grid gap-8 md:grid-cols-2'>
               {/* <!-- images - start --> */}
               <div className=''>
@@ -460,6 +464,8 @@ const ProductDetails = ({ product }) => {
               </div>
               {/* <!-- content - end --> */}
             </div>
+            {/* product detail end  */}
+
             {/* <!-- description - start --> */}
             <div className='mt-10 md:mt-16 lg:mt-20'>
               <Tabs isFitted variant='enclosed'>
@@ -569,6 +575,12 @@ const ProductDetails = ({ product }) => {
               </div> */}
             </div>
             {/* <!-- description - end --> */}
+
+            {/* related product start */}
+            <div className='mt-6 flex'>
+              <RelatedProducts id={product?.id} />
+            </div>
+            {/* related products end */}
           </div>
         </div>
       </div>

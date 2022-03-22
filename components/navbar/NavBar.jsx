@@ -47,7 +47,9 @@ const NavBar = () => {
    * ? cart is a draw that has the details in it
    * TODO: work out the logic of a guest making a purchase without login
    */
-  const { setGlobalCurr } = useGlobal();
+  const { setGlobalCurr, cartInfo } = useGlobal();
+
+  const cartTotal = cartInfo.reduce((prev, curr) => prev + +curr?.quantity, 0);
 
   const user = true;
   const router = useRouter();
@@ -82,8 +84,29 @@ const NavBar = () => {
     localStorage.setItem('active', val);
   };
   useEffect(() => {
-    const val = localStorage.getItem('active');
-
+    let val = '';
+    console.log(window.location);
+    if (window.location.pathname === '/') {
+      localStorage.setItem('active', 'home');
+      val = localStorage.getItem('active');
+    } else if (window.location.pathname === '/shop') {
+      localStorage.setItem('active', 'shop');
+      val = localStorage.getItem('active');
+    } else if (window.location.pathname === '/about') {
+      localStorage.setItem('active', 'about');
+      val = localStorage.getItem('active');
+    } else if (window.location.pathname === '/contact') {
+      localStorage.setItem('active', 'contact');
+      val = localStorage.getItem('active');
+    } else if (window.location.pathname === '/checkout') {
+      localStorage.setItem('active', 'checkout');
+      val = localStorage.getItem('active');
+    } else if (window.location.pathname === '/dashboard') {
+      localStorage.setItem('active', 'dashboard');
+      val = localStorage.getItem('active');
+    } else {
+      val = localStorage.getItem('active');
+    }
     setActive(val);
 
     AOS.init();
@@ -253,7 +276,7 @@ const NavBar = () => {
               // icon={<BsCartCheck fontSize='1.5rem' />}
             >
               <Badge
-                count={1}
+                count={cartTotal}
                 overflowCount={10}
                 style={{ backgroundColor: '#1e40af' }}
               >
@@ -436,7 +459,7 @@ const NavBar = () => {
               // icon={<BsCartCheck fontSize='1.5rem' />}
             >
               <Badge
-                count={1}
+                count={cartTotal}
                 overflowCount={10}
                 style={{ backgroundColor: '#1e40af' }}
               >

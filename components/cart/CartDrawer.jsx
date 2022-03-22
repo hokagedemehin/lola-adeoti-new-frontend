@@ -19,10 +19,12 @@ import React, { useState } from 'react';
 import { useGlobal } from '../../utils/context/GlobalData';
 import empty_cart from '../../public/cart/empty_cart.png';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
   const { cartInfo, globalCurr, setCartInfo } = useGlobal();
-
+  const [updateDisable, setUpdateDisable] = useState(true);
+  const router = useRouter();
   console.log('cart drawer :>> ', cartInfo);
   const nairaTotal = cartInfo.reduce((prev, curr) => {
     const naira = +curr?.quantity * +curr?.nairaPrice;
@@ -49,6 +51,7 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
       : 'https://lola-adeoti-new-backend.herokuapp.com';
 
   const handleChange = (e, elem) => {
+    setUpdateDisable(false);
     let numm = [];
     cartInfo.forEach((val) => {
       if (val?.variantId == elem?.variantId) {
@@ -113,14 +116,21 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
       toast({
         title: 'Cart cleared 🚨.',
         description: 'Your Cart is now empty.',
-        status: 'error',
+        status: 'info',
         position: 'top',
+        variant: 'top-accent',
         // duration: 9000,
         isClosable: true,
       });
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleCheckout = () => {
+    setUpdateDisable(true);
+    router.push('/checkout');
+    localStorage.setItem('active', 'checkout');
   };
 
   const range = (start, end) => {
@@ -200,7 +210,7 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
                           </a>
                         </Link>
 
-                        {/* name | color | price */}
+                        {/* name | color | quantity | price */}
                         <div className='flex flex-1 flex-col justify-between py-4 pr-2'>
                           {/* name | color */}
                           <div>
@@ -249,9 +259,9 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
                           </div>
                         </div>
                       </div>
-                      {/* quantity | delete | price */}
+                      {/*delete | total */}
                       <div className='flex w-full justify-between py-2 px-4 sm:w-auto'>
-                        {/* quantity | delete */}
+                        {/*delete */}
                         <div className='flex flex-col items-start justify-center gap-2'>
                           <Button
                             variant='ghost'
@@ -363,11 +373,16 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
                   onClick={() => updateCart()}
                   variant='solid'
                   colorScheme='blue'
+                  isDisabled={updateDisable}
                   isLoading={updateLoading}
                 >
                   Update Cart
                 </Button>
-                <Button variant='solid' colorScheme='teal'>
+                <Button
+                  onClick={() => handleCheckout()}
+                  variant='solid'
+                  colorScheme='teal'
+                >
                   Checkout
                 </Button>
               </div>
