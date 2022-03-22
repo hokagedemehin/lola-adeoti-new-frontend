@@ -65,7 +65,7 @@ const ProductList = ({ data }) => {
   };
 
   return (
-    <div className='pt-5 pb-5 sm:pt-10'>
+    <div className='mx-auto max-w-4xl pt-5 pb-5 sm:pt-10'>
       {/* search and sort */}
       <div className='flex w-fit space-x-4'>
         {/* search */}
@@ -86,7 +86,7 @@ const ProductList = ({ data }) => {
         </Select>
       </div>
       {/* product list */}
-      <div className='flex flex-wrap items-center justify-center gap-5 py-4'>
+      <div className=' flex  flex-wrap items-center justify-center gap-5 py-4'>
         {newData &&
           newData.map((elem, id) => (
             <div
