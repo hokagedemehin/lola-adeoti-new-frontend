@@ -9,7 +9,6 @@ export default function GlobalDataContext({ children }) {
   const [globalCurr, setGlobalCurr] = useState(null);
   const [userID, setUserID] = useState(null);
   const [cartInfo, setCartInfo] = useState([]);
-  // const [cartIds, setCartIds] = useState([]);
 
   const URL =
     process.env.NODE_ENV !== 'production'
@@ -52,10 +51,6 @@ export default function GlobalDataContext({ children }) {
   useEffect(() => {
     const curr = localStorage.getItem('currency');
     setGlobalCurr(curr);
-    // console.log(window.location);
-    if (window.location.pathname === '/') {
-      localStorage.setItem('active', 'home');
-    }
   }, []);
 
   useEffect(() => {
@@ -66,18 +61,32 @@ export default function GlobalDataContext({ children }) {
         setUserID(cleanedAnon);
       } else {
         let id = nanoid();
-
+        let addressId = nanoid();
         const { data } = await axios.post(`${URL}/api/anonusers`, {
           data: {
             userId: id,
           },
         });
+        const { data: addressData } = await axios.post(`${URL}/api/addresses`, {
+          data: {
+            userId: addressId,
+            anonuser: data?.data?.id,
+          },
+        });
         // console.log('data', data);
         localStorage.setItem(
           'lola-userId',
-          JSON.stringify({ userID: id, anonID: data?.data?.id })
+          JSON.stringify({
+            userID: id,
+            anonID: data?.data?.id,
+            addressID: addressData?.data?.id,
+          })
         );
-        setUserID({ userID: id, anonID: data?.data?.id });
+        setUserID({
+          userID: id,
+          anonID: data?.data?.id,
+          addressID: addressData?.data?.id,
+        });
       }
     };
     handleUser();

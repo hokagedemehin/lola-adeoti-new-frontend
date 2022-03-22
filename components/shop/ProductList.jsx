@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useGlobal } from '../../utils/context/GlobalData';
 import { Pagination } from 'antd';
+import empty_search from '../../public/shop/empty_search.png';
 
 const ProductList = ({ data }) => {
   /**
@@ -21,7 +22,7 @@ const ProductList = ({ data }) => {
   const [totalPages, setTotalPages] = useState(data.length);
   // console.log('searchTerm :>> ', searchTerm);
 
-  const [pageSiz] = useState(2);
+  const [pageSiz] = useState(6);
 
   const [fullData, setFullData] = useState(data);
   let startData = fullData.slice(0, pageSiz);
@@ -163,6 +164,28 @@ const ProductList = ({ data }) => {
               </Link>
             </div>
           ))}
+
+        {newData.length === 0 && (
+          <div className='flex flex-col'>
+            <div className='relative flex h-80 w-80'>
+              <Image
+                src={empty_search}
+                layout='fill'
+                objectFit='contain'
+                placeholder='blur'
+                // blurDataURL={
+                //   elem?.attributes?.image?.data?.attributes?.formats?.small
+                //     ?.url
+                // }
+                alt='Empty Cart'
+                className=''
+              />
+            </div>
+            <Text className='text-center text-xl font-bold'>
+              No Search Result
+            </Text>
+          </div>
+        )}
       </div>
       <div className='flex items-center justify-center pt-5'>
         <Pagination
