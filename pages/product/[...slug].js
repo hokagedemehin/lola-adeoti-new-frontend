@@ -101,7 +101,7 @@ const ProductDetails = ({ product }) => {
     setVarID(val?.id);
     setIndexID(id);
     setVarQty(val?.attributes?.quantity);
-    if (val?.attributes?.quantity !== 0) {
+    if (val?.attributes?.quantity > 0) {
       setBtnLoad(true);
       // setVarQty(true);
       setCartLoad(false);
