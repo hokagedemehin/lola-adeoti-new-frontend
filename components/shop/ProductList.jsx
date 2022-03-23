@@ -177,7 +177,7 @@ const ProductList = ({ data }) => {
                 //   elem?.attributes?.image?.data?.attributes?.formats?.small
                 //     ?.url
                 // }
-                alt='Empty Cart'
+                alt='Empty Search'
                 className=''
               />
             </div>
