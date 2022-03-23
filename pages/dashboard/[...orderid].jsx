@@ -37,7 +37,7 @@ const DashboardDetails = () => {
     }
   );
 
-  const { isSuccess, isLoading, data } = useQuery(
+  const { isSuccess, data } = useQuery(
     ['orders details', id],
     async () => await handleOrders(),
     { enabled: !!id }
