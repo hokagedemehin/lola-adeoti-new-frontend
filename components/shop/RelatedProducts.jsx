@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 import { Text } from '@chakra-ui/react';
@@ -16,8 +16,8 @@ const RelatedProducts = ({ id }) => {
 
   const { globalCurr } = useGlobal();
 
-  const [finalData, setFinalData] = useState([]);
-  console.log('finalData', finalData);
+  // const [finalData, setFinalData] = useState([]);
+  // console.log('finalData', finalData);
   const [sliderRef] = useKeenSlider({
     loop: true,
     mode: 'free-snap',
@@ -56,41 +56,31 @@ const RelatedProducts = ({ id }) => {
     'products',
     async () => await handleProducts()
   );
-  // const data1 = data?.data.filter((elem) => elem?.id !== id);
+  // const data3=[]
+  const data1 = data?.data.filter((elem) => elem?.id !== id);
   // // console.log(data1);
-  // const data2 = shuffle(data1);
-  // const data3 = data2.slice(0, 4);
-  // console.log('data :>> ', data);
+  const data2 = shuffle(data1);
+  const data3 = data2?.slice(0, 4);
+  console.log('data :>> ', data3);
   // console.log('isSuccess :>> ', isSuccess);
 
   function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
+    for (let i = array?.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
   }
 
-  useEffect(() => {
-    if (isSuccess) {
-      const data1 = data?.data.filter((elem) => elem?.id !== id);
-      // console.log(data1);
-      const data2 = shuffle(data1);
-      const data3 = data2.slice(0, 4);
-      // console.log(finalData);
-      setFinalData(data3);
-    }
-  }, [isSuccess, data]);
-
   return (
     <div className='w-full'>
       <div className='mx-2 flex flex-col space-y-5'>
         <Text className='text-xl font-bold'>Related Products</Text>
-        {isSuccess && finalData.length !== 0 && (
+        {isSuccess && (
           <div ref={sliderRef} className='keen-slider '>
             {/* {isSuccess && */}
 
-            {finalData.map((elem, id) => (
+            {data3.map((elem, id) => (
               <div key={id} className='keen-slider__slide'>
                 <div className='flex items-center justify-center rounded-lg p-3 transition duration-300 ease-in-out'>
                   <Link
