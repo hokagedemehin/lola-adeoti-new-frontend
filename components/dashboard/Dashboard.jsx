@@ -65,7 +65,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className='pt-8'>
+    <div className='mx-auto max-w-screen-lg pt-8'>
       <Tabs variant='soft-rounded' colorScheme='green'>
         <TabList>
           <Tab>My Orders</Tab>
@@ -74,7 +74,7 @@ const Dashboard = () => {
         <TabPanels>
           <TabPanel>
             {/* <div className='grid grid-cols-2 gap-4 sm:flex sm:flex-wrap'> */}
-            <div className=' flex flex-wrap justify-center gap-2'>
+            <div className=' mx-auto flex max-w-4xl flex-wrap justify-center gap-2'>
               {data &&
                 sortedData?.map((elem, id) => (
                   <OrderCard key={id} elem={elem} />

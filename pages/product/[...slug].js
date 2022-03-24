@@ -17,6 +17,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  // Skeleton,
   Tab,
   TabList,
   TabPanel,
@@ -28,14 +29,51 @@ import {
 } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
 import RelatedProducts from '../../components/shop/RelatedProducts';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 const qs = require('qs');
 
-const ProductDetails = ({ product }) => {
+const ProductDetails = ({ products }) => {
+  // const product = products;
   // console.log('product details:>> ', product);
   const URL =
     process.env.NODE_ENV !== 'production'
       ? 'http://localhost:1337'
       : 'https://lola-adeoti-new-backend.herokuapp.com';
+  const router = useRouter();
+  let id = null;
+
+  if (router?.query?.slug) {
+    id = router?.query?.slug[0];
+  }
+  console.log(id);
+  const queryPopulate = qs.stringify(
+    {
+      populate: ['image', 'variants.image'],
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+
+  const handleProducts = async () => {
+    const { data } = await axios.get(
+      `${URL}/api/products/${id}?${queryPopulate}`
+      // `${URL}/api/anonusers/${userID?.anonID}?populate=*`
+    );
+    console.log(data);
+    return data?.data;
+  };
+  const {
+    data: product,
+    isSuccess,
+    isLoading,
+  } = useQuery(['products', id], async () => await handleProducts(), {
+    enabled: !!id,
+  });
+  // console.log('product', product);
+  // console.log('isSuccess', isSuccess);
+
   const { globalCurr, userID, cartInfo, setCartInfo } = useGlobal();
   const [varImg, setVarImg] = useState(null);
   const [varName, setVarName] = useState(null);
@@ -231,349 +269,690 @@ const ProductDetails = ({ product }) => {
 
   return (
     <Layout
-      name={`${product?.attributes?.name}`}
+      name={`${products?.attributes?.name}`}
       desc='Classic bag for everyone for every purpose and occassion'
     >
       <div className='pt-16'>
         <div className=' py-6 sm:py-8 lg:py-12'>
           <div className='mx-auto max-w-screen-lg px-4 md:px-8'>
             {/* product detail start */}
-            <div className='grid gap-8 md:grid-cols-2'>
-              {/* <!-- images - start --> */}
-              <div className=''>
-                <div className=''></div>
-                {/* large screens */}
-                <div className='hidden h-full w-full md:relative md:block '>
-                  <Image
-                    src={
-                      varImg && varName == product?.attributes?.name
-                        ? varImg
-                        : product?.attributes?.image?.data?.attributes?.url
-                    }
-                    layout='fill'
-                    objectFit='cover'
-                    // objectPosition='center'
-                    placeholder='blur'
-                    blurDataURL={
-                      product?.attributes?.image?.data?.attributes?.formats
-                        ?.small?.url
-                    }
-                    alt={product?.attributes?.name}
-                    className='transition delay-150 duration-500 ease-in-out hover:scale-110'
-                  />
-                </div>
-                {/* small screens */}
-                <div className='relative block h-72 w-full md:hidden '>
-                  <Image
-                    src={
-                      varImg && varName == product?.attributes?.name
-                        ? varImg
-                        : product?.attributes?.image?.data?.attributes?.url
-                    }
-                    layout='fill'
-                    objectFit='contain'
-                    placeholder='blur'
-                    blurDataURL={
-                      product?.attributes?.image?.data?.attributes?.formats
-                        ?.small?.url
-                    }
-                    alt={product?.attributes?.name}
-                    className='transition delay-150 duration-500 ease-in-out hover:scale-110'
-                  />
-                </div>
-              </div>
-              {/* <!-- images - end --> */}
-
-              {/* <!-- content - start --> */}
-              <div className='md:py-2'>
-                {/* <!-- name - start --> */}
-                <div className='mb-2 md:mb-3'>
-                  <h2 className='text-2xl font-bold text-gray-800 lg:text-3xl'>
-                    {product?.attributes?.name}
-                  </h2>
-                </div>
-                {/* <!-- name - end --> */}
-
-                {/* <!-- color - start --> */}
-                <div className='mb-4 md:mb-6'>
-                  <div className='mb-3 flex space-x-2 text-sm font-semibold text-gray-500 sm:text-lg'>
-                    <Text>Color:</Text>
-                    <Text className='text-zinc-700'>
-                      {varColor ? varColor : 'Choose a color'}
-                    </Text>
+            {isSuccess && (
+              <div className='grid gap-8 md:grid-cols-2'>
+                {/* <!-- images - start --> */}
+                <div className=''>
+                  <div className=''></div>
+                  {/* large screens */}
+                  <div className='hidden h-full w-full md:relative md:block '>
+                    <Image
+                      src={
+                        varImg && varName == product?.attributes?.name
+                          ? varImg
+                          : product?.attributes?.image?.data?.attributes?.url
+                      }
+                      layout='fill'
+                      objectFit='cover'
+                      // objectPosition='center'
+                      placeholder='blur'
+                      blurDataURL={
+                        product?.attributes?.image?.data?.attributes?.formats
+                          ?.small?.url
+                      }
+                      alt={product?.attributes?.name}
+                      className='transition delay-150 duration-500 ease-in-out hover:scale-110'
+                    />
                   </div>
-                  {/* color pallet */}
-                  <div className='flex h-fit w-64 flex-wrap gap-3 pl-2 text-white '>
-                    {product?.attributes?.variants?.data.map((val, id) => (
-                      <div
-                        key={id}
-                        style={{ backgroundColor: val?.attributes?.hex }}
-                        onClick={() => handleVariant(val, product, id)}
-                        className='h-8 w-8 cursor-pointer rounded-full ring-1 ring-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:shadow-gray-800 sm:h-10 sm:w-10'
-                      ></div>
-                    ))}
+                  {/* small screens */}
+                  <div className='relative block h-72 w-full md:hidden '>
+                    <Image
+                      src={
+                        varImg && varName == product?.attributes?.name
+                          ? varImg
+                          : product?.attributes?.image?.data?.attributes?.url
+                      }
+                      layout='fill'
+                      objectFit='contain'
+                      placeholder='blur'
+                      blurDataURL={
+                        product?.attributes?.image?.data?.attributes?.formats
+                          ?.small?.url
+                      }
+                      alt={product?.attributes?.name}
+                      className='transition delay-150 duration-500 ease-in-out hover:scale-110'
+                    />
                   </div>
                 </div>
-                {/* <!-- color - end --> */}
+                {/* <!-- images - end --> */}
 
-                {/* <!-- price - start --> */}
-                <div className='mb-4'>
-                  <div className='flex items-end gap-2'>
-                    {globalCurr == 'naira' ? (
-                      <div className='flex items-center space-x-2'>
-                        <Text className='font-semibold sm:text-lg'>
-                          &#8358;{product?.attributes?.nairaSalePrice}
-                        </Text>
-                        <Text
-                          as='s'
-                          className={`text-sm font-semibold text-gray-400 ${
-                            product?.attributes?.nairaSalePrice ==
-                            product?.attributes?.nairaPrice
-                              ? 'hidden'
-                              : ''
-                          }`}
-                        >
-                          &#8358;{product?.attributes?.nairaPrice}
-                        </Text>
-                      </div>
+                {/* <!-- content - start --> */}
+                <div className='md:py-2'>
+                  {/* <!-- name - start --> */}
+                  <div className='mb-2 md:mb-3'>
+                    <h2 className='text-2xl font-bold text-gray-800 lg:text-3xl'>
+                      {product?.attributes?.name}
+                    </h2>
+                  </div>
+                  {/* <!-- name - end --> */}
+
+                  {/* <!-- color - start --> */}
+                  <div className='mb-4 md:mb-6'>
+                    <div className='mb-3 flex space-x-2 text-sm font-semibold text-gray-500 sm:text-lg'>
+                      <Text>Color:</Text>
+                      <Text className='text-zinc-700'>
+                        {varColor ? varColor : 'Choose a color'}
+                      </Text>
+                    </div>
+                    {/* color pallet */}
+                    <div className='flex h-fit w-64 flex-wrap gap-3 pl-2 text-white '>
+                      {product?.attributes?.variants?.data.map((val, id) => (
+                        <div
+                          key={id}
+                          style={{ backgroundColor: val?.attributes?.hex }}
+                          onClick={() => handleVariant(val, product, id)}
+                          className='h-8 w-8 cursor-pointer rounded-full ring-1 ring-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:shadow-gray-800 sm:h-10 sm:w-10'
+                        ></div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* <!-- color - end --> */}
+
+                  {/* <!-- price - start --> */}
+                  <div className='mb-4'>
+                    <div className='flex items-end gap-2'>
+                      {globalCurr == 'naira' ? (
+                        <div className='flex items-center space-x-2'>
+                          <Text className='font-semibold sm:text-lg'>
+                            &#8358;{product?.attributes?.nairaSalePrice}
+                          </Text>
+                          <Text
+                            as='s'
+                            className={`text-sm font-semibold text-gray-400 ${
+                              product?.attributes?.nairaSalePrice ==
+                              product?.attributes?.nairaPrice
+                                ? 'hidden'
+                                : ''
+                            }`}
+                          >
+                            &#8358;{product?.attributes?.nairaPrice}
+                          </Text>
+                        </div>
+                      ) : (
+                        <div className='flex items-center space-x-2'>
+                          <Text className='font-semibold sm:text-lg'>
+                            &#x24;{product?.attributes?.dollarSalePrice}
+                          </Text>
+                          <Text
+                            as='s'
+                            className={`text-sm font-semibold text-gray-400 ${
+                              product?.attributes?.dollarSalePrice ==
+                              product?.attributes?.dollarPrice
+                                ? 'hidden'
+                                : ''
+                            }`}
+                          >
+                            &#x24;{product?.attributes?.dollarPrice}
+                          </Text>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {/* <!-- price - end --> */}
+
+                  {/* quantity start */}
+                  <div className='mb-4 flex'>
+                    {cartLoad ? (
+                      ''
                     ) : (
-                      <div className='flex items-center space-x-2'>
-                        <Text className='font-semibold sm:text-lg'>
-                          &#x24;{product?.attributes?.dollarSalePrice}
-                        </Text>
-                        <Text
-                          as='s'
-                          className={`text-sm font-semibold text-gray-400 ${
-                            product?.attributes?.dollarSalePrice ==
-                            product?.attributes?.dollarPrice
-                              ? 'hidden'
-                              : ''
-                          }`}
-                        >
-                          &#x24;{product?.attributes?.dollarPrice}
-                        </Text>
-                      </div>
+                      <Select
+                        // placeholder='Quantity'
+                        value={qty}
+                        maxW='120px'
+                        className='cursor-pointer'
+                        onChange={(e) => handleChange(e)}
+                        isDisabled={!btnLoad}
+                      >
+                        {range(1, varQty).map((elem) => (
+                          <option key={elem} value={elem}>
+                            {elem}
+                          </option>
+                        ))}
+                      </Select>
                     )}
                   </div>
-                </div>
-                {/* <!-- price - end --> */}
+                  {/* quantity end */}
 
-                {/* quantity start */}
-                <div className='mb-4 flex'>
-                  {cartLoad ? (
-                    ''
-                  ) : (
-                    <Select
-                      // placeholder='Quantity'
-                      value={qty}
-                      maxW='120px'
-                      className='cursor-pointer'
-                      onChange={(e) => handleChange(e)}
-                      isDisabled={!btnLoad}
-                    >
-                      {range(1, varQty).map((elem) => (
-                        <option key={elem} value={elem}>
-                          {elem}
-                        </option>
-                      ))}
-                    </Select>
-                  )}
-                </div>
-                {/* quantity end */}
+                  {/* <!-- cart buttons - start --> */}
+                  <div className='flex'>
+                    {cartLoad ? (
+                      <div className='flex flex-col space-y-2'>
+                        <Text className='text-xl font-bold text-red-700'>
+                          Out of Stock
+                        </Text>
+                        <Button
+                          onClick={onOpen}
+                          colorScheme='blue'
+                          variant='outline'
+                          ref={finalRef}
+                          // isDisabled={true}
+                        >
+                          Notify Me When Available
+                        </Button>
+                        <Modal
+                          initialFocusRef={initialRef}
+                          finalFocusRef={finalRef}
+                          isOpen={isOpen}
+                          onClose={onClose}
+                        >
+                          <ModalOverlay />
+                          <ModalContent>
+                            <ModalHeader>Notify Me</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody pb={6}>
+                              <Text className='mb-3 text-lg font-semibold'>
+                                We will notify you when this bag is available
+                              </Text>
+                              <FormControl>
+                                <FormLabel htmlFor='name'>Name</FormLabel>
+                                <Input
+                                  onChange={(e) => handleForm(e)}
+                                  name='name'
+                                  id='name'
+                                  ref={initialRef}
+                                  placeholder='Name...'
+                                />
+                              </FormControl>
 
-                {/* <!-- cart buttons - start --> */}
-                <div className='flex'>
-                  {cartLoad ? (
-                    <div className='flex flex-col space-y-2'>
-                      <Text className='text-xl font-bold text-red-700'>
-                        Out of Stock
-                      </Text>
+                              <FormControl mt={4}>
+                                <FormLabel htmlFor='email'>Email</FormLabel>
+                                <Input
+                                  onChange={(e) => handleForm(e)}
+                                  name='email'
+                                  id='email'
+                                  placeholder='Email...'
+                                  type='email'
+                                />
+                              </FormControl>
+                            </ModalBody>
+
+                            <ModalFooter>
+                              <Button
+                                onClick={() => handleNotify()}
+                                colorScheme='blue'
+                                mr={3}
+                                isLoading={modalLoading}
+                              >
+                                Send
+                              </Button>
+                              <Button onClick={onClose}>Close</Button>
+                            </ModalFooter>
+                          </ModalContent>
+                        </Modal>
+                      </div>
+                    ) : (
                       <Button
-                        onClick={onOpen}
-                        colorScheme='blue'
-                        variant='outline'
-                        ref={finalRef}
-                        // isDisabled={true}
+                        // href='#'
+                        onClick={() => handleCart()}
+                        colorScheme='purple'
+                        variant='solid'
+                        isDisabled={!btnLoad}
                       >
-                        Notify Me When Available
+                        Add to cart
                       </Button>
-                      <Modal
-                        initialFocusRef={initialRef}
-                        finalFocusRef={finalRef}
-                        isOpen={isOpen}
-                        onClose={onClose}
-                      >
-                        <ModalOverlay />
-                        <ModalContent>
-                          <ModalHeader>Notify Me</ModalHeader>
-                          <ModalCloseButton />
-                          <ModalBody pb={6}>
-                            <Text className='mb-3 text-lg font-semibold'>
-                              We will notify you when this bag is available
-                            </Text>
-                            <FormControl>
-                              <FormLabel htmlFor='name'>Name</FormLabel>
-                              <Input
-                                onChange={(e) => handleForm(e)}
-                                name='name'
-                                id='name'
-                                ref={initialRef}
-                                placeholder='Name...'
-                              />
-                            </FormControl>
-
-                            <FormControl mt={4}>
-                              <FormLabel htmlFor='email'>Email</FormLabel>
-                              <Input
-                                onChange={(e) => handleForm(e)}
-                                name='email'
-                                id='email'
-                                placeholder='Email...'
-                                type='email'
-                              />
-                            </FormControl>
-                          </ModalBody>
-
-                          <ModalFooter>
-                            <Button
-                              onClick={() => handleNotify()}
-                              colorScheme='blue'
-                              mr={3}
-                              isLoading={modalLoading}
-                            >
-                              Send
-                            </Button>
-                            <Button onClick={onClose}>Close</Button>
-                          </ModalFooter>
-                        </ModalContent>
-                      </Modal>
-                    </div>
-                  ) : (
-                    <Button
-                      // href='#'
-                      onClick={() => handleCart()}
-                      colorScheme='purple'
-                      variant='solid'
-                      isDisabled={!btnLoad}
-                    >
-                      Add to cart
-                    </Button>
-                  )}
+                    )}
+                  </div>
+                  {/* <!-- cart buttons - end --> */}
                 </div>
-                {/* <!-- cart buttons - end --> */}
+                {/* <!-- content - end --> */}
               </div>
-              {/* <!-- content - end --> */}
-            </div>
+            )}
+            {isLoading && (
+              <div className='grid gap-8 md:grid-cols-2'>
+                {/* <!-- images - start --> */}
+                <div className=''>
+                  <div className=''></div>
+                  {/* large screens */}
+                  <div className='hidden h-full w-full md:relative md:block '>
+                    <Image
+                      src={
+                        varImg && varName == products?.attributes?.name
+                          ? varImg
+                          : products?.attributes?.image?.data?.attributes?.url
+                      }
+                      layout='fill'
+                      objectFit='cover'
+                      // objectPosition='center'
+                      placeholder='blur'
+                      blurDataURL={
+                        products?.attributes?.image?.data?.attributes?.formats
+                          ?.small?.url
+                      }
+                      alt={products?.attributes?.name}
+                      className='transition delay-150 duration-500 ease-in-out hover:scale-110'
+                    />
+                  </div>
+                  {/* small screens */}
+                  <div className='relative block h-72 w-full md:hidden '>
+                    <Image
+                      src={
+                        varImg && varName == products?.attributes?.name
+                          ? varImg
+                          : products?.attributes?.image?.data?.attributes?.url
+                      }
+                      layout='fill'
+                      objectFit='contain'
+                      placeholder='blur'
+                      blurDataURL={
+                        products?.attributes?.image?.data?.attributes?.formats
+                          ?.small?.url
+                      }
+                      alt={products?.attributes?.name}
+                      className='transition delay-150 duration-500 ease-in-out hover:scale-110'
+                    />
+                  </div>
+                </div>
+                {/* <!-- images - end --> */}
+
+                {/* <!-- content - start --> */}
+                <div className='md:py-2'>
+                  {/* <!-- name - start --> */}
+                  <div className='mb-2 md:mb-3'>
+                    <h2 className='text-2xl font-bold text-gray-800 lg:text-3xl'>
+                      {products?.attributes?.name}
+                    </h2>
+                  </div>
+                  {/* <!-- name - end --> */}
+
+                  {/* <!-- color - start --> */}
+                  <div className='mb-4 md:mb-6'>
+                    <div className='mb-3 flex space-x-2 text-sm font-semibold text-gray-500 sm:text-lg'>
+                      <Text>Color:</Text>
+                      <Text className='text-zinc-700'>
+                        {varColor ? varColor : 'Choose a color'}
+                      </Text>
+                    </div>
+                    {/* color pallet */}
+                    <div className='flex h-fit w-64 flex-wrap gap-3 pl-2 text-white '>
+                      {products?.attributes?.variants?.data.map((val, id) => (
+                        <div
+                          key={id}
+                          style={{ backgroundColor: val?.attributes?.hex }}
+                          onClick={() => handleVariant(val, products, id)}
+                          className='h-8 w-8 cursor-pointer rounded-full ring-1 ring-white transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:shadow-md hover:shadow-gray-800 sm:h-10 sm:w-10'
+                        ></div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* <!-- color - end --> */}
+
+                  {/* <!-- price - start --> */}
+                  <div className='mb-4'>
+                    <div className='flex items-end gap-2'>
+                      {globalCurr == 'naira' ? (
+                        <div className='flex items-center space-x-2'>
+                          <Text className='font-semibold sm:text-lg'>
+                            &#8358;{products?.attributes?.nairaSalePrice}
+                          </Text>
+                          <Text
+                            as='s'
+                            className={`text-sm font-semibold text-gray-400 ${
+                              products?.attributes?.nairaSalePrice ==
+                              products?.attributes?.nairaPrice
+                                ? 'hidden'
+                                : ''
+                            }`}
+                          >
+                            &#8358;{products?.attributes?.nairaPrice}
+                          </Text>
+                        </div>
+                      ) : (
+                        <div className='flex items-center space-x-2'>
+                          <Text className='font-semibold sm:text-lg'>
+                            &#x24;{products?.attributes?.dollarSalePrice}
+                          </Text>
+                          <Text
+                            as='s'
+                            className={`text-sm font-semibold text-gray-400 ${
+                              products?.attributes?.dollarSalePrice ==
+                              products?.attributes?.dollarPrice
+                                ? 'hidden'
+                                : ''
+                            }`}
+                          >
+                            &#x24;{products?.attributes?.dollarPrice}
+                          </Text>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {/* <!-- price - end --> */}
+
+                  {/* quantity start */}
+                  <div className='mb-4 flex'>
+                    {cartLoad ? (
+                      ''
+                    ) : (
+                      <Select
+                        // placeholder='Quantity'
+                        value={qty}
+                        maxW='120px'
+                        className='cursor-pointer'
+                        onChange={(e) => handleChange(e)}
+                        isDisabled={!btnLoad}
+                      >
+                        {range(1, varQty).map((elem) => (
+                          <option key={elem} value={elem}>
+                            {elem}
+                          </option>
+                        ))}
+                      </Select>
+                    )}
+                  </div>
+                  {/* quantity end */}
+
+                  {/* <!-- cart buttons - start --> */}
+                  <div className='flex'>
+                    {cartLoad ? (
+                      <div className='flex flex-col space-y-2'>
+                        <Text className='text-xl font-bold text-red-700'>
+                          Out of Stock
+                        </Text>
+                        <Button
+                          onClick={onOpen}
+                          colorScheme='blue'
+                          variant='outline'
+                          ref={finalRef}
+                          // isDisabled={true}
+                        >
+                          Notify Me When Available
+                        </Button>
+                        <Modal
+                          initialFocusRef={initialRef}
+                          finalFocusRef={finalRef}
+                          isOpen={isOpen}
+                          onClose={onClose}
+                        >
+                          <ModalOverlay />
+                          <ModalContent>
+                            <ModalHeader>Notify Me</ModalHeader>
+                            <ModalCloseButton />
+                            <ModalBody pb={6}>
+                              <Text className='mb-3 text-lg font-semibold'>
+                                We will notify you when this bag is available
+                              </Text>
+                              <FormControl>
+                                <FormLabel htmlFor='name'>Name</FormLabel>
+                                <Input
+                                  onChange={(e) => handleForm(e)}
+                                  name='name'
+                                  id='name'
+                                  ref={initialRef}
+                                  placeholder='Name...'
+                                />
+                              </FormControl>
+
+                              <FormControl mt={4}>
+                                <FormLabel htmlFor='email'>Email</FormLabel>
+                                <Input
+                                  onChange={(e) => handleForm(e)}
+                                  name='email'
+                                  id='email'
+                                  placeholder='Email...'
+                                  type='email'
+                                />
+                              </FormControl>
+                            </ModalBody>
+
+                            <ModalFooter>
+                              <Button
+                                onClick={() => handleNotify()}
+                                colorScheme='blue'
+                                mr={3}
+                                isLoading={modalLoading}
+                              >
+                                Send
+                              </Button>
+                              <Button onClick={onClose}>Close</Button>
+                            </ModalFooter>
+                          </ModalContent>
+                        </Modal>
+                      </div>
+                    ) : (
+                      <Button
+                        // href='#'
+                        onClick={() => handleCart()}
+                        colorScheme='purple'
+                        variant='solid'
+                        isDisabled={!btnLoad}
+                      >
+                        Add to cart
+                      </Button>
+                    )}
+                  </div>
+                  {/* <!-- cart buttons - end --> */}
+                </div>
+                {/* <!-- content - end --> */}
+              </div>
+            )}
             {/* product detail end  */}
 
             {/* <!-- description - start --> */}
-            <div className='mt-10 md:mt-16 lg:mt-20'>
-              <Tabs isFitted variant='enclosed'>
-                <TabList mb='1em'>
-                  <Tab>Description</Tab>
-                  <Tab>Reviews</Tab>
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    <Text>{product?.attributes?.shortDescription}</Text>
-                    <br />
-                    {/* <br /> */}
-                    <Text>{product?.attributes?.description}</Text>
-                  </TabPanel>
-                  <TabPanel>
-                    <div className=' py-4 sm:py-6'>
-                      <div className='mx-auto max-w-screen-lg px-2 md:px-4'>
-                        <div className='mb-4 flex items-center border-b py-4'>
-                          <Button
-                            // href='#'
-                            className='inline-block rounded-lg border bg-white px-4 py-2 text-center text-sm font-semibold text-gray-500 outline-none ring-indigo-300 transition duration-100 hover:bg-gray-100 focus-visible:ring active:bg-gray-200 md:px-8 md:py-3 md:text-base'
-                          >
-                            Write a review
-                          </Button>
-                        </div>
-
-                        <div className='divide-y'>
-                          {/* <!-- review - start --> */}
-                          <div className='flex flex-col gap-3 py-4 md:py-8'>
-                            <div>
-                              <span className='block text-sm font-bold'>
-                                John McCulling
-                              </span>
-                              <span className='block text-sm text-gray-500'>
-                                August 28, 2021
-                              </span>
-                            </div>
-
-                            {/* <!-- stars - start --> */}
-                            <div className='-ml-1 flex gap-0.5'>
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                className='h-5 w-5 text-yellow-400'
-                                viewBox='0 0 20 20'
-                                fill='currentColor'
-                              >
-                                <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                              </svg>
-
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                className='h-5 w-5 text-yellow-400'
-                                viewBox='0 0 20 20'
-                                fill='currentColor'
-                              >
-                                <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                              </svg>
-
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                className='h-5 w-5 text-yellow-400'
-                                viewBox='0 0 20 20'
-                                fill='currentColor'
-                              >
-                                <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                              </svg>
-
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                className='h-5 w-5 text-yellow-400'
-                                viewBox='0 0 20 20'
-                                fill='currentColor'
-                              >
-                                <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                              </svg>
-
-                              <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                className='h-5 w-5 text-yellow-400'
-                                viewBox='0 0 20 20'
-                                fill='currentColor'
-                              >
-                                <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
-                              </svg>
-                            </div>
-                            {/* <!-- stars - end --> */}
-
-                            <p className='text-gray-600'>
-                              This is a section of some simple filler text, also
-                              known as placeholder text. It shares some
-                              characteristics of a real written text but is
-                              random or otherwise generated. It may be used to
-                              display a sample of fonts or generate text for
-                              testing.
-                            </p>
+            {isSuccess && (
+              <div className='mt-10 md:mt-16 lg:mt-20'>
+                <Tabs isFitted variant='enclosed'>
+                  <TabList mb='1em'>
+                    <Tab>Description</Tab>
+                    <Tab>Reviews</Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <Text>{product?.attributes?.shortDescription}</Text>
+                      <br />
+                      {/* <br /> */}
+                      <Text>{product?.attributes?.description}</Text>
+                    </TabPanel>
+                    <TabPanel>
+                      <div className=' py-4 sm:py-6'>
+                        <div className='mx-auto max-w-screen-lg px-2 md:px-4'>
+                          <div className='mb-4 flex items-center border-b py-4'>
+                            <Button
+                              // href='#'
+                              className='inline-block rounded-lg border bg-white px-4 py-2 text-center text-sm font-semibold text-gray-500 outline-none ring-indigo-300 transition duration-100 hover:bg-gray-100 focus-visible:ring active:bg-gray-200 md:px-8 md:py-3 md:text-base'
+                            >
+                              Write a review
+                            </Button>
                           </div>
-                          {/* <!-- review - end --> */}
+
+                          <div className='divide-y'>
+                            {/* <!-- review - start --> */}
+                            <div className='flex flex-col gap-3 py-4 md:py-8'>
+                              <div>
+                                <div className='block text-sm font-bold'>
+                                  John McCulling
+                                </div>
+                                <div className='block text-sm text-gray-500'>
+                                  August 28, 2021
+                                </div>
+                              </div>
+
+                              {/* <!-- stars - start --> */}
+                              <div className='-ml-1 flex gap-0.5'>
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  className='h-5 w-5 text-yellow-400'
+                                  viewBox='0 0 20 20'
+                                  fill='currentColor'
+                                >
+                                  <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                                </svg>
+
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  className='h-5 w-5 text-yellow-400'
+                                  viewBox='0 0 20 20'
+                                  fill='currentColor'
+                                >
+                                  <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                                </svg>
+
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  className='h-5 w-5 text-yellow-400'
+                                  viewBox='0 0 20 20'
+                                  fill='currentColor'
+                                >
+                                  <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                                </svg>
+
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  className='h-5 w-5 text-yellow-400'
+                                  viewBox='0 0 20 20'
+                                  fill='currentColor'
+                                >
+                                  <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                                </svg>
+
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  className='h-5 w-5 text-yellow-400'
+                                  viewBox='0 0 20 20'
+                                  fill='currentColor'
+                                >
+                                  <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                                </svg>
+                              </div>
+                              {/* <!-- stars - end --> */}
+
+                              <p className='text-gray-600'>
+                                This is a section of some simple filler text,
+                                also known as placeholder text. It shares some
+                                characteristics of a real written text but is
+                                random or otherwise generated. It may be used to
+                                display a sample of fonts or generate text for
+                                testing.
+                              </p>
+                            </div>
+                            {/* <!-- review - end --> */}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    ;
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-              {/* <div className='mb-3 text-lg font-semibold text-gray-800'>
+                      ;
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+                {/* <div className='mb-3 text-lg font-semibold text-gray-800'>
                 Description
               </div> */}
-            </div>
+              </div>
+            )}
+            {isLoading && (
+              <div className='mt-10 md:mt-16 lg:mt-20'>
+                <Tabs isFitted variant='enclosed'>
+                  <TabList mb='1em'>
+                    <Tab>Description</Tab>
+                    <Tab>Reviews</Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <Text>{products?.attributes?.shortDescription}</Text>
+                      <br />
+                      {/* <br /> */}
+                      <Text>{products?.attributes?.description}</Text>
+                    </TabPanel>
+                    <TabPanel>
+                      <div className=' py-4 sm:py-6'>
+                        <div className='mx-auto max-w-screen-lg px-2 md:px-4'>
+                          <div className='mb-4 flex items-center border-b py-4'>
+                            <Button
+                              // href='#'
+                              className='inline-block rounded-lg border bg-white px-4 py-2 text-center text-sm font-semibold text-gray-500 outline-none ring-indigo-300 transition duration-100 hover:bg-gray-100 focus-visible:ring active:bg-gray-200 md:px-8 md:py-3 md:text-base'
+                            >
+                              Write a review
+                            </Button>
+                          </div>
+
+                          <div className='divide-y'>
+                            {/* <!-- review - start --> */}
+                            <div className='flex flex-col gap-3 py-4 md:py-8'>
+                              <div>
+                                <div className='block text-sm font-bold'>
+                                  John McCulling
+                                </div>
+                                <div className='block text-sm text-gray-500'>
+                                  August 28, 2021
+                                </div>
+                              </div>
+
+                              {/* <!-- stars - start --> */}
+                              <div className='-ml-1 flex gap-0.5'>
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  className='h-5 w-5 text-yellow-400'
+                                  viewBox='0 0 20 20'
+                                  fill='currentColor'
+                                >
+                                  <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                                </svg>
+
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  className='h-5 w-5 text-yellow-400'
+                                  viewBox='0 0 20 20'
+                                  fill='currentColor'
+                                >
+                                  <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                                </svg>
+
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  className='h-5 w-5 text-yellow-400'
+                                  viewBox='0 0 20 20'
+                                  fill='currentColor'
+                                >
+                                  <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                                </svg>
+
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  className='h-5 w-5 text-yellow-400'
+                                  viewBox='0 0 20 20'
+                                  fill='currentColor'
+                                >
+                                  <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                                </svg>
+
+                                <svg
+                                  xmlns='http://www.w3.org/2000/svg'
+                                  className='h-5 w-5 text-yellow-400'
+                                  viewBox='0 0 20 20'
+                                  fill='currentColor'
+                                >
+                                  <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+                                </svg>
+                              </div>
+                              {/* <!-- stars - end --> */}
+
+                              <p className='text-gray-600'>
+                                This is a section of some simple filler text,
+                                also known as placeholder text. It shares some
+                                characteristics of a real written text but is
+                                random or otherwise generated. It may be used to
+                                display a sample of fonts or generate text for
+                                testing.
+                              </p>
+                            </div>
+                            {/* <!-- review - end --> */}
+                          </div>
+                        </div>
+                      </div>
+                      ;
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+                {/* <div className='mb-3 text-lg font-semibold text-gray-800'>
+                Description
+              </div> */}
+              </div>
+            )}
             {/* <!-- description - end --> */}
 
             {/* related product start */}
@@ -631,9 +1010,9 @@ export async function getStaticProps({ params }) {
   // console.log('data', data);
   return {
     props: {
-      product: data.data,
+      products: data.data,
     },
-    revalidate: 10,
+    revalidate: 5,
   };
 }
 

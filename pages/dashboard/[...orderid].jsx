@@ -8,7 +8,7 @@ import qs from 'qs';
 
 const DashboardDetails = () => {
   const router = useRouter();
-  console.log(router);
+  // console.log(router);
   // const [orderID, setOrderID] = useState(null);
   const URL =
     process.env.NODE_ENV !== 'production'
