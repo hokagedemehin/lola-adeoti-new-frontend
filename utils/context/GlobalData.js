@@ -9,7 +9,7 @@ export default function GlobalDataContext({ children }) {
   const [globalCurr, setGlobalCurr] = useState(null);
   const [userID, setUserID] = useState(null);
   const [cartInfo, setCartInfo] = useState([]);
-
+  const [checkCart, setCheckCart] = useState(false);
   const URL =
     process.env.NODE_ENV !== 'production'
       ? 'http://localhost:1337'
@@ -101,6 +101,8 @@ export default function GlobalDataContext({ children }) {
         setUserID,
         cartInfo,
         setCartInfo,
+        checkCart,
+        setCheckCart,
       }}
     >
       {children}

@@ -47,9 +47,15 @@ const NavBar = () => {
    * ? cart is a draw that has the details in it
    * TODO: work out the logic of a guest making a purchase without login
    */
-  const { setGlobalCurr, cartInfo } = useGlobal();
+  const { setGlobalCurr, cartInfo, checkCart, setCheckCart } = useGlobal();
 
+  // const [cartTotal, setCartTotal] = useState(0);
   const cartTotal = cartInfo.reduce((prev, curr) => prev + +curr?.quantity, 0);
+  // useEffect(() => {
+  //   console.log('fire');
+  //   const total = cartInfo.reduce((prev, curr) => prev + +curr?.quantity, 0);
+  //   setCartTotal(total);
+  // }, [cartInfo]);
 
   const user = true;
   const router = useRouter();
@@ -59,6 +65,10 @@ const NavBar = () => {
     onOpen: cartOnOpen,
     onClose: cartOnClose,
   } = useDisclosure();
+  const handleOpen = () => {
+    cartOnOpen();
+    setCheckCart(!checkCart);
+  };
   const btnRef = useRef();
   const cartRef = useRef();
   const [active, setActive] = useState('');
@@ -271,7 +281,7 @@ const NavBar = () => {
               isRound
               aria-label='Shopping Cart'
               ref={cartRef}
-              onClick={cartOnOpen}
+              onClick={handleOpen}
               // size='lg'
               // icon={<BsCartCheck fontSize='1.5rem' />}
             >
@@ -454,7 +464,7 @@ const NavBar = () => {
               isRound
               aria-label='Shopping Cart'
               ref={cartRef}
-              onClick={cartOnOpen}
+              onClick={handleOpen}
               // size='lg'
               // icon={<BsCartCheck fontSize='1.5rem' />}
             >

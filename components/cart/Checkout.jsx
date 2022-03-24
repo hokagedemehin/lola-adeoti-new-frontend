@@ -31,7 +31,8 @@ import { nanoid } from 'nanoid';
 import order_complete from '../../public/cart/order_complete.png';
 
 const CheckoutComponent = () => {
-  const { cartInfo, setCartInfo, globalCurr, userID } = useGlobal();
+  const { cartInfo, setCartInfo, globalCurr, userID, checkCart, setCheckCart } =
+    useGlobal();
   const router = useRouter();
   // console.log('userID', userID);
   // console.log('checkout cart :>> ', cartInfo);
@@ -141,6 +142,7 @@ const CheckoutComponent = () => {
         })
       );
       // setAddressInfo({ ...formValue });
+      setCheckCart(!checkCart, setCheckCart);
       setCurrentStep(currentStep + 1);
     }
   };
@@ -298,6 +300,57 @@ const CheckoutComponent = () => {
   };
 
   const initializePayment = usePaystackPayment(payStackConfig);
+
+  // ******************************************************
+  // * realtime check of cart items
+  // **************************************************
+
+  const handleCheck = () => {
+    try {
+      let cartItems = localStorage.getItem('lola-cart');
+      if (cartItems) {
+        let cleanedCart = JSON.parse(cartItems);
+        let cartKeys = Object.keys(cleanedCart);
+        // console.log(cartKeys, cleanedCart);
+        cartKeys.forEach(async (elem) => {
+          const { data } = await axios.get(`${URL}/api/variants/${elem}`);
+
+          // console.log(data);
+          // console.log(data?.data?.attributes?.quantity);
+          if (data && data?.data?.attributes?.quantity <= 0) {
+            // console.log('zero quantity');
+            const newArr = cartInfo.filter((val) => +val?.variantId !== +elem);
+            const getCart = cartInfo.filter(
+              (value) => +value?.variantId === +elem
+            );
+            setCartInfo(newArr);
+            // console.log(getCart);
+            // const cartLocal = JSON.parse(localStorage.getItem('lola-cart'));
+            delete cleanedCart[getCart[0]?.variantId];
+            // const newCart = Object.values(cartLocal)
+            // const newLocal = cartLocal
+            localStorage.setItem('lola-cart', JSON.stringify(cleanedCart));
+            // if (getCart.length !== 0) {
+            await axios.delete(
+              `${URL}/api/carts/${getCart[0]?.strapiId.toString()}`
+            );
+            // }
+          }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    handleCheck();
+  }, []);
+
+  // useMemo(() => handleCheck(), [checkCart, setCheckCart]);
+
+  // *******************************************************
+  // * end of realtime check of cart items
+  // **************************************************
 
   return (
     <div className='mx-auto mb-5 max-w-screen-xl sm:py-5'>
@@ -726,6 +779,7 @@ const CheckoutComponent = () => {
             colorScheme='teal'
             rightIcon={<MdArrowForward />}
             onClick={() => handleNext()}
+            isDisabled={cartInfo.length === 0}
           >
             Next
           </Button>

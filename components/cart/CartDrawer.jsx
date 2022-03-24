@@ -15,17 +15,18 @@ import {
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from '../../utils/context/GlobalData';
 import empty_cart from '../../public/cart/empty_cart.png';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+// import { useQuery } from 'react-query';
 
 const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
-  const { cartInfo, globalCurr, setCartInfo } = useGlobal();
+  const { cartInfo, globalCurr, setCartInfo, checkCart } = useGlobal();
   const [updateDisable, setUpdateDisable] = useState(true);
   const router = useRouter();
-  // console.log('cart drawer :>> ', cartInfo);
+  console.log('cart drawer :>> ', cartInfo);
   const nairaTotal = cartInfo.reduce((prev, curr) => {
     const naira = +curr?.quantity * +curr?.nairaPrice;
     // const dollar = +curr?.quantity * +curr?.dollarPrice
@@ -92,6 +93,7 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
       const newArr = cartInfo.filter(
         (elem) => elem?.strapiId !== val?.strapiId
       );
+
       setCartInfo(newArr);
       const cartLocal = JSON.parse(localStorage.getItem('lola-cart'));
       delete cartLocal[val?.variantId];
@@ -138,6 +140,54 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
     return Array.from({ length }, (_, i) => start + i);
   };
 
+  // ******************************************************
+  // * realtime check of cart items
+  // **************************************************
+
+  const handleCheck = () => {
+    try {
+      let cartItems = localStorage.getItem('lola-cart');
+      if (cartItems) {
+        let cleanedCart = JSON.parse(cartItems);
+        let cartKeys = Object.keys(cleanedCart);
+        console.log(cartKeys, cleanedCart);
+        cartKeys.forEach(async (elem) => {
+          const { data } = await axios.get(`${URL1}/api/variants/${elem}`);
+
+          console.log(data);
+          // console.log(data?.data?.attributes?.quantity);
+          if (data && data?.data?.attributes?.quantity <= 0) {
+            console.log('zero quantity');
+            const newArr = cartInfo.filter((val) => +val?.variantId !== +elem);
+            const getCart = cartInfo.filter(
+              (value) => +value?.variantId === +elem
+            );
+            setCartInfo(newArr);
+            console.log(getCart);
+            // const cartLocal = JSON.parse(localStorage.getItem('lola-cart'));
+            delete cleanedCart[getCart[0]?.variantId];
+            // const newCart = Object.values(cartLocal)
+            // const newLocal = cartLocal
+            localStorage.setItem('lola-cart', JSON.stringify(cleanedCart));
+            // if (getCart.length !== 0) {
+            await axios.delete(
+              `${URL1}/api/carts/${getCart[0]?.strapiId.toString()}`
+            );
+            // }
+          }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    handleCheck();
+  }, [checkCart]);
+
+  // *******************************************************
+  // * end of realtime check of cart items
+  // **************************************************
   return (
     <Drawer
       isOpen={isOpen}
