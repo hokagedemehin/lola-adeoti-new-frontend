@@ -19,26 +19,26 @@ const AboutDetails = () => {
               Lola Adeoti Bags
             </Text>
             <div className='mx-auto flex max-w-2xl flex-col space-y-3 lg:max-w-[90rem] lg:space-y-4'>
-              <Text className='lg:text-lg'>
+              <Text className=' text-base lg:text-lg'>
                 Lola Adeoti is a genuine leather brand that designs and produces
                 genuine leather bags for the modern day individual. Our bags are
                 for men and women who value quality and to maintain this
                 standard, we produce all our bags with genuine leather.
               </Text>
-              <Text className='lg:text-lg'>
+              <Text className='text-base lg:text-lg'>
                 All our products are made from scratch, choosing exquisite
                 leather and then step by step, gently transforming them into a
                 masterpiece for the modern day Individual. We pride ourselves in
                 our ability to make great pieces that you would love and would
                 stand the test of time.
               </Text>
-              <Text className='lg:text-lg'>
+              <Text className='text-base lg:text-lg'>
                 Our bags are great gifts, and people all over the world ask our
                 customers how to purchase unique pieces. Each piece is made with
                 lots of love and particularly tailored towards the needs of the
                 modern day individual.
               </Text>
-              <Text className='lg:text-lg'>
+              <Text className=' text-base lg:text-lg'>
                 Lola Adeoti is very passionate about showcasing the expertise of
                 African artisans and because of this, we stay true to producing
                 within the shores of Africa

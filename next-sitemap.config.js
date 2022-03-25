@@ -2,6 +2,7 @@
 
 module.exports = {
   siteUrl: 'https://lolaadeoti.vercel.app',
-  generateRobotsTxt: true, // (optional)
+  generateRobotsTxt: true,
+  sitemapSize: 7000, // (optional)
   // ...other options
 };

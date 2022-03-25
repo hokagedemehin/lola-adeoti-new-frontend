@@ -14,7 +14,7 @@ const AboutPointSection = () => {
             <RiStackFill className='text-2xl' />
           </Circle>
           <Text className='text-center text-xl font-bold'>Durability</Text>
-          <Text className='text-center text-gray-500'>
+          <Text className='text-center text-base text-gray-500'>
             The LolaAdeoti team designs and handcrafts leather bags using
             genuine calf leather skin and high quality hardware to ensure your
             beloved bag lasts a long time.
@@ -26,7 +26,7 @@ const AboutPointSection = () => {
             <MdAccessTimeFilled className='text-2xl' />
           </Circle>
           <Text className='text-center text-xl font-bold'>Timelessness</Text>
-          <Text className='text-center text-gray-500'>
+          <Text className='text-center text-base text-gray-500'>
             Our bags are designed to transit trends, timeless pieces that stay
             on trend for years
           </Text>
@@ -39,7 +39,7 @@ const AboutPointSection = () => {
           <Text className='text-center text-xl font-bold'>
             Elegant & Stylish
           </Text>
-          <Text className='text-center text-gray-500'>
+          <Text className='text-center text-base text-gray-500'>
             Different styles and colors to blend with your taste, desires and
             goals
           </Text>
@@ -50,7 +50,7 @@ const AboutPointSection = () => {
             <ImTruck className='text-2xl' />
           </Circle>
           <Text className='text-center text-xl font-bold'>Fast Shipping</Text>
-          <Text className='text-center text-gray-500'>
+          <Text className='text-center text-base text-gray-500'>
             We process, ship and deliver your handbag to you in record time
           </Text>
         </div>

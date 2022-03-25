@@ -61,7 +61,7 @@ const RelatedProducts = ({ id }) => {
   // // console.log(data1);
   const data2 = shuffle(data1);
   const data3 = data2?.slice(0, 4);
-  console.log('data :>> ', data3);
+  // console.log('data :>> ', data3);
   // console.log('isSuccess :>> ', isSuccess);
 
   function shuffle(array) {
