@@ -43,8 +43,8 @@ const DashboardDetails = () => {
     { enabled: !!id }
   );
 
-  console.log('data', data);
-  console.log('isSuccess', isSuccess);
+  // console.log('data', data);
+  // console.log('isSuccess', isSuccess);
 
   const handleOrders = async () => {
     const { data } = await axios.get(
@@ -57,7 +57,7 @@ const DashboardDetails = () => {
   return (
     <Layout name='Dashboard' desc='order details for a single order'>
       <div className='mx-2 mt-20'>
-        <OrderDetails data={data} />
+        <OrderDetails data={data} isSuccess={isSuccess} />
       </div>
     </Layout>
   );

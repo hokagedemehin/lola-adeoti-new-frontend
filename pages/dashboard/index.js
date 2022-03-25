@@ -1,4 +1,5 @@
 // import axios from 'axios';
+// import axios from 'axios';
 import React from 'react';
 // import { useQuery } from 'react-query';
 import Dashboard from '../../components/dashboard/Dashboard';
@@ -8,6 +9,32 @@ import Layout from '../../components/layout/Layout';
 // const qs = require('qs');
 
 const DashboardPage = () => {
+  // console.log('user :>> ', user);
+
+  // const query = qs.stringify(
+  //   {
+  //     pagination: {
+  //       // page: 1,
+  //       // pageSize: 2,
+  //       start: 4,
+  //       limit: 4,
+  //     },
+  //   },
+  //   {
+  //     encodeValuesOnly: true,
+  //   }
+  // );
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
+
+  // const handle = async () => {
+  //   const { data } = await axios.get(`${URL}/api/anonusers?${query}`);
+  // console.log(data);
+  // };
+
+  // handle();
   return (
     <Layout
       name='Dashboard'
@@ -24,3 +51,33 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
+
+// export async function getStaticProps() {
+//   // console.log('context :>> ', context);
+
+//   const query = qs.stringify(
+//     {
+//       pagination: {
+//         // page: 1,
+//         pageSize: 2,
+//       },
+//     },
+//     {
+//       encodeValuesOnly: true,
+//     }
+//   );
+//   const URL =
+//     process.env.NODE_ENV !== 'production'
+//       ? 'http://localhost:1337'
+//       : 'https://lola-adeoti-new-backend.herokuapp.com';
+
+//   const { data } = await axios.get(`${URL}/api/anonusers?${query}`);
+//   // const { data } = await axios.get(`${URL}/api/products`);
+//   // console.log('data', data);
+//   return {
+//     props: {
+//       user: data,
+//     },
+//     revalidate: 10,
+//   };
+// }
