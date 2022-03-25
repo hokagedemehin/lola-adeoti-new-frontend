@@ -46,7 +46,7 @@ const ProductDetails = ({ products }) => {
   if (router?.query?.slug) {
     id = router?.query?.slug[0];
   }
-  console.log(id);
+  // console.log(id);
   const queryPopulate = qs.stringify(
     {
       populate: ['image', 'variants.image'],
@@ -61,7 +61,7 @@ const ProductDetails = ({ products }) => {
       `${URL}/api/products/${id}?${queryPopulate}`
       // `${URL}/api/anonusers/${userID?.anonID}?populate=*`
     );
-    console.log(data);
+    // console.log(data);
     return data?.data;
   };
   const {

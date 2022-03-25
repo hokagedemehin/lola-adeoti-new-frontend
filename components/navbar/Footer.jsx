@@ -271,7 +271,7 @@ const Footer = () => {
                 {/* email */}
                 <div className=''>
                   <a
-                    href='mailto:lola.adeoti@gmail.com'
+                    href='mailto:accessorizedbylisa@gmail.com'
                     target='_blank'
                     rel='noreferrer'
                     className='text-gray-400 transition duration-100 hover:text-yellow-500 active:text-yellow-600'
@@ -289,7 +289,9 @@ const Footer = () => {
                       </svg>
                       <div className='flex flex-col text-gray-100'>
                         <Text className='text-sm '>Email:</Text>
-                        <Text className='text-xs'>lola.adeoti@email.com</Text>
+                        <Text className='text-xs'>
+                          accessorizedbylisa@gmail.com
+                        </Text>
                       </div>
                     </div>
                   </a>

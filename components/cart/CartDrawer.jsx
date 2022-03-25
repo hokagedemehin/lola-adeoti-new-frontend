@@ -26,7 +26,7 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
   const { cartInfo, globalCurr, setCartInfo, checkCart } = useGlobal();
   const [updateDisable, setUpdateDisable] = useState(true);
   const router = useRouter();
-  console.log('cart drawer :>> ', cartInfo);
+  // console.log('cart drawer :>> ', cartInfo);
   const nairaTotal = cartInfo.reduce((prev, curr) => {
     const naira = +curr?.quantity * +curr?.nairaPrice;
     // const dollar = +curr?.quantity * +curr?.dollarPrice
@@ -150,20 +150,20 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
       if (cartItems) {
         let cleanedCart = JSON.parse(cartItems);
         let cartKeys = Object.keys(cleanedCart);
-        console.log(cartKeys, cleanedCart);
+        // console.log(cartKeys, cleanedCart);
         cartKeys.forEach(async (elem) => {
           const { data } = await axios.get(`${URL1}/api/variants/${elem}`);
 
-          console.log(data);
+          // console.log(data);
           // console.log(data?.data?.attributes?.quantity);
           if (data && data?.data?.attributes?.quantity <= 0) {
-            console.log('zero quantity');
+            // console.log('zero quantity');
             const newArr = cartInfo.filter((val) => +val?.variantId !== +elem);
             const getCart = cartInfo.filter(
               (value) => +value?.variantId === +elem
             );
             setCartInfo(newArr);
-            console.log(getCart);
+            // console.log(getCart);
             // const cartLocal = JSON.parse(localStorage.getItem('lola-cart'));
             delete cleanedCart[getCart[0]?.variantId];
             // const newCart = Object.values(cartLocal)

@@ -26,7 +26,7 @@ const DashboardDetails = () => {
   if (router?.query?.orderid) {
     id = router?.query?.orderid[0];
   }
-  console.log('id', id);
+  // console.log('id', id);
   // console.log('orderID :>> ', orderID);
   const queryPopulate = qs.stringify(
     {
