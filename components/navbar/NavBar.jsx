@@ -57,7 +57,7 @@ const NavBar = () => {
   //   setCartTotal(total);
   // }, [cartInfo]);
 
-  const user = true;
+  const user = false;
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -237,27 +237,29 @@ const NavBar = () => {
                   // src='https://avatars.dicebear.com/api/micah/:child.svg?mouth[]=laughing&mouth[]=smile&glassesProbability=100'
                 />
               </MenuButton>
-              {user ? (
-                <MenuList>
-                  <MenuItem
-                    // as='box'
-                    // href='/dashboard'
-                    icon={<MdOutlineDashboard />}
-                    className={` cursor-pointer py-2 px-2  transition duration-300 ease-in-out  hover:ring-1 hover:ring-gray-300 ${
-                      active == 'dashboard'
-                        ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
-                        : ''
-                    }`}
-                    onClick={() => handleDashboard('dashboard')}
-                  >
-                    Dashboard
-                  </MenuItem>
+              <MenuList>
+                <MenuItem
+                  // as='box'
+                  // href='/dashboard'
+                  icon={<MdOutlineDashboard />}
+                  className={` cursor-pointer py-2 px-2  transition duration-300 ease-in-out  hover:ring-1 hover:ring-gray-300 ${
+                    active == 'dashboard'
+                      ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
+                      : ''
+                  }`}
+                  onClick={() => handleDashboard('dashboard')}
+                >
+                  Dashboard
+                </MenuItem>
+                {/* </MenuList> */}
+                {user ? (
+                  // <MenuList>
                   <MenuItem as='a' href='/' icon={<GrLogout />}>
                     Log Out
                   </MenuItem>
-                </MenuList>
-              ) : (
-                <MenuList>
+                ) : (
+                  // </MenuList>
+                  // <MenuList>
                   <MenuItem
                     as='a'
                     href='/login'
@@ -271,8 +273,9 @@ const NavBar = () => {
                   >
                     Login
                   </MenuItem>
-                </MenuList>
-              )}
+                  // </MenuList>
+                )}
+              </MenuList>
             </Menu>
 
             {/* cart icon */}
@@ -390,31 +393,29 @@ const NavBar = () => {
                       Contact Us
                     </a>
                   </Link>
+                  <Link href='/dashboard' passHref>
+                    <a
+                      data-name='dashboard'
+                      className={`rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 ${
+                        active == 'dashboard'
+                          ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
+                          : ''
+                      }`}
+                      onClick={() => handleActive('dashboard')}
+                    >
+                      Dashboard
+                    </a>
+                  </Link>
                   {user ? (
-                    <>
-                      <Link href='/dashboard' passHref>
-                        <a
-                          data-name='dashboard'
-                          className={`rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 ${
-                            active == 'dashboard'
-                              ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
-                              : ''
-                          }`}
-                          onClick={() => handleActive('dashboard')}
-                        >
-                          Dashboard
-                        </a>
-                      </Link>
-                      <Link href='/' passHref>
-                        <a
-                          data-name='logout'
-                          className={`rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 `}
-                          onClick={() => handleActive('home')}
-                        >
-                          Logout
-                        </a>
-                      </Link>
-                    </>
+                    <Link href='/' passHref>
+                      <a
+                        data-name='logout'
+                        className={`rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 `}
+                        onClick={() => handleActive('home')}
+                      >
+                        Logout
+                      </a>
+                    </Link>
                   ) : (
                     <Link href='/login' passHref>
                       <a
