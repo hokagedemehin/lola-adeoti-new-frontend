@@ -38,6 +38,8 @@ import { MdOutlineDashboard } from 'react-icons/md';
 import { useRouter } from 'next/router';
 import AOS from 'aos';
 import { useGlobal } from '../../utils/context/GlobalData';
+import { getCookie, removeCookies } from 'cookies-next';
+import axios from 'axios';
 
 const NavBar = () => {
   /**
@@ -47,7 +49,14 @@ const NavBar = () => {
    * ? cart is a draw that has the details in it
    * TODO: work out the logic of a guest making a purchase without login
    */
-  const { setGlobalCurr, cartInfo, checkCart, setCheckCart } = useGlobal();
+  const {
+    setGlobalCurr,
+    cartInfo,
+    checkCart,
+    setCheckCart,
+    setUserID,
+    setCartInfo,
+  } = useGlobal();
 
   // const [cartTotal, setCartTotal] = useState(0);
   const cartTotal = cartInfo.reduce((prev, curr) => prev + +curr?.quantity, 0);
@@ -57,7 +66,7 @@ const NavBar = () => {
   //   setCartTotal(total);
   // }, [cartInfo]);
 
-  const user = false;
+  // const user = false;
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -91,6 +100,80 @@ const NavBar = () => {
 
   const handleDashboard = (val) => {
     router.push('/dashboard');
+    localStorage.setItem('active', val);
+  };
+
+  const handleLogin = (val) => {
+    router.push('/login');
+    localStorage.setItem('active', val);
+  };
+
+  const handleLogout = async (val) => {
+    // * set localhost userid to new-userid and set global userID
+    // ################################################################
+    const users = localStorage.getItem('lola-new-userId');
+    const userscleaned = JSON.parse(users);
+    console.log('userscleaned :>> ', userscleaned);
+    localStorage.setItem('lola-userId', users);
+    setUserID(userscleaned);
+    // ##################################################################
+
+    //* get address and create lola-address
+    // #################################################################
+    const { data: addressData } = await axios.get(
+      `${
+        process.env.NEXT_PUBLIC_BACKEND_URL
+      }/api/addresses/${userscleaned?.addressID.toString()}`
+    );
+
+    const addressInfo = {
+      firstName: addressData?.data?.attributes?.firstName,
+      lastName: addressData?.data?.attributes?.lastName,
+      phoneNumber: addressData?.data?.attributes?.phoneNumber,
+      emailAddress: addressData?.data?.attributes?.emailAddress,
+      country: addressData?.data?.attributes?.country,
+      state: addressData?.data?.attributes?.state,
+      deliveryAddress: addressData?.data?.attributes?.deliveryAddress,
+      additionalInfo: addressData?.data?.attributes?.additionalInfo,
+    };
+    localStorage.setItem('lola-address', JSON.stringify(addressInfo));
+    // #################################################################
+
+    //* get unconfirmed cart and create lola-cart
+    // ################################################################
+
+    const { data: cartData } = await axios.get(
+      `${
+        process.env.NEXT_PUBLIC_BACKEND_URL
+      }/api/anonusers/${userscleaned?.anonID.toString()}?populate=*`
+    );
+    console.log('cartData :>> ', cartData);
+    localStorage.setItem('lola-cart', JSON.stringify({}));
+    setCartInfo([]);
+    if (cartData?.data?.attributes?.carts?.data.length !== 0) {
+      const userCart = cartData?.data?.attributes?.carts?.data.filter(
+        (elem) => elem?.attributes?.complete == false
+      );
+      let newArr = [];
+      userCart.forEach((elem) => newArr.push(elem?.attributes));
+      setCartInfo(newArr);
+      const newObj = {};
+      userCart.forEach((elem) => {
+        Object.assign(newObj, {
+          [elem?.attributes?.variantId]: {
+            cartId: elem?.attributes?.cartId,
+            datID: elem?.id,
+            variantId: elem?.attributes?.variantId,
+          },
+        });
+      });
+      // console.log('newObj :>> ', newObj);
+      localStorage.setItem('lola-cart', JSON.stringify(newObj));
+    }
+
+    // #################################################################
+    removeCookies('lola_key');
+    router.push('/');
     localStorage.setItem('active', val);
   };
   useEffect(() => {
@@ -242,37 +325,31 @@ const NavBar = () => {
                   // as='box'
                   // href='/dashboard'
                   icon={<MdOutlineDashboard />}
-                  className={` cursor-pointer py-2 px-2  transition duration-300 ease-in-out  hover:ring-1 hover:ring-gray-300 ${
-                    active == 'dashboard'
-                      ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
-                      : ''
-                  }`}
+                  className={` cursor-pointer py-2 px-2  transition duration-300 ease-in-out  hover:ring-1 hover:ring-gray-300`}
                   onClick={() => handleDashboard('dashboard')}
                 >
                   Dashboard
                 </MenuItem>
                 {/* </MenuList> */}
-                {user ? (
-                  // <MenuList>
-                  <MenuItem as='a' href='/' icon={<GrLogout />}>
+                {getCookie('lola_key') ? (
+                  <MenuItem
+                    className={` cursor-pointer py-2 px-2  transition duration-300 ease-in-out  hover:ring-1 hover:ring-gray-300`}
+                    onClick={() => handleLogout('home')}
+                    icon={<GrLogout />}
+                  >
                     Log Out
                   </MenuItem>
                 ) : (
-                  // </MenuList>
-                  // <MenuList>
                   <MenuItem
-                    as='a'
-                    href='/login'
+                    // as='a'
+                    // href='/login'
                     icon={<GrLogin />}
-                    className={` py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 ${
-                      active == 'login'
-                        ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
-                        : ''
-                    }`}
-                    onClick={() => handleActive('login')}
+                    className={` cursor-pointer py-2 px-2  transition duration-300 ease-in-out  hover:ring-1 hover:ring-gray-300 `}
+                    onClick={() => handleLogin('login')}
                   >
                     Login
                   </MenuItem>
+
                   // </MenuList>
                 )}
               </MenuList>
@@ -406,12 +483,12 @@ const NavBar = () => {
                       Dashboard
                     </a>
                   </Link>
-                  {user ? (
+                  {getCookie('lola_key') ? (
                     <Link href='/' passHref>
                       <a
                         data-name='logout'
                         className={`rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 `}
-                        onClick={() => handleActive('home')}
+                        onClick={() => handleLogout('home')}
                       >
                         Logout
                       </a>
@@ -425,7 +502,7 @@ const NavBar = () => {
                             ? 'bg-yellow-500 text-white ring-1 ring-gray-300'
                             : ''
                         }`}
-                        onClick={() => handleActive('login')}
+                        onClick={() => handleLogin('login')}
                       >
                         Login
                       </a>

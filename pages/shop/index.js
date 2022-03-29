@@ -30,12 +30,14 @@ export async function getStaticProps() {
     }
   );
 
-  const URL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:1337'
-      : 'https://lola-adeoti-new-backend.herokuapp.com';
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
 
-  let product = await axios.get(`${URL}/api/products?${queryPopulate}`);
+  let product = await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?${queryPopulate}`
+  );
   // const { data } = await axios.get(`${URL}/api/products`);
   // console.log('data', data);
   return {

@@ -17,6 +17,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import no_order from '../../public/dashboard/no_order.svg';
 import { Pagination } from 'antd';
+import ProfileDetails from './ProfileDetails';
 
 const Dashboard = () => {
   const { userID } = useGlobal();
@@ -34,7 +35,7 @@ const Dashboard = () => {
 
   const handleOrders = async () => {
     const { data } = await axios.get(
-      `${URL}/api/anonusers/${userID?.anonID}?${queryPopulate}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/anonusers/${userID?.anonID}?${queryPopulate}`
       // `${URL}/api/anonusers/${userID?.anonID}?populate=*`
     );
     return data?.data;
@@ -48,6 +49,8 @@ const Dashboard = () => {
       // initialData: userData,
     }
   );
+
+  // console.log('data', data);
   useEffect(() => {
     if (isSuccess) {
       const sortedData = data?.attributes?.confirmedcarts?.data?.sort(
@@ -59,10 +62,10 @@ const Dashboard = () => {
     }
   }, [isSuccess]);
 
-  const URL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:1337'
-      : 'https://lola-adeoti-new-backend.herokuapp.com';
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
 
   const queryPopulate = qs.stringify(
     {
@@ -169,7 +172,12 @@ const Dashboard = () => {
             </>
           </TabPanel>
           <TabPanel>
-            <ProfileCard />
+            <>
+              {isSuccess && data?.attributes?.email === null && <ProfileCard />}
+              {isSuccess && data?.attributes?.email !== null && (
+                <ProfileDetails data={data} />
+              )}
+            </>
           </TabPanel>
         </TabPanels>
       </Tabs>
