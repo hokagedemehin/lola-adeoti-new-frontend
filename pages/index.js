@@ -76,20 +76,22 @@ export async function getStaticProps() {
     }
   );
 
-  const URL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:1337'
-      : 'https://lola-adeoti-new-backend.herokuapp.com';
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
 
-  let campaign = await axios.get(`${URL}/api/campaigns?${queryPopulate}`);
+  let campaign = await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaigns?${queryPopulate}`
+  );
   let personality = await axios.get(
-    `${URL}/api/personalities?${queryPopulate}`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/personalities?${queryPopulate}`
   );
   let featuredData = await axios.get(
-    `${URL}/api/products?${queryFeaturedPopulate}`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?${queryFeaturedPopulate}`
   );
   let popularData = await axios.get(
-    `${URL}/api/products?${queryPopularPopulate}`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?${queryPopularPopulate}`
   );
   // let campaign = await axios.get(`${URL}/api/campaigns?populate=*`);
   // let personality = await axios.get(`${URL}/api/personalities?populate=*`);

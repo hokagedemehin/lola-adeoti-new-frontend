@@ -36,10 +36,10 @@ const qs = require('qs');
 const ProductDetails = ({ products }) => {
   // const product = products;
   // console.log('product details:>> ', product);
-  const URL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:1337'
-      : 'https://lola-adeoti-new-backend.herokuapp.com';
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
   const router = useRouter();
   let id = null;
 
@@ -58,7 +58,7 @@ const ProductDetails = ({ products }) => {
 
   const handleProducts = async () => {
     const { data } = await axios.get(
-      `${URL}/api/products/${id}?${queryPopulate}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/${id}?${queryPopulate}`
       // `${URL}/api/anonusers/${userID?.anonID}?populate=*`
     );
     // console.log(data);
@@ -100,17 +100,23 @@ const ProductDetails = ({ products }) => {
     try {
       setModalLoading(true);
 
-      await axios.post(`${URL}/api/bagnotifications`, {
-        data: {
-          variantId: varID,
-          name: product?.attributes?.name,
-          color:
-            product?.attributes?.variants?.data[indexID]?.attributes?.color,
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/bagnotifications`,
+        {
+          data: {
+            variantId: varID,
+            name: product?.attributes?.name,
+            color:
+              product?.attributes?.variants?.data[indexID]?.attributes?.color,
 
-          userName: formValue?.name,
-          userEmail: formValue?.email,
-        },
-      });
+            userName: formValue?.name,
+            userEmail: formValue?.email,
+          },
+        }
+      );
+      const sendForm = JSON.stringify(formValue);
+      const form = await axios.post('/api/contact', sendForm);
+      console.log('form :>> ', JSON.parse(form?.config?.data));
     } catch (error) {
       console.error(error);
     } finally {
@@ -178,10 +184,13 @@ const ProductDetails = ({ products }) => {
       datID: null,
     };
     if (cartInfo.length === 0) {
-      const { data } = await axios.post(`${URL}/api/carts`, {
-        data: newCart,
-        variant: varID,
-      });
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/carts`,
+        {
+          data: newCart,
+          variant: varID,
+        }
+      );
       const newID = data?.data?.id;
       newCart.strapiId = newID;
       arr.datID = newID;
@@ -198,9 +207,12 @@ const ProductDetails = ({ products }) => {
       //     encodeValuesOnly: true,
       //   }
       // );
-      await axios.put(`${URL}/api/carts/${newID}`, {
-        data: { strapiId: newID },
-      });
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/carts/${newID}`,
+        {
+          data: { strapiId: newID },
+        }
+      );
       // localStorage.setItem('lola-cart-1', JSON.stringify({[varID]: newCart}))
       setCartInfo([newCart]);
       toast({
@@ -218,10 +230,13 @@ const ProductDetails = ({ products }) => {
       // const cartKeys1 = Object.keys(carts1);
 
       if (!cartKeys.includes(newCart.variantId.toString())) {
-        const { data } = await axios.post(`${URL}/api/carts`, {
-          data: newCart,
-          variant: varID,
-        });
+        const { data } = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/carts`,
+          {
+            data: newCart,
+            variant: varID,
+          }
+        );
         const newID = data?.data?.id;
         newCart.strapiId = newID;
         arr.datID = newID;
@@ -233,9 +248,12 @@ const ProductDetails = ({ products }) => {
         // });
 
         localStorage.setItem('lola-cart', JSON.stringify(newCart1));
-        await axios.put(`${URL}/api/carts/${newID}`, {
-          data: { strapiId: newID },
-        });
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/carts/${newID}`,
+          {
+            data: { strapiId: newID },
+          }
+        );
         // localStorage.setItem('lola-cart-1', JSON.stringify(newCart2));
         setCartInfo([...cartInfo, newCart]);
         toast({
@@ -971,11 +989,13 @@ const ProductDetails = ({ products }) => {
 export default ProductDetails;
 
 export async function getStaticPaths() {
-  const URL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:1337'
-      : 'https://lola-adeoti-new-backend.herokuapp.com';
-  const { data } = await axios.get(`${URL}/api/products`);
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products`
+  );
 
   const paths = data.data.map((product) => ({
     params: { slug: [product?.id.toString(), product?.attributes?.slug] },
@@ -986,10 +1006,10 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   // console.log(params);
-  const URL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:1337'
-      : 'https://lola-adeoti-new-backend.herokuapp.com';
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
 
   const queryPopulate = qs.stringify(
     {
@@ -1002,7 +1022,7 @@ export async function getStaticProps({ params }) {
 
   // let product = await axios.get(`${URL}/api/products?${queryPopulate}`);
   const { data } = await axios.get(
-    `${URL}/api/products/${params.slug[0]}?${queryPopulate}`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/${params.slug[0]}?${queryPopulate}`
   );
   if (!data?.data) {
     return { notFound: true };

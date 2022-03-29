@@ -58,10 +58,10 @@ const CheckoutComponent = () => {
   //   return () => router.push('/shop');
   // }
 
-  const URL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:1337'
-      : 'https://lola-adeoti-new-backend.herokuapp.com';
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
 
   const nairaTotal = cartInfo.reduce((prev, curr) => {
     const naira = +curr?.quantity * +curr?.nairaPrice;
@@ -151,10 +151,13 @@ const CheckoutComponent = () => {
     // setCurrentStep(currentStep + 1);
     try {
       // * post address to strapi
-      await axios.put(`${URL}/api/addresses/${userID?.addressID}`, {
-        data: formValue,
-        anonuser: userID?.anonID,
-      });
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/addresses/${userID?.addressID}`,
+        {
+          data: formValue,
+          anonuser: userID?.anonID,
+        }
+      );
       // * post order  to strapi
       const anonid = userID?.anonID;
       const addressid = userID?.addressID;
@@ -185,7 +188,7 @@ const CheckoutComponent = () => {
         address: addressid,
       };
       const { data: orderData } = await axios.post(
-        `${URL}/api/confirmedcarts`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/confirmedcarts`,
         {
           data: newOrder,
         }
@@ -195,25 +198,31 @@ const CheckoutComponent = () => {
         // console.log('elem :>> ', elem);
         // *** get the current variant and calculate the new quantity ****
         const { data: variant } = await axios.get(
-          `${URL}/api/variants/${elem?.variantId}`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/variants/${elem?.variantId}`
         );
         // console.log(variant);
         const newQuantity =
           variant?.data?.attributes?.quantity - +elem?.quantity;
         // console.log('newQuantity', newQuantity);
         // *** change the cart status ***
-        await axios.put(`${URL}/api/carts/${elem?.strapiId}`, {
-          data: {
-            complete: true,
-            confirmedcart: orderData?.data?.id,
-          },
-        });
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/carts/${elem?.strapiId}`,
+          {
+            data: {
+              complete: true,
+              confirmedcart: orderData?.data?.id,
+            },
+          }
+        );
         // *** change the cart quantity ***
-        await axios.put(`${URL}/api/variants/${elem?.variantId}`, {
-          data: {
-            quantity: newQuantity,
-          },
-        });
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/variants/${elem?.variantId}`,
+          {
+            data: {
+              quantity: newQuantity,
+            },
+          }
+        );
         // console.log('varData', varData);
       });
       //  ***clear cart everywhere****
@@ -313,7 +322,9 @@ const CheckoutComponent = () => {
         let cartKeys = Object.keys(cleanedCart);
         // console.log(cartKeys, cleanedCart);
         cartKeys.forEach(async (elem) => {
-          const { data } = await axios.get(`${URL}/api/variants/${elem}`);
+          const { data } = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/variants/${elem}`
+          );
 
           // console.log(data);
           // console.log(data?.data?.attributes?.quantity);
@@ -332,7 +343,9 @@ const CheckoutComponent = () => {
             localStorage.setItem('lola-cart', JSON.stringify(cleanedCart));
             // if (getCart.length !== 0) {
             await axios.delete(
-              `${URL}/api/carts/${getCart[0]?.strapiId.toString()}`
+              `${
+                process.env.NEXT_PUBLIC_BACKEND_URL
+              }/api/carts/${getCart[0]?.strapiId.toString()}`
             );
             // }
           }
@@ -371,7 +384,7 @@ const CheckoutComponent = () => {
             <div className=' grid w-full space-y-2 sm:grid-cols-2 sm:space-x-2 sm:space-y-0'>
               <div className='flex'>
                 <FormControl isRequired>
-                  <FormLabel htmlFor='firstName'>FirstName</FormLabel>
+                  <FormLabel htmlFor='firstName'>First Name</FormLabel>
                   <InputGroup>
                     <InputLeftElement
                       pointerEvents='none'
@@ -592,7 +605,10 @@ const CheckoutComponent = () => {
                   >
                     <div className='flex justify-between space-x-4'>
                       {/* image */}
-                      <Link href={`${URL}${elem?.link}`} passHref>
+                      <Link
+                        href={`${process.env.NEXT_PUBLIC_BACKEND_URL}${elem?.link}`}
+                        passHref
+                      >
                         <a
                           // href='#'
                           // className='group relative block h-48 w-32 overflow-hidden bg-gray-100 sm:h-56 sm:w-40'
@@ -617,7 +633,10 @@ const CheckoutComponent = () => {
                       <div className='flex flex-1 flex-col justify-between py-3 pr-2'>
                         {/* name | color */}
                         <div>
-                          <Link href={`${URL}${elem?.link}`} passHref>
+                          <Link
+                            href={`${process.env.NEXT_PUBLIC_BACKEND_URL}${elem?.link}`}
+                            passHref
+                          >
                             <a className='mb-1 inline-block text-lg font-bold text-gray-800 transition duration-100 hover:text-gray-500 md:text-xl'>
                               <Text>{elem?.name}</Text>
                             </a>

@@ -20,11 +20,11 @@ const Notification = () => {
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      const URL =
-        process.env.NODE_ENV !== 'production'
-          ? 'http://localhost:1337'
-          : 'https://lola-adeoti-new-backend.herokuapp.com';
-      await axios.post(`${URL}/api/promos`, {
+      // const URL =
+      //   process.env.NODE_ENV !== 'production'
+      //     ? 'http://localhost:1337'
+      //     : 'https://lola-adeoti-new-backend.herokuapp.com';
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/promos`, {
         data: {
           email: formValue.email,
         },

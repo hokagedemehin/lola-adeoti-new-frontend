@@ -15,7 +15,7 @@ const ContactPoint = () => {
           <Circle size='60px' className=' bg-yellow-300'>
             <MdAccessTimeFilled className='text-2xl' />
           </Circle>
-          <Text className='text-center text-xl font-bold'>Timelessness</Text>
+          <Text className='text-center text-xl font-bold'>Work Hours</Text>
           <div className='space-y-1 text-base '>
             <Text className='text-center text-gray-500'>
               Monday to Friday: 24 Hours

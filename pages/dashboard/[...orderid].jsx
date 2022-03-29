@@ -10,10 +10,10 @@ const DashboardDetails = () => {
   const router = useRouter();
   // console.log(router);
   // const [orderID, setOrderID] = useState(null);
-  const URL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:1337'
-      : 'https://lola-adeoti-new-backend.herokuapp.com';
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
 
   // useEffect(() => {
   //   if (router?.query?.orderid) {
@@ -48,7 +48,7 @@ const DashboardDetails = () => {
 
   const handleOrders = async () => {
     const { data } = await axios.get(
-      `${URL}/api/confirmedcarts/${id}?${queryPopulate}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/confirmedcarts/${id}?${queryPopulate}`
       // `${URL}/api/anonusers/${userID?.anonID}?populate=*`
     );
     return data?.data;

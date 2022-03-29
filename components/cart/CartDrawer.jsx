@@ -41,15 +41,15 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
   const [updateLoading, setUpdateLoading] = useState(false);
   // const [cartName, setCartName] = useState([]);
 
-  const URL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:3000'
-      : 'https://lolaadeoti.vercel.app';
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:3000'
+  //     : 'https://lolaadeoti.vercel.app';
 
-  const URL1 =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:1337'
-      : 'https://lola-adeoti-new-backend.herokuapp.com';
+  // const URL1 =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
 
   const handleChange = (e, elem) => {
     setUpdateDisable(false);
@@ -67,9 +67,12 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
     try {
       setUpdateLoading(true);
       cartInfo.forEach(async (element) => {
-        await axios.put(`${URL1}/api/carts/${element?.strapiId}`, {
-          data: element,
-        });
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/carts/${element?.strapiId}`,
+          {
+            data: element,
+          }
+        );
       });
       toast({
         title: 'Cart Updated.',
@@ -100,7 +103,9 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
       // const newCart = Object.values(cartLocal)
       // const newLocal = cartLocal
       localStorage.setItem('lola-cart', JSON.stringify(cartLocal));
-      await axios.delete(`${URL1}/api/carts/${val?.strapiId}`);
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/carts/${val?.strapiId}`
+      );
     } catch (error) {
       console.error(error);
     }
@@ -111,7 +116,9 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
       const cartLocal = JSON.parse(localStorage.getItem('lola-cart'));
       const newCart = Object.values(cartLocal);
       newCart.forEach(async (values) => {
-        await axios.delete(`${URL1}/api/carts/${values?.datID}`);
+        await axios.delete(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/carts/${values?.datID}`
+        );
       });
       setCartInfo([]);
       localStorage.removeItem('lola-cart');
@@ -152,7 +159,9 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
         let cartKeys = Object.keys(cleanedCart);
         // console.log(cartKeys, cleanedCart);
         cartKeys.forEach(async (elem) => {
-          const { data } = await axios.get(`${URL1}/api/variants/${elem}`);
+          const { data } = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/variants/${elem}`
+          );
 
           // console.log(data);
           // console.log(data?.data?.attributes?.quantity);
@@ -171,7 +180,9 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
             localStorage.setItem('lola-cart', JSON.stringify(cleanedCart));
             // if (getCart.length !== 0) {
             await axios.delete(
-              `${URL1}/api/carts/${getCart[0]?.strapiId.toString()}`
+              `${
+                process.env.NEXT_PUBLIC_BACKEND_URL
+              }/api/carts/${getCart[0]?.strapiId.toString()}`
             );
             // }
           }
@@ -239,7 +250,10 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
                     <div className='flex w-full flex-col overflow-hidden rounded-lg border transition ease-in-out hover:shadow-md'>
                       <div className='flex justify-between space-x-4'>
                         {/* image */}
-                        <Link href={`${URL}${elem?.link}`} passHref>
+                        <Link
+                          href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}${elem?.link}`}
+                          passHref
+                        >
                           <a
                             // href='#'
                             // className='group relative block h-48 w-32 overflow-hidden bg-gray-100 sm:h-56 sm:w-40'
@@ -264,7 +278,10 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
                         <div className='flex flex-1 flex-col justify-between py-4 pr-2'>
                           {/* name | color */}
                           <div>
-                            <Link href={`${URL}${elem?.link}`} passHref>
+                            <Link
+                              href={`${process.env.NEXT_PUBLIC_FRONTEND_URL}${elem?.link}`}
+                              passHref
+                            >
                               <a className='mb-1 inline-block text-lg font-bold text-gray-800 transition duration-100 hover:text-gray-500 md:text-xl'>
                                 <Text>{elem?.name}</Text>
                               </a>

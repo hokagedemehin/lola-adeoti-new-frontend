@@ -9,10 +9,10 @@ import Image from 'next/image';
 import { useGlobal } from '../../utils/context/GlobalData';
 
 const RelatedProducts = ({ id }) => {
-  const URL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:1337'
-      : 'https://lola-adeoti-new-backend.herokuapp.com';
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
 
   const { globalCurr } = useGlobal();
 
@@ -46,7 +46,7 @@ const RelatedProducts = ({ id }) => {
 
   const handleProducts = async () => {
     const { data: products } = await axios.get(
-      `${URL}/api/products?populate=*`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?populate=*`
     );
     // console.log('data', data);
     return products;

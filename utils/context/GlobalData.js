@@ -10,10 +10,10 @@ export default function GlobalDataContext({ children }) {
   const [userID, setUserID] = useState(null);
   const [cartInfo, setCartInfo] = useState([]);
   const [checkCart, setCheckCart] = useState(false);
-  const URL =
-    process.env.NODE_ENV !== 'production'
-      ? 'http://localhost:1337'
-      : 'https://lola-adeoti-new-backend.herokuapp.com';
+  // const URL =
+  //   process.env.NODE_ENV !== 'production'
+  //     ? 'http://localhost:1337'
+  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
   // console.log('userID', userID);
   // console.log('cartInfo :>> ', cartInfo);
   let arr = [];
@@ -38,7 +38,9 @@ export default function GlobalDataContext({ children }) {
         }
       );
       // const { data } = await axios.get(`${URL}/api/carts/${elem?.datID}`);
-      const { data: res } = await axios.get(`${URL}/api/carts?${query}`);
+      const { data: res } = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/carts?${query}`
+      );
       // console.log('res', res.data[0]);
       // console.log('data', data);
       // arr.push(data?.data?.attributes);
@@ -62,17 +64,23 @@ export default function GlobalDataContext({ children }) {
       } else {
         let id = nanoid();
         let addressId = nanoid();
-        const { data } = await axios.post(`${URL}/api/anonusers`, {
-          data: {
-            userId: id,
-          },
-        });
-        const { data: addressData } = await axios.post(`${URL}/api/addresses`, {
-          data: {
-            userId: addressId,
-            anonuser: data?.data?.id,
-          },
-        });
+        const { data } = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/anonusers`,
+          {
+            data: {
+              userId: id,
+            },
+          }
+        );
+        const { data: addressData } = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/addresses`,
+          {
+            data: {
+              userId: addressId,
+              anonuser: data?.data?.id,
+            },
+          }
+        );
         // console.log('data', data);
         localStorage.setItem(
           'lola-userId',
