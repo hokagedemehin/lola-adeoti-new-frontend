@@ -485,14 +485,12 @@ const NavBar = () => {
                     </a>
                   </Link>
                   {getCookie('lola_key') ? (
-                    <div>
-                      <a
-                        data-name='logout'
-                        className={`rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 `}
-                        onClick={() => handleLogout('home')}
-                      >
-                        Logout
-                      </a>
+                    <div
+                      data-name='logout'
+                      className={` cursor-pointer rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 `}
+                      onClick={() => handleLogout('home')}
+                    >
+                      Logout
                     </div>
                   ) : (
                     <Link href='/login' passHref>
