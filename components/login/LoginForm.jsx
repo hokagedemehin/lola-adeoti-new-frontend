@@ -18,11 +18,11 @@ import {
   MdOutlineLock,
   // MdArrowForward,
 } from 'react-icons/md';
-import { setCookies } from 'cookies-next';
+// import { setCookies } from 'cookies-next';
 import { useGlobal } from '../../utils/context/GlobalData';
 
 const LoginForm = () => {
-  const { setUserID, setCartInfo } = useGlobal();
+  const { setUserID, setCartInfo, setLolaKey } = useGlobal();
   const toast = useToast();
   // const router = useRouter();
   const [formValue, setFormValue] = useState({});
@@ -52,7 +52,9 @@ const LoginForm = () => {
         }
       );
       // console.log('data :>> ', data);
-      setCookies('lola_key', data.jwt);
+      // setCookies('lola_key', data.jwt);
+      localStorage.setItem('lola-key', data.jwt);
+      setLolaKey(data.jwt);
       router.push('/shop');
 
       // *set lola-userid from starpi

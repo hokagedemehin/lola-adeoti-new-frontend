@@ -10,6 +10,7 @@ export default function GlobalDataContext({ children }) {
   const [userID, setUserID] = useState(null);
   const [cartInfo, setCartInfo] = useState([]);
   const [checkCart, setCheckCart] = useState(false);
+  const [lolaKey, setLolaKey] = useState('');
   // const URL =
   //   process.env.NODE_ENV !== 'production'
   //     ? 'http://localhost:1337'
@@ -53,6 +54,8 @@ export default function GlobalDataContext({ children }) {
   useEffect(() => {
     const curr = localStorage.getItem('currency');
     setGlobalCurr(curr);
+    const keys = localStorage.getItem('lola_key');
+    setLolaKey(keys);
   }, []);
 
   useEffect(() => {
@@ -111,6 +114,8 @@ export default function GlobalDataContext({ children }) {
         setCartInfo,
         checkCart,
         setCheckCart,
+        lolaKey,
+        setLolaKey,
       }}
     >
       {children}

@@ -13,14 +13,14 @@ import React, { useEffect, useState } from 'react';
 // import { BsTelephone, BsCreditCard } from 'react-icons/bs';
 import { AiOutlineUser } from 'react-icons/ai';
 import { MdAlternateEmail, MdOutlineLock } from 'react-icons/md';
-import { setCookies } from 'cookies-next';
+// import { setCookies } from 'cookies-next';
 import { useGlobal } from '../../utils/context/GlobalData';
 import { useRouter } from 'next/router';
-import { getCookie } from 'cookies-next';
+// import { getCookie } from 'cookies-next';
 import { nanoid } from 'nanoid';
 
 const RegisterForm = () => {
-  const { userID } = useGlobal();
+  const { userID, setLolaKey } = useGlobal();
   const router = useRouter();
   const toast = useToast();
   const [formValue, setFormValue] = useState({});
@@ -28,7 +28,7 @@ const RegisterForm = () => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    if (getCookie('lola_key')) {
+    if (localStorage.getItem('lola_key')) {
       // router.back();
       router.push('/shop');
     }
@@ -63,7 +63,9 @@ const RegisterForm = () => {
         }
       );
       // console.log('data :>> ', data);
-      setCookies('lola_key', data.jwt);
+      localStorage.setItem('lola-key', data.jwt);
+      setLolaKey(data.jwt);
+      // setCookies('lola_key', data.jwt);
 
       // update anon details
       await axios.put(

@@ -38,7 +38,7 @@ import { MdOutlineDashboard } from 'react-icons/md';
 import { useRouter } from 'next/router';
 import AOS from 'aos';
 import { useGlobal } from '../../utils/context/GlobalData';
-import { getCookie, removeCookies } from 'cookies-next';
+// import { getCookie, removeCookies } from 'cookies-next';
 import axios from 'axios';
 
 const NavBar = () => {
@@ -56,6 +56,8 @@ const NavBar = () => {
     setCheckCart,
     setUserID,
     setCartInfo,
+    lolaKey,
+    setLolaKey,
   } = useGlobal();
 
   // const [cartTotal, setCartTotal] = useState(0);
@@ -83,6 +85,8 @@ const NavBar = () => {
   const [active, setActive] = useState('');
   const [currency, setCurrency] = useState('');
   const [currentCurr, setCurrentCurr] = useState('');
+
+  // console.log('lolaKey', lolaKey);
   // console.log('currenct :>> ', currency);
   // console.log('currentCurr', currentCurr);
   // console.log(location);
@@ -173,7 +177,8 @@ const NavBar = () => {
 
     // #################################################################
 
-    removeCookies('lola_key');
+    localStorage.removeItem('lola_key');
+    setLolaKey('');
     router.push('/');
     localStorage.setItem('active', val);
   };
@@ -332,7 +337,7 @@ const NavBar = () => {
                   Dashboard
                 </MenuItem>
                 {/* </MenuList> */}
-                {getCookie('lola_key') ? (
+                {lolaKey ? (
                   <MenuItem
                     className={` cursor-pointer py-2 px-2  transition duration-300 ease-in-out  hover:ring-1 hover:ring-gray-300`}
                     onClick={() => handleLogout('home')}
@@ -484,7 +489,7 @@ const NavBar = () => {
                       Dashboard
                     </a>
                   </Link>
-                  {getCookie('lola_key') ? (
+                  {lolaKey ? (
                     <div
                       data-name='logout'
                       className={` cursor-pointer rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 `}
