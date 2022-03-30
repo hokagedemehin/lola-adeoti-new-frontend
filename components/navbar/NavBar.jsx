@@ -113,7 +113,7 @@ const NavBar = () => {
     // ################################################################
     const users = localStorage.getItem('lola-new-userId');
     const userscleaned = JSON.parse(users);
-    console.log('userscleaned :>> ', userscleaned);
+    // console.log('userscleaned :>> ', userscleaned);
     localStorage.setItem('lola-userId', users);
     setUserID(userscleaned);
     // ##################################################################
@@ -147,7 +147,7 @@ const NavBar = () => {
         process.env.NEXT_PUBLIC_BACKEND_URL
       }/api/anonusers/${userscleaned?.anonID.toString()}?populate=*`
     );
-    console.log('cartData :>> ', cartData);
+    // console.log('cartData :>> ', cartData);
     localStorage.setItem('lola-cart', JSON.stringify({}));
     setCartInfo([]);
     if (cartData?.data?.attributes?.carts?.data.length !== 0) {
@@ -172,6 +172,7 @@ const NavBar = () => {
     }
 
     // #################################################################
+
     removeCookies('lola_key');
     router.push('/');
     localStorage.setItem('active', val);
@@ -484,7 +485,7 @@ const NavBar = () => {
                     </a>
                   </Link>
                   {getCookie('lola_key') ? (
-                    <Link href='/' passHref>
+                    <div>
                       <a
                         data-name='logout'
                         className={`rounded-md py-2 px-2 transition  duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:ring-1 hover:ring-gray-300 `}
@@ -492,7 +493,7 @@ const NavBar = () => {
                       >
                         Logout
                       </a>
-                    </Link>
+                    </div>
                   ) : (
                     <Link href='/login' passHref>
                       <a
