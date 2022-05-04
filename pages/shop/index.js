@@ -1,17 +1,21 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
 import axios from 'axios';
-import ShopHeroSection from '../../components/shop/HeroSection';
-import ProductList from '../../components/shop/ProductList';
+// import ShopHeroSection from '../../components/shop/HeroSection';
+// import ProductList from '../../components/shop/ProductList';
+import NewShopHeroSection from '../../components/shop/NewHeroSection';
+import NewProductList from '../../components/shop/NewProductList';
 const qs = require('qs');
 
 const ShopPage = ({ product }) => {
   // console.log('product', product);
   return (
     <Layout name='Shop' desc='Shop all your lola adeoti bags '>
-      <ShopHeroSection />
+      {/* <ShopHeroSection /> */}
+      <NewShopHeroSection />
       <div className='mx-2'>
-        <ProductList data={product.data} />
+        {/* <ProductList data={product.data} /> */}
+        <NewProductList data={product.data} />
       </div>
     </Layout>
   );
@@ -36,7 +40,7 @@ export async function getStaticProps() {
   //     : 'https://lola-adeoti-new-backend.herokuapp.com';
 
   let product = await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?${queryPopulate}`
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/variants?${queryPopulate}`
   );
   // const { data } = await axios.get(`${URL}/api/products`);
   // console.log('data', data);

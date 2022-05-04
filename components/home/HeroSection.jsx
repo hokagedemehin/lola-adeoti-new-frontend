@@ -31,7 +31,7 @@ const HeroSection = () => {
             objectPosition='right'
             // style={{ display: 'none' }}
           />
-          <div className='absolute inset-0 h-[25rem] w-full bg-white opacity-25 sm:h-[40rem]'></div>
+          <div className='absolute inset-0 h-[25rem] w-full bg-white opacity-10 sm:h-[40rem]'></div>
         </div>
         {/* small screen image */}
         <div className='relative block h-[25rem] w-full sm:hidden sm:h-[40rem]'>
@@ -45,7 +45,7 @@ const HeroSection = () => {
             objectPosition='right'
             // style={{ display: 'none' }}
           />
-          <div className='inset absolute h-[25rem] w-full bg-white opacity-25 sm:h-[40rem]'></div>
+          <div className='inset absolute h-[25rem] w-full bg-white opacity-10 sm:h-[40rem]'></div>
         </div>
         <div className='absolute left-[10%] top-[20%] space-y-4'>
           {/* CTA Slogan */}
@@ -77,7 +77,7 @@ const HeroSection = () => {
             <Link href='/shop' passHref>
               <a
                 onClick={() => handleActive('shop')}
-                className='flex items-center justify-center rounded-lg bg-yellow-400 px-4 py-1  font-semibold text-black ring-1 ring-gray-200 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:text-black hover:shadow-md hover:shadow-gray-600 active:scale-90 active:shadow-md active:shadow-gray-600 sm:px-6 sm:py-2 sm:text-lg'
+                className='flex items-center justify-center rounded-lg bg-black px-4 py-1  font-semibold text-white ring-1 ring-gray-200 transition delay-150 duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-yellow-500 hover:text-black hover:shadow-md hover:shadow-gray-600 active:scale-90 active:shadow-md active:shadow-gray-600 sm:px-6 sm:py-2 sm:text-lg'
               >
                 Shop Collection
               </a>

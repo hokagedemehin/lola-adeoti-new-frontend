@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useGlobal } from '../../utils/context/GlobalData';
-import { Pagination } from 'antd';
+// import { Pagination } from 'antd';
 import empty_search from '../../public/shop/empty_search.png';
 
-const ProductList = ({ data }) => {
+const NewProductList = ({ data }) => {
   /**
    * *? the data taken from index page
    * *? searching by name is implemented
@@ -15,30 +15,16 @@ const ProductList = ({ data }) => {
    * ? large screens 3 columns 2 rows
    * ? small screens 2 columns 3 rows
    */
-  // console.log('data', data);
   const { globalCurr } = useGlobal();
-  // const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(data.length);
-  // console.log('searchTerm :>> ', searchTerm);
-
-  const [pageSiz] = useState(6);
-
-  const [fullData, setFullData] = useState(data);
-  let startData = fullData.slice(0, pageSiz);
-  let [newData, setNewData] = useState(startData);
-  // console.log('newData :>> ', newData);
-  // console.log('fullData', fullData);
+  shuffle(data);
+  let [newData, setNewData] = useState(data);
   let data1 = [];
   // #####################################
   // * filter the data and slice it by pagesize afterwards
   // ########################################
   const handleSearch = (e) => {
-    // setSearchTerm(e.target.value);
     let searchValue = e.target.value;
-    // console.log('searchValue', searchValue);
     data1 = data.filter((val) => {
-      // console.log('search here :>> ', searchTerm);
       if (searchValue == '' || searchValue.length === 0) {
         return val;
       } else if (
@@ -48,21 +34,17 @@ const ProductList = ({ data }) => {
         return val;
       }
     });
-    // console.log('data1 :>> ', data1);
-
-    let data2 = data1.slice(0, pageSiz);
-    // console.log('data2 :>> ', data2);
-    setFullData(data1);
-    setNewData(data2);
-    setTotalPages(data1.length);
+    shuffle(data1);
+    setNewData(data1);
   };
 
-  const handleChange = (page) => {
-    const indexOfLast = page * pageSiz;
-    const indexOfFirst = indexOfLast - pageSiz;
-    setNewData(fullData.slice(indexOfFirst, indexOfLast));
-    setCurrentPage(page);
-  };
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
 
   return (
     <div className='mx-auto max-w-screen-lg pt-5 pb-5 sm:pt-10'>
@@ -86,18 +68,20 @@ const ProductList = ({ data }) => {
         </Select>
       </div>
       {/* product list */}
-      <div className=' flex  flex-wrap items-center justify-center gap-5 py-4'>
+      <div className=' flex flex-wrap items-center justify-center gap-5 py-4'>
         {newData &&
           newData.map((elem, id) => (
             <div
-              // data-aos='fade-down'
-              // data-aos-duration='1000'
-              // data-aos-easing='ease-in-out'
+              data-aos='fade-up'
+              data-aos-duration='1000'
+              data-aos-easing='ease-in-out'
               key={id}
               className='flex rounded-lg p-3 transition duration-300 ease-in-out'
             >
               <Link
-                href={`/product/${elem?.id}/${elem?.attributes?.slug}`}
+                href={`/product/${elem?.id}/${elem?.attributes?.name
+                  .split('-')[0]
+                  .trim()}/${elem?.attributes?.name.split('-')[1].trim()}`}
                 passHref
               >
                 <a className='hover:text-current'>
@@ -115,6 +99,20 @@ const ProductList = ({ data }) => {
                       alt={elem?.attributes?.name}
                       className='transition delay-150 duration-500 ease-in-out hover:scale-110'
                     />
+                    <div className='absolute top-2 left-2 '>
+                      <div className='flex space-x-1'>
+                        {elem?.attributes?.new && (
+                          <Text className='flex h-7 w-7 items-center justify-center rounded-full border border-white bg-yellow-500 text-[10px] font-semibold text-black sm:h-10 sm:w-10 sm:text-base'>
+                            New
+                          </Text>
+                        )}
+                        {elem?.attributes?.sale && (
+                          <div className='flex h-7 w-7 items-center justify-center rounded-full border border-white bg-yellow-500 text-center text-[10px] font-semibold text-black sm:h-10 sm:w-10 sm:text-base'>
+                            Sale
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                   {/* name & price */}
                   <div className='flex'>
@@ -187,7 +185,7 @@ const ProductList = ({ data }) => {
           </div>
         )}
       </div>
-      <div className='flex items-center justify-center pt-5'>
+      {/* <div className='flex items-center justify-center pt-5'>
         <Pagination
           onChange={handleChange}
           current={currentPage}
@@ -202,9 +200,9 @@ const ProductList = ({ data }) => {
           hideOnSinglePage
           // showLessItems
         />
-      </div>
+      </div> */}
     </div>
   );
 };
 
-export default ProductList;
+export default NewProductList;
