@@ -67,6 +67,7 @@ const Notification = () => {
                 onClick={() => handleSubmit()}
                 isLoading={isLoading}
                 loadingText='Saving'
+                // className='bg-black'
               >
                 Submit
               </Button>

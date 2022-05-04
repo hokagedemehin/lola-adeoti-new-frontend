@@ -1,23 +1,26 @@
 import Layout from '../components/layout/Layout';
 
 import HeroSection from '../components/home/HeroSection';
-import PersonalitySection from '../components/home/Personality';
+// import PersonalitySection from '../components/home/Personality';
 import CampaignSection from '../components/home/Campaign';
 import axios from 'axios';
 import Featured from '../components/home/Featured';
-import Popular from '../components/home/Popular';
+// import Popular from '../components/home/Popular';
 import Notification from '../components/home/Notification';
 import TawkTo from 'tawkto-react';
 import { useEffect } from 'react';
+import NewPersonalitySection from '../components/home/NewPersonality';
 const qs = require('qs');
 
-export default function Home({ campaign, personality, featured, popular }) {
+export default function Home({ campaign, personality, variant }) {
   useEffect(() => {
     new TawkTo(
       process.env.NEXT_PUBLIC_PROPERTY_ID,
       process.env.NEXT_PUBLIC_TAWK_ID
     );
   }, []);
+
+  // console.log('variant :>> ', variant);
 
   return (
     <Layout
@@ -28,9 +31,10 @@ export default function Home({ campaign, personality, featured, popular }) {
         <HeroSection />
         <div className='mx-2'>
           <CampaignSection data={campaign?.data} />
-          <PersonalitySection data={personality?.data} />
-          <Featured data={featured?.data} />
-          <Popular data={popular?.data} />
+          {/* <PersonalitySection data={personality?.data} /> */}
+          <NewPersonalitySection data={personality?.data} />
+          <Featured data={variant?.data} />
+          {/* <Popular data={popular?.data} /> */}
           <Notification />
         </div>
       </div>
@@ -48,33 +52,44 @@ export async function getStaticProps() {
       encodeValuesOnly: true,
     }
   );
-  const queryFeaturedPopulate = qs.stringify(
-    {
-      populate: ['image', 'variants.image'],
-      filters: {
-        featured: {
-          $eq: true,
-        },
-      },
-    },
-    {
-      encodeValuesOnly: true,
-    }
-  );
-  const queryPopularPopulate = qs.stringify(
-    {
-      populate: ['image', 'variants.image'],
-      filters: {
-        popular: {
-          $eq: true,
-        },
-      },
-    },
+  // const queryFeaturedPopulate = qs.stringify(
+  //   {
+  //     populate: ['image', 'variants.image'],
+  //     filters: {
+  //       variants: {
+  //         featured: {
+  //           $eq: true,
+  //         },
+  //       },
+  //     },
+  //   },
+  //   {
+  //     encodeValuesOnly: true,
+  //   }
+  // );
 
-    {
-      encodeValuesOnly: true,
-    }
-  );
+  const queryVariantPopulate = qs.stringify({
+    populate: '*',
+    filters: {
+      featured: {
+        $eq: true,
+      },
+    },
+  });
+  // const queryPopularPopulate = qs.stringify(
+  //   {
+  //     populate: ['image', 'variants.image'],
+  //     filters: {
+  //       popular: {
+  //         $eq: true,
+  //       },
+  //     },
+  //   },
+
+  //   {
+  //     encodeValuesOnly: true,
+  //   }
+  // );
 
   // const URL =
   //   process.env.NODE_ENV !== 'production'
@@ -87,12 +102,15 @@ export async function getStaticProps() {
   let personality = await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/personalities?${queryPopulate}`
   );
-  let featuredData = await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?${queryFeaturedPopulate}`
+  // let featuredData = await axios.get(
+  //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?${queryFeaturedPopulate}`
+  // );
+  let variantData = await axios.get(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/variants?${queryVariantPopulate}`
   );
-  let popularData = await axios.get(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?${queryPopularPopulate}`
-  );
+  // let popularData = await axios.get(
+  //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products?${queryPopularPopulate}`
+  // );
   // let campaign = await axios.get(`${URL}/api/campaigns?populate=*`);
   // let personality = await axios.get(`${URL}/api/personalities?populate=*`);
   // let featuredData = await axios.get(`${URL}/api/products?populate=*`);
@@ -100,8 +118,9 @@ export async function getStaticProps() {
     props: {
       campaign: campaign.data,
       personality: personality.data,
-      featured: featuredData.data,
-      popular: popularData.data,
+      // featured: featuredData.data,
+      variant: variantData.data,
+      // popular: popularData.data,
     },
     revalidate: 10,
   };

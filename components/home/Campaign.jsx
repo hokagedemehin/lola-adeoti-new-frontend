@@ -60,7 +60,7 @@ const CampaignSection = ({ data }) => {
             <Image
               src={img?.attributes?.image?.data?.attributes?.url}
               layout='fill'
-              objectFit='contain'
+              objectFit='cover'
               placeholder='blur'
               blurDataURL={
                 img?.attributes?.image?.data?.attributes?.formats?.small?.url
