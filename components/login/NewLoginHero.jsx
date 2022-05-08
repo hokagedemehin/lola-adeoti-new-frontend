@@ -1,8 +1,8 @@
 import { Text } from '@chakra-ui/react';
 import Aos from 'aos';
-import Image from 'next/image';
+// import Image from 'next/image';
 import React, { useEffect } from 'react';
-import idoma_girl_green_strips from '../../public/login/idoma_girl_green_strips.jpeg';
+// import idoma_girl_green_strips from '../../public/login/idoma_girl_green_strips.jpeg';
 
 const NewLoginHero = () => {
   useEffect(() => {

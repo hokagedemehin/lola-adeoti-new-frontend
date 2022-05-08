@@ -84,8 +84,8 @@ const ProductDetails = ({ products }) => {
     variantName,
   } = useGlobal();
 
-  console.log('variantColor :>> ', variantColor);
-  console.log('variantName :>> ', variantName);
+  // console.log('variantColor :>> ', variantColor);
+  // console.log('variantName :>> ', variantName);
 
   const initialData = async () => {
     const queryColor = qs.stringify(
@@ -202,9 +202,9 @@ const ProductDetails = ({ products }) => {
           },
         }
       );
-      const sendForm = JSON.stringify(formValue);
-      const form = await axios.post('/api/contact', sendForm);
-      console.log('form :>> ', JSON.parse(form?.config?.data));
+      // const sendForm = JSON.stringify(formValue);
+      // const form = await axios.post('/api/contact', sendForm);
+      // console.log('form :>> ', JSON.parse(form?.config?.data));
     } catch (error) {
       console.error(error);
     } finally {
@@ -1105,7 +1105,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  console.log(params);
+  // console.log(params);
   // const URL =
   //   process.env.NODE_ENV !== 'production'
   //     ? 'http://localhost:1337'
