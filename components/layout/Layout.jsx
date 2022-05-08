@@ -26,7 +26,7 @@ const Layout = ({ children, name, desc }) => {
         <div className='fixed top-0 left-0 right-0 z-10 bg-white shadow-md'>
           <NavBar />
         </div>
-        <main className='min-h-screen bg-white'>{children}</main>
+        <main className='min-h-screen bg-white  md:pt-16'>{children}</main>
         {/* <BackToTop /> */}
         <Footer />
       </div>

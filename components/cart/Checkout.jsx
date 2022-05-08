@@ -29,7 +29,6 @@ import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import order_complete from '../../public/cart/order_complete.png';
-
 const CheckoutComponent = () => {
   const { cartInfo, setCartInfo, globalCurr, userID, checkCart, setCheckCart } =
     useGlobal();
@@ -110,13 +109,20 @@ const CheckoutComponent = () => {
   };
   const handleNext = () => {
     if (
-      formValue.firstName.length == 0 ||
-      formValue.lastName.length == 0 ||
-      formValue.phoneNumber.length == 0 ||
-      formValue.emailAddress.length == 0 ||
-      formValue.deliveryAddress == 0 ||
-      formValue.country == 0 ||
-      formValue.state == 0
+      formValue?.firstName == null ||
+      formValue?.lastName == null ||
+      formValue?.phoneNumber == null ||
+      formValue?.emailAddress == null ||
+      formValue?.deliveryAddress == null ||
+      formValue?.country == null ||
+      formValue?.state == null
+      // formValue?.firstName.length == 0 ||
+      // formValue?.lastName.length == 0 ||
+      // formValue?.phoneNumber.length == 0 ||
+      // formValue?.emailAddress.length == 0 ||
+      // formValue?.deliveryAddress == 0 ||
+      // formValue?.country == 0 ||
+      // formValue?.state == 0
     ) {
       toast({
         title: 'Missing Details',
@@ -369,7 +375,7 @@ const CheckoutComponent = () => {
     <div className='mx-auto mb-5 max-w-screen-xl sm:py-5'>
       {/* steps section */}
       <div className='mx-2 flex '>
-        <Steps current={currentStep}>
+        <Steps progressDot current={currentStep}>
           <Step title='Delivery Address' />
           <Step title='Order Summary' />
           <Step title='Order Complete' />
@@ -547,8 +553,8 @@ const CheckoutComponent = () => {
           <div className='mx-2 flex w-full flex-col space-y-3 space-x-0 lg:flex-row lg:space-x-4 '>
             {/* delivery details */}
             <div className='flex w-full flex-col'>
-              <div className='flex space-x-2 pb-4'>
-                <span className='text-xl font-bold text-gray-400'>
+              <div className=' flex w-full justify-center space-x-2 pb-4'>
+                <span className='  text-xl font-bold text-gray-400'>
                   Delivery
                 </span>{' '}
                 <span className='text-xl font-bold text-indigo-500 '>
@@ -590,7 +596,7 @@ const CheckoutComponent = () => {
             {/* cart details */}
             <div className='flex w-full flex-col'>
               {/* cart items */}
-              <div className='flex space-x-2 pb-2'>
+              <div className='flex justify-center space-x-2 pb-2'>
                 <span className='text-xl font-bold text-gray-400'>Cart</span>{' '}
                 <span className='text-xl font-bold text-yellow-600 '>
                   Items
@@ -783,37 +789,58 @@ const CheckoutComponent = () => {
       {/* buttons */}
       <div className='my-4 mx-2 flex space-x-4'>
         {currentStep !== 0 && currentStep < 2 && (
-          <Button
-            variant='outline'
-            colorScheme='blue'
-            leftIcon={<MdArrowBack />}
+          // <Button
+          //   variant='outline'
+          //   colorScheme='blue'
+          //   leftIcon={<MdArrowBack />}
+          //   onClick={() => handlePrev()}
+          // >
+          //   Previous
+          // </Button>
+          <div
             onClick={() => handlePrev()}
+            className='flex cursor-pointer items-center justify-center space-x-3 rounded-lg bg-white px-4  py-1 font-semibold text-black ring-1 ring-black transition delay-150 duration-300 ease-in-out hover:bg-yellow-500 hover:text-black hover:shadow-md hover:shadow-gray-600  hover:ring-white sm:px-6 sm:py-2 sm:text-lg'
           >
-            Previous
-          </Button>
+            <MdArrowBack />
+            <Text>Prev</Text>
+          </div>
         )}
         {currentStep >= 0 && currentStep < 1 && (
-          <Button
-            variant='outline'
-            colorScheme='teal'
-            rightIcon={<MdArrowForward />}
+          // <Button
+          //   variant='outline'
+          //   colorScheme='teal'
+          //   rightIcon={<MdArrowForward />}
+          //   onClick={() => handleNext()}
+          //   isDisabled={cartInfo.length === 0}
+          // >
+          //   Next
+          // </Button>
+          <div
             onClick={() => handleNext()}
-            isDisabled={cartInfo.length === 0}
+            className='flex cursor-pointer items-center justify-center space-x-3 rounded-lg bg-black px-4  py-1 font-semibold text-white ring-1 ring-gray-200 transition delay-150 duration-300 ease-in-out hover:bg-yellow-500 hover:text-black hover:shadow-md  hover:shadow-gray-600 sm:px-6 sm:py-2 sm:text-lg'
           >
-            Next
-          </Button>
+            <Text>Next</Text>
+            <MdArrowForward />
+          </div>
         )}
         {currentStep === 1 && (
-          <Button
-            variant='solid'
-            colorScheme='teal'
-            isDisabled={cartInfo.length === 0}
-            rightIcon={<BsCreditCard />}
-            // onClick={() => handlePay()}
+          // <Button
+          //   variant='solid'
+          //   colorScheme='teal'
+          //   isDisabled={cartInfo.length === 0}
+          //   rightIcon={<BsCreditCard />}
+          //   // onClick={() => handlePay()}
+          //   onClick={() => handlePaymentOption()}
+          // >
+          //   Pay Now
+          // </Button>
+          <div
             onClick={() => handlePaymentOption()}
+            className='flex cursor-pointer items-center justify-center space-x-3 rounded-lg bg-black px-4  py-1 font-semibold text-white ring-1 ring-gray-200 transition delay-150 duration-300 ease-in-out hover:bg-yellow-500 hover:text-black hover:shadow-md  hover:shadow-gray-600 sm:px-6 sm:py-2 sm:text-lg'
           >
-            Pay Now
-          </Button>
+            <Text>Pay Now</Text>
+            <BsCreditCard />
+          </div>
         )}
       </div>
     </div>

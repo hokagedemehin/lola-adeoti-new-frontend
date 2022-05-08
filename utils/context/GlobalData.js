@@ -11,10 +11,9 @@ export default function GlobalDataContext({ children }) {
   const [cartInfo, setCartInfo] = useState([]);
   const [checkCart, setCheckCart] = useState(false);
   const [lolaKey, setLolaKey] = useState('');
-  // const URL =
-  //   process.env.NODE_ENV !== 'production'
-  //     ? 'http://localhost:1337'
-  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
+  const [variantColor, setVariantColor] = useState('');
+  const [variantName, setVariantName] = useState('');
+
   // console.log('userID', userID);
   // console.log('cartInfo :>> ', cartInfo);
   let arr = [];
@@ -116,6 +115,10 @@ export default function GlobalDataContext({ children }) {
         setCheckCart,
         lolaKey,
         setLolaKey,
+        variantColor,
+        setVariantColor,
+        variantName,
+        setVariantName,
       }}
     >
       {children}
