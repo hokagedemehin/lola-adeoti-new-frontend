@@ -2,14 +2,14 @@
 import React from 'react';
 import Layout from '../../components/layout/Layout';
 import LoginComponent from '../../components/login/LoginComponent';
-import LoginHero from '../../components/login/LoginHero';
+import NewLoginHero from '../../components/login/NewLoginHero';
 
 const LoginPage = () => {
   // console.log('data :>> ', data);
   return (
     <Layout name='Login' desc='Login page to get authenticated'>
       <div className=''>
-        <LoginHero />
+        <NewLoginHero />
         <LoginComponent />
       </div>
     </Layout>

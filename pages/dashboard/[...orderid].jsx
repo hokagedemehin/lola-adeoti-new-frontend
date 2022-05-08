@@ -56,7 +56,7 @@ const DashboardDetails = () => {
 
   return (
     <Layout name='Dashboard' desc='order details for a single order'>
-      <div className='mx-2 mt-20'>
+      <div className='mx-2 mt-24'>
         <OrderDetails data={data} isSuccess={isSuccess} />
       </div>
     </Layout>

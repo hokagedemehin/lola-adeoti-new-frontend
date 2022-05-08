@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
 import { Text } from '@chakra-ui/react';
-import AOS from 'aos';
-// import 'aos/dist/aos.css';
+import Aos from 'aos';
+// import Image from 'next/image';
+import React, { useEffect } from 'react';
+// import idoma_girl_green_strips from '../../public/login/idoma_girl_green_strips.jpeg';
 
-const NewShopHeroSection = () => {
+const NewLoginHero = () => {
   useEffect(() => {
-    AOS.init();
+    Aos.init();
   }, []);
 
   return (
@@ -14,7 +15,7 @@ const NewShopHeroSection = () => {
         {/* CTA Slogan */}
         <div data-aos='zoom-in' data-aos-duration='1000'>
           <Text className='bg-gradient-to-r from-teal-600 to-yellow-500 bg-clip-text py-12 text-3xl font-extrabold text-transparent  sm:text-5xl md:py-24'>
-            Lola Adeoti Shop
+            Login Page
           </Text>
         </div>
       </div>
@@ -22,4 +23,4 @@ const NewShopHeroSection = () => {
   );
 };
 
-export default NewShopHeroSection;
+export default NewLoginHero;

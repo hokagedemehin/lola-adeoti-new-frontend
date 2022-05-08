@@ -3,7 +3,7 @@
 import React from 'react';
 // import { useQuery } from 'react-query';
 import Dashboard from '../../components/dashboard/Dashboard';
-import DashboardHero from '../../components/dashboard/DashboardHero';
+import NewDashboardHero from '../../components/dashboard/NewDashboardHero';
 import Layout from '../../components/layout/Layout';
 // import { useGlobal } from '../../utils/context/GlobalData';
 // const qs = require('qs');
@@ -41,7 +41,7 @@ const DashboardPage = () => {
       desc='dashboard with profile details and order details'
     >
       <div className=''>
-        <DashboardHero />
+        <NewDashboardHero />
         <div className='mx-2'>
           <Dashboard />
         </div>

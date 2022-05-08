@@ -1,6 +1,6 @@
 import React from 'react';
 import AboutDetails from '../../components/about/AboutDetails';
-import AboutHeroSection from '../../components/about/AboutHeroSection';
+import NewAboutHeroSection from '../../components/about/NewAboutHeroSection';
 import AboutPointSection from '../../components/about/AboutPointSection';
 import Layout from '../../components/layout/Layout';
 // import NavBar from '../../components/navbar/NavBar';
@@ -8,7 +8,7 @@ import Layout from '../../components/layout/Layout';
 const AboutPage = () => {
   return (
     <Layout name='About'>
-      <AboutHeroSection />
+      <NewAboutHeroSection />
       <div className='mx-6'>
         <AboutPointSection />
         <AboutDetails />

@@ -11,7 +11,7 @@ const ShopHeroSection = () => {
   }, []);
 
   return (
-    <div className='flex pt-14 sm:pt-16'>
+    <div className='flex '>
       <div
         className='relative h-full w-full bg-fixed bg-left bg-no-repeat'
         // style={{ backgroundImage: `url(/${anike_lady_orange})` }}

@@ -7,15 +7,24 @@ import NewShopHeroSection from '../../components/shop/NewHeroSection';
 import NewProductList from '../../components/shop/NewProductList';
 const qs = require('qs');
 
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 const ShopPage = ({ product }) => {
   // console.log('product', product);
+  const data = shuffle(product?.data);
   return (
     <Layout name='Shop' desc='Shop all your lola adeoti bags '>
       {/* <ShopHeroSection /> */}
       <NewShopHeroSection />
       <div className='mx-2'>
         {/* <ProductList data={product.data} /> */}
-        <NewProductList data={product.data} />
+        <NewProductList data={data} />
       </div>
     </Layout>
   );
@@ -27,7 +36,7 @@ export async function getStaticProps() {
   // console.log('context :>> ', context);
   const queryPopulate = qs.stringify(
     {
-      populate: ['image'],
+      populate: ['image', 'product'],
     },
     {
       encodeValuesOnly: true,

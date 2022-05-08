@@ -1,5 +1,5 @@
 import { Input, Select, Text } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { LinkBox, LinkOverlay } from '@chakra-ui/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,6 +8,7 @@ import { useGlobal } from '../../utils/context/GlobalData';
 import empty_search from '../../public/shop/empty_search.png';
 
 const NewProductList = ({ data }) => {
+  // console.log('data', data);
   /**
    * *? the data taken from index page
    * *? searching by name is implemented
@@ -15,8 +16,8 @@ const NewProductList = ({ data }) => {
    * ? large screens 3 columns 2 rows
    * ? small screens 2 columns 3 rows
    */
-  const { globalCurr } = useGlobal();
-  shuffle(data);
+  const { globalCurr, setVariantColor, setVariantName } = useGlobal();
+
   let [newData, setNewData] = useState(data);
   let data1 = [];
   // #####################################
@@ -34,17 +35,26 @@ const NewProductList = ({ data }) => {
         return val;
       }
     });
-    shuffle(data1);
+    // shuffle(data1);
     setNewData(data1);
   };
 
-  function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
+  // function shuffle(array) {
+  //   for (let i = array.length - 1; i > 0; i--) {
+  //     let j = Math.floor(Math.random() * (i + 1)); // random index from 0 to i
+  //     [array[i], array[j]] = [array[j], array[i]];
+  //   }
+  //   return array;
+  // }
+
+  useEffect(() => {
+    // shuffle(data);
+  }, []);
+
+  const handleVariant = (elem) => {
+    setVariantColor(elem?.attributes?.color);
+    setVariantName(elem?.attributes?.name);
+  };
 
   return (
     <div className='mx-auto max-w-screen-lg pt-5 pb-5 sm:pt-10'>
@@ -79,12 +89,15 @@ const NewProductList = ({ data }) => {
               className='flex rounded-lg p-3 transition duration-300 ease-in-out'
             >
               <Link
-                href={`/product/${elem?.id}/${elem?.attributes?.name
-                  .split('-')[0]
-                  .trim()}/${elem?.attributes?.name.split('-')[1].trim()}`}
+                href={`/product/${elem?.attributes?.product?.data?.id}/${elem?.attributes?.product?.data?.attributes?.slug}`}
+                // onClick={() => console.log('clicked')}
                 passHref
               >
-                <a className='hover:text-current'>
+                <a
+                  className='hover:text-current'
+                  onClick={() => handleVariant(elem)}
+                  // onClick={() => console.log(elem?.attributes?.color)}
+                >
                   {/* image */}
                   <div className='relative h-36 w-36 sm:h-52 sm:w-52'>
                     <Image

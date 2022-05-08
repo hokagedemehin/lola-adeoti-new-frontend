@@ -1,7 +1,7 @@
 import React from 'react';
 import ContactForm from '../../components/contact/ContactForm';
-import ContactHero from '../../components/contact/ContactHero';
 import ContactPoint from '../../components/contact/ContactPoint';
+import NewContactHero from '../../components/contact/NewContactHero';
 import Layout from '../../components/layout/Layout';
 // import NavBar from '../../components/navbar/NavBar';
 
@@ -11,7 +11,7 @@ const ContactPage = () => {
       name='Contact'
       desc='Get all contact details to reach lola adeoti stores'
     >
-      <ContactHero />
+      <NewContactHero />
       <div className='mx-4'>
         <ContactPoint />
         <ContactForm />

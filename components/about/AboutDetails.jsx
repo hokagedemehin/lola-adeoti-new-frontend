@@ -3,6 +3,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import model1 from '../../public/about/model1.jpeg';
+// import Typewriter from 'typewriter-effect/dist/core';
+import Typewriter from 'typewriter-effect';
+
 const AboutDetails = () => {
   const handleActive = (val) => {
     localStorage.setItem('active', val);
@@ -12,14 +15,60 @@ const AboutDetails = () => {
     <div className='mb-10'>
       <div className='mx-auto flex max-w-screen-xl flex-col-reverse justify-center space-x-0 lg:flex-row lg:space-x-5'>
         {/* discription | Button */}
-        <div className='flex flex-col justify-between'>
+        <div className='flex w-full flex-col justify-between'>
           {/* Description */}
           <div className=' flex flex-col items-center pt-4'>
             <Text className='pb-4 text-center text-2xl font-black sm:text-4xl lg:pb-8'>
               Lola Adeoti Bags
             </Text>
             <div className='mx-auto flex max-w-2xl flex-col space-y-3 lg:max-w-[90rem] lg:space-y-4'>
-              <Text className=' text-base lg:text-lg'>
+              <Text className='text-base lg:text-lg'>
+                <Typewriter
+                  onInit={(typewriter) => {
+                    typewriter
+                      .typeString(
+                        `Lola Adeoti is a genuine leather brand that designs and produces
+                genuine leather bags for the modern day individual. Our bags are
+                for men and women who value quality and to maintain this
+                standard, we produce all our bags with genuine leather.`
+                      )
+                      // .pasteString(`<br/>`)
+                      // .pasteString(
+                      //   `<div style={{paddingBottom: '5rem'}}></div>`
+                      // )
+                      .pasteString(`<br />`)
+                      .pasteString(`<br />`)
+                      .pauseFor(300)
+                      .typeString(
+                        `All our products are made from scratch, choosing exquisite
+                leather and then step by step, gently transforming them into a
+                masterpiece for the modern day Individual. We pride ourselves in
+                our ability to make great pieces that you would love and would
+                stand the test of time.`
+                      )
+                      .pasteString(`<br />`)
+                      .pasteString(`<br />`)
+                      .pauseFor(300)
+                      .typeString(
+                        `Our bags are great gifts, and people all over the world ask our
+                customers how to purchase unique pieces. Each piece is made with
+                lots of love and particularly tailored towards the needs of the
+                modern day individual.`
+                      )
+                      .pasteString(`<br />`)
+                      .pasteString(`<br />`)
+                      .pauseFor(300)
+                      .typeString(
+                        `Lola Adeoti is very passionate about showcasing the expertise of
+                African artisans and because of this, we stay true to producing
+                within the shores of Africa.`
+                      )
+                      .start();
+                  }}
+                />
+              </Text>
+
+              {/* <Text className=' text-base lg:text-lg'>
                 Lola Adeoti is a genuine leather brand that designs and produces
                 genuine leather bags for the modern day individual. Our bags are
                 for men and women who value quality and to maintain this
@@ -42,7 +91,7 @@ const AboutDetails = () => {
                 Lola Adeoti is very passionate about showcasing the expertise of
                 African artisans and because of this, we stay true to producing
                 within the shores of Africa
-              </Text>
+              </Text> */}
             </div>
           </div>
 

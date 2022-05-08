@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Layout from '../../components/layout/Layout';
 import axios from 'axios';
 // import { Image } from 'antd';
@@ -28,20 +28,20 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { nanoid } from 'nanoid';
-import RelatedProducts from '../../components/shop/RelatedProducts';
+// import RelatedProducts from '../../components/shop/RelatedProducts';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
-const qs = require('qs');
+import NewRelatedProducts from '../../components/shop/NewRelatedProducts';
+// import Link from 'next/link';
 
+const qs = require('qs');
 const ProductDetails = ({ products }) => {
   // const product = products;
-  // console.log('product details:>> ', product);
-  // const URL =
-  //   process.env.NODE_ENV !== 'production'
-  //     ? 'http://localhost:1337'
-  //     : 'https://lola-adeoti-new-backend.herokuapp.com';
+  // const {variantImage} = useGlobal();
+  // console.log('product details:>> ', products);
   const router = useRouter();
   let id = null;
+  // console.log('router :>> ', router);
 
   if (router?.query?.slug) {
     id = router?.query?.slug[0];
@@ -64,6 +64,7 @@ const ProductDetails = ({ products }) => {
     // console.log(data);
     return data?.data;
   };
+
   const {
     data: product,
     isSuccess,
@@ -74,7 +75,90 @@ const ProductDetails = ({ products }) => {
   // console.log('product', product);
   // console.log('isSuccess', isSuccess);
 
-  const { globalCurr, userID, cartInfo, setCartInfo } = useGlobal();
+  const {
+    globalCurr,
+    userID,
+    cartInfo,
+    setCartInfo,
+    variantColor,
+    variantName,
+  } = useGlobal();
+
+  // console.log('variantColor :>> ', variantColor);
+  // console.log('variantName :>> ', variantName);
+
+  const initialData = async () => {
+    const queryColor = qs.stringify(
+      {
+        populate: '*',
+        filters: {
+          color: {
+            $eq: variantColor,
+          },
+          name: {
+            $eq: variantName,
+          },
+        },
+      },
+      {
+        encodeValuesOnly: true,
+      }
+    );
+
+    const { data: variantImage } = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/variants?${queryColor}`
+    );
+
+    const id = variantImage?.data[0]?.attributes?.product?.data?.id;
+
+    const { data: productData } = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/products/${id}?populate=*`
+    );
+
+    // console.log('variantImage', variantImage);
+    // console.log('productData', productData);
+
+    const img = variantImage?.data[0]?.attributes?.image?.data?.attributes?.url;
+
+    const productName = productData?.data?.attributes?.name;
+    const color = variantColor;
+    const selectQuantity = 1;
+    const variantID = variantImage?.data[0]?.id;
+    const index = productData?.data?.attributes?.variants?.data.findIndex(
+      (elem) => elem?.attributes?.color == variantColor
+    );
+    const variantQty = variantImage?.data[0]?.attributes?.quantity;
+    // console.log(
+    //   img,
+    //   productName,
+    //   color,
+    //   selectQuantity,
+    //   variantID,
+    //   index,
+    //   variantQty
+    // );
+    setVarImg(img);
+    setVarName(productName);
+    setVarColor(color);
+    setQty(selectQuantity);
+    setVarID(variantID);
+    setIndexID(index);
+    setVarQty(variantQty);
+    if (variantQty > 0) {
+      setBtnLoad(true);
+      setCartLoad(false);
+    } else {
+      setBtnLoad(false);
+      setCartLoad(true);
+    }
+  };
+
+  useEffect(() => {
+    if (variantColor && variantName) {
+      initialData();
+    }
+  }, [variantColor, variantName]);
+
   const [varImg, setVarImg] = useState(null);
   const [varName, setVarName] = useState(null);
   const [varColor, setVarColor] = useState(null);
@@ -96,6 +180,10 @@ const ProductDetails = ({ products }) => {
   const initialRef = useRef();
   const finalRef = useRef();
 
+  // useEffect(() => {
+  //   setVarImg(variantImage?.data?.attributes?.image?.data?.attributes?.url);
+  // }, [variantImage]);
+
   const handleNotify = async () => {
     try {
       setModalLoading(true);
@@ -114,9 +202,9 @@ const ProductDetails = ({ products }) => {
           },
         }
       );
-      const sendForm = JSON.stringify(formValue);
-      const form = await axios.post('/api/contact', sendForm);
-      console.log('form :>> ', JSON.parse(form?.config?.data));
+      // const sendForm = JSON.stringify(formValue);
+      // const form = await axios.post('/api/contact', sendForm);
+      // console.log('form :>> ', JSON.parse(form?.config?.data));
     } catch (error) {
       console.error(error);
     } finally {
@@ -447,7 +535,7 @@ const ProductDetails = ({ products }) => {
                         </Text>
                         <Button
                           onClick={onOpen}
-                          colorScheme='blue'
+                          colorScheme='teal'
                           variant='outline'
                           ref={finalRef}
                           // isDisabled={true}
@@ -506,15 +594,21 @@ const ProductDetails = ({ products }) => {
                         </Modal>
                       </div>
                     ) : (
-                      <Button
-                        // href='#'
+                      // <Button
+                      //   // href='#'
+                      //   onClick={() => handleCart()}
+                      //   colorScheme='teal'
+                      //   variant='solid'
+                      //   isDisabled={!btnLoad}
+                      // >
+                      //   Add to cart
+                      // </Button>
+                      <div
                         onClick={() => handleCart()}
-                        colorScheme='purple'
-                        variant='solid'
-                        isDisabled={!btnLoad}
+                        className='flex cursor-pointer items-center justify-center rounded-lg bg-black px-4 py-1  font-semibold text-white ring-1 ring-gray-200 transition delay-150 duration-300 ease-in-out hover:bg-yellow-500 hover:text-black hover:shadow-md hover:shadow-gray-600  sm:px-6 sm:py-2 sm:text-lg'
                       >
                         Add to cart
-                      </Button>
+                      </div>
                     )}
                   </div>
                   {/* <!-- cart buttons - end --> */}
@@ -675,7 +769,7 @@ const ProductDetails = ({ products }) => {
                         </Text>
                         <Button
                           onClick={onOpen}
-                          colorScheme='blue'
+                          colorScheme='teal'
                           variant='outline'
                           ref={finalRef}
                           // isDisabled={true}
@@ -737,7 +831,7 @@ const ProductDetails = ({ products }) => {
                       <Button
                         // href='#'
                         onClick={() => handleCart()}
-                        colorScheme='purple'
+                        colorScheme='teal'
                         variant='solid'
                         isDisabled={!btnLoad}
                       >
@@ -766,6 +860,10 @@ const ProductDetails = ({ products }) => {
                       <br />
                       {/* <br /> */}
                       <Text>{product?.attributes?.description}</Text>
+                      <br />
+                      <Text className='font-bold'>
+                        {product?.attributes?.disclaimer}
+                      </Text>
                     </TabPanel>
                     <TabPanel>
                       <div className=' py-4 sm:py-6'>
@@ -975,7 +1073,9 @@ const ProductDetails = ({ products }) => {
 
             {/* related product start */}
             <div className='mt-6 flex'>
-              <RelatedProducts id={product?.id} />
+              {/* <RelatedProducts id={product?.id} /> */}
+              {<NewRelatedProducts id={varID} />}
+              {/* <NewRelatedProducts id={product?.id} /> */}
             </div>
             {/* related products end */}
           </div>
