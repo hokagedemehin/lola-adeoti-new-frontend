@@ -50,7 +50,7 @@ const NewRelatedProducts = ({ id }) => {
       }
 
       const data2 = shuffle(data1);
-      const data3 = data2?.slice(0, 4);
+      const data3 = data2?.slice(0, 6);
       setFinalData(data3);
     }
     // }, [data, isSuccess, dataUpdatedAt, id]);

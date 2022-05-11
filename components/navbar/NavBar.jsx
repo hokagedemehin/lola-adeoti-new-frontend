@@ -231,7 +231,7 @@ const NavBar = () => {
     };
   }, []);
 
-  console.log('scrollPosition :>> ', scrollPosition);
+  // console.log('scrollPosition :>> ', scrollPosition);
 
   // const boxRef = useRef();
 
