@@ -128,7 +128,7 @@ const NewProductList = ({ data }) => {
                     </div>
                   </div>
                   {/* name & price */}
-                  <div className='flex'>
+                  <div className='flex pt-3'>
                     {/* name */}
                     <div className='flex flex-col'>
                       <Text className='font-semibold sm:text-xl '>

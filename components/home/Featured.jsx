@@ -1,36 +1,79 @@
 import { Text } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useGlobal } from '../../utils/context/GlobalData';
-// import { BsHandbagFill } from 'react-icons/bs';
 import Link from 'next/link';
 import Aos from 'aos';
+import axios from 'axios';
+import { useQuery } from 'react-query';
+import { Rate } from 'antd';
+const qs = require('qs');
 
 const Featured = ({ data }) => {
   /**
    * *when the color is selected a a function sets the following state (price, quantity, image)
    */
-  const { globalCurr } = useGlobal();
-  // console.log('globalCurr :>> ', globalCurr);
-  // console.log('data :>> ', data[0]);
-  // console.log('variants :>> ', data[0]?.attributes?.variants?.data[0]);
-  // const [varImg, setVarImg] = useState(null);
-  // const [varName, setVarName] = useState(null);
-  // console.log('varName :>> ', varName);
+  const { globalCurr, setVariantColor, setVariantName } = useGlobal();
+
+  const [reviewData, setReviewData] = useState(0);
+
   const handleActive = (val) => {
     // e.preventDefault();
     // setActive(val);
     localStorage.setItem('active', val);
   };
 
-  // const handleVariant = (val, elem) => {
-  //   setVarImg(val?.attributes?.image?.data?.attributes?.url);
-  //   setVarName(elem?.attributes?.name);
-  // };
+  const handleVariant = (elem, val) => {
+    handleActive(val);
+    setVariantColor(elem?.attributes?.color);
+    setVariantName(elem?.attributes?.name);
+  };
 
   useEffect(() => {
     Aos.init();
   }, []);
+
+  const getReviews = async () => {
+    const query = qs.stringify(
+      {
+        populate: '*',
+        sort: ['id:desc'],
+        filters: {
+          approved: {
+            $eq: true,
+          },
+        },
+      },
+      {
+        encodeValuesOnly: true,
+      }
+    );
+
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/reviews?${query}`
+    );
+    return data?.data;
+  };
+
+  const {
+    data: reviewStar,
+    isSuccess,
+    dataUpdatedAt,
+  } = useQuery('reviews', async () => await getReviews());
+
+  useEffect(() => {
+    if (isSuccess) {
+      let score;
+      let newArr = [];
+      reviewStar.forEach((elem) => {
+        score = elem?.attributes?.rating;
+        newArr.push(score);
+      });
+      const rating = newArr.reduce((prev, curr) => prev + curr, 0);
+      const averageValue = Math.ceil(rating / newArr.length) || 0;
+      setReviewData(averageValue);
+    }
+  }, [isSuccess, reviewStar, dataUpdatedAt]);
 
   return (
     <div className='pt-10 pb-10 sm:pt-20'>
@@ -95,8 +138,18 @@ const Featured = ({ data }) => {
                     )} */}
                   </div>
 
+                  {/* review star */}
+                  <div className='flex pt-3'>
+                    <Rate
+                      allowHalf
+                      value={reviewData}
+                      style={{ fontSize: '15px' }}
+                      disabled
+                    />
+                  </div>
+
                   {/* name & price */}
-                  <div className='flex'>
+                  <div className='flex pt-3'>
                     <div className='flex flex-col'>
                       {/* name */}
                       <Text className='font-semibold sm:text-xl '>
@@ -156,11 +209,11 @@ const Featured = ({ data }) => {
               {/* select options */}
               <div className='flex  pt-4'>
                 <Link
-                  href={`/product/${elem?.id}/${elem?.attributes?.slug}`}
+                  href={`/product/${elem?.attributes?.product?.data?.id}/${elem?.attributes?.product?.data?.attributes?.slug}`}
                   passHref
                 >
                   <a
-                    onClick={() => handleActive('shop')}
+                    onClick={() => handleVariant(elem, 'shop')}
                     className='flex items-center justify-center rounded-lg bg-black px-2 py-1 font-semibold text-white  transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-yellow-500 hover:text-black hover:shadow-md  active:scale-90 active:shadow-md active:shadow-gray-400 sm:px-4 sm:py-2 '
                   >
                     Select Options
