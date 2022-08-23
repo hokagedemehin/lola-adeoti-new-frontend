@@ -10,6 +10,8 @@ import { DefaultSeo } from 'next-seo';
 import GlobalProvider from '../utils/context/GlobalData';
 import { ReactQueryDevtools } from 'react-query/devtools';
 // import SEO from '../next-seo.config';
+// import Script from 'next/script';
+import { GoogleAnalytics } from 'nextjs-google-analytics';
 
 const progress = new ProgressBar({
   size: 4,
@@ -68,6 +70,22 @@ function MyApp({ Component, pageProps }) {
             propertyId={process.env.NEXT_PUBLIC_PROPERTY_ID}
             widgetId={process.env.NEXT_PUBLIC_TAWK_ID}
           /> */}
+          {/* <Script id='google-analytics' strategy='afterInteractive'>
+            {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID}');
+        `}
+          </Script>
+
+           <Script
+            src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4908548968774542'
+            crossorigin='anonymous'
+            strategy='afterInteractive'
+          /> */}
+          <GoogleAnalytics trackPageViews />
           <Component {...pageProps} />
         </GlobalProvider>
       </ChakraProvider>
