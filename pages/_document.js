@@ -18,6 +18,11 @@ class MyDocument extends Document {
             name='google-site-verification'
             content='wp3A-ezGXoPfSCif3ObQc4BSJrx_fvFYvamsIYP27gk'
           />
+          <script
+            async
+            src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4908548968774542'
+            crossOrigin='anonymous'
+          ></script>
         </Head>
         <body>
           <Main />
