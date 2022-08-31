@@ -39,19 +39,19 @@ function MyApp({ Component, pageProps }) {
           openGraph={{
             type: 'website',
             locale: 'en_IE',
-            url: 'https://www.lolaadeoti.vercel.app/',
+            url: 'https://www.lola-adeoti.com',
             site_name: 'Lola Adeoti Bags & Accessories',
             description:
               'Classic bag for everyone for every purpose and occassion',
             images: [
               {
-                url: 'https://github.com/hokagedemehin/lola-adeoti-new-frontend/blob/main/public/logo/logo_only.png?raw=true',
+                url: 'https://raw.githubusercontent.com/hokagedemehin/lola-adeoti-new-frontend/main/public/logo/logo_only.png',
                 width: 800,
                 height: 600,
                 alt: 'Og:lola-adeoti',
               },
               {
-                url: 'https://github.com/hokagedemehin/lola-adeoti-new-frontend/blob/main/public/logo/logo_and_name_coloured.png?raw=true',
+                url: 'https://raw.githubusercontent.com/hokagedemehin/lola-adeoti-new-frontend/main/public/logo/logo_and_name_coloured.png',
                 width: 800,
                 height: 600,
                 alt: 'Og:lola-adeoti',
