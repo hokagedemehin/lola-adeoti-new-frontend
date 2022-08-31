@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://lolaadeoti.vercel.app
+Host: https://lola-adeoti.com
 
 # Sitemaps
-Sitemap: https://lolaadeoti.vercel.app/sitemap.xml
+Sitemap: https://lola-adeoti.com/sitemap.xml
