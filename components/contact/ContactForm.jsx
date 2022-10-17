@@ -34,7 +34,7 @@ const ContactForm = () => {
   });
   const [loadingState, setLoadingState] = useState(false);
 
-  console.log('formValue :>> ', formValue);
+  // console.log('formValue :>> ', formValue);
 
   const handleChange = (e) => {
     setFormValue({
