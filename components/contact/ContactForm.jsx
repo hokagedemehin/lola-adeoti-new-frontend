@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   FormControl,
@@ -7,6 +7,8 @@ import {
   InputGroup,
   InputLeftElement,
   Textarea,
+  Button,
+  useToast,
 } from '@chakra-ui/react';
 import { MdOutlineAlternateEmail } from 'react-icons/md';
 import {
@@ -18,8 +20,83 @@ import {
 import { FaLinkedinIn, FaFacebookF, FaPinterestP } from 'react-icons/fa';
 import { FiTwitter } from 'react-icons/fi';
 import Link from 'next/link';
+import { MdOutgoingMail } from 'react-icons/md';
+import axios from 'axios';
 
 const ContactForm = () => {
+  const toast = useToast();
+
+  const [formValue, setFormValue] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [loadingState, setLoadingState] = useState(false);
+
+  console.log('formValue :>> ', formValue);
+
+  const handleChange = (e) => {
+    setFormValue({
+      ...formValue,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (
+        formValue.name === '' ||
+        formValue.email === '' ||
+        formValue.subject === '' ||
+        formValue.message === ''
+      ) {
+        toast({
+          title: 'Missing Fields',
+          description: 'Please fill all the required fields',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      } else {
+        setLoadingState(true);
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/contact-messages`,
+          {
+            data: formValue,
+          }
+        );
+        toast({
+          title: 'Message Sent',
+          description: 'Your message has been sent successfully',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
+        setFormValue({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+        });
+        setLoadingState(false);
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: 'Something went wrong',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setLoadingState(false);
+    }
+  };
+  // console.log(formValue)
+
   return (
     <div className='mb-10 flex flex-col space-y-5'>
       <div className='mx-auto flex max-w-4xl flex-col text-center'>
@@ -110,6 +187,7 @@ const ContactForm = () => {
         {/* contact form */}
         <div className='flex w-full rounded-lg border p-4 shadow-lg'>
           <div className='flex w-full flex-col space-y-5'>
+            {/* name */}
             <div className='flex'>
               <FormControl isRequired>
                 <FormLabel htmlFor='name'>Full Name</FormLabel>
@@ -118,10 +196,17 @@ const ContactForm = () => {
                     pointerEvents='none'
                     children={<BsPerson />}
                   />
-                  <Input name='name' id='name' type='text' />
+                  <Input
+                    name='name'
+                    id='name'
+                    type='text'
+                    value={formValue?.name}
+                    onChange={handleChange}
+                  />
                 </InputGroup>
               </FormControl>
             </div>
+            {/* email */}
             <div className='flex'>
               <FormControl isRequired>
                 <FormLabel htmlFor='email'>Email</FormLabel>
@@ -130,10 +215,17 @@ const ContactForm = () => {
                     pointerEvents='none'
                     children={<MdOutlineAlternateEmail />}
                   />
-                  <Input name='email' id='email' type='email' />
+                  <Input
+                    name='email'
+                    id='email'
+                    type='email'
+                    value={formValue?.email}
+                    onChange={handleChange}
+                  />
                 </InputGroup>
               </FormControl>
             </div>
+            {/* subject */}
             <div className='flex'>
               <FormControl isRequired>
                 <FormLabel htmlFor='subject'>Subject</FormLabel>
@@ -142,7 +234,13 @@ const ContactForm = () => {
                     pointerEvents='none'
                     children={<BsChatLeftText />}
                   />
-                  <Input name='subject' id='subject' type='text' />
+                  <Input
+                    name='subject'
+                    id='subject'
+                    type='text'
+                    value={formValue?.subject}
+                    onChange={handleChange}
+                  />
                 </InputGroup>
               </FormControl>
             </div>
@@ -150,15 +248,31 @@ const ContactForm = () => {
               <FormControl isRequired>
                 <FormLabel htmlFor='message'>Message</FormLabel>
                 <Textarea
-                  // value={value}
-                  // onChange={handleInputChange}
+                  value={formValue?.message}
+                  onChange={handleChange}
                   name='message'
                   id='message'
                   rows='8'
+
                   // placeholder='Here is a sample placeholder'
                   // size='lg'
                 />
               </FormControl>
+            </div>
+            {/* submit buton */}
+            <div className='flex justify-end'>
+              <Button
+                colorScheme='green'
+                variant='solid'
+                // size="lg"
+                onClick={handleSubmit}
+                rightIcon={<MdOutgoingMail />}
+                isLoading={loadingState}
+                loadingText='Sending'
+                spinnerPlacement='end'
+              >
+                Send
+              </Button>
             </div>
           </div>
         </div>
