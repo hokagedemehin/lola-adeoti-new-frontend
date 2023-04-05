@@ -333,7 +333,7 @@ const CartDrawer = ({ isOpen, onClose, finalFocusRef }) => {
                           <Button
                             variant='ghost'
                             onClick={() => deleteCart(elem)}
-                            className='select-none text-sm font-semibold text-indigo-500 transition duration-100 hover:text-indigo-600 active:text-indigo-700'
+                            className='-semibold select-none text-sm text-indigo-500 transition duration-100 hover:text-indigo-600 active:text-indigo-700'
                           >
                             Delete
                           </Button>
